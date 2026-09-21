@@ -48,10 +48,8 @@ function parseCSV(text){
     if(ch==='"' && inQuotes && next==='"'){cell+='"';i++;}
     else if(ch==='"') inQuotes=!inQuotes;
     else if(ch===',' && !inQuotes){row.push(cell);cell='';}
-    else if((ch==='
-'||ch==='') && !inQuotes){
-      if(ch===''&&next==='
-') i++;
+    else if((ch==='\n'||ch==='\r') && !inQuotes){
+      if(ch==='\r'&&next==='\n') i++;
       row.push(cell);
       if(row.some(v=>v!=='')) rows.push(row);
       row=[];cell='';
