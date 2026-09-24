@@ -24,6 +24,15 @@ button{height:42px;border:0;border-radius:9px;padding:0 18px;font:inherit;font-w
 @media(max-width:1150px){.charts-grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){main{padding:16px 12px 30px}.topbar-inner{padding:18px 14px;align-items:flex-start;flex-direction:column}.source{text-align:left}.filters{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}.chart-row{grid-template-columns:1fr}.faculty{text-align:left}.donut-body{grid-template-columns:1fr;justify-items:center}.filter-actions{display:grid;grid-template-columns:1fr 1fr}}
 </style>
+<script>document.documentElement.classList.add("auth-check");</script>
+<style>
+html.auth-check body{visibility:hidden}
+.auth-chip{position:fixed;right:16px;bottom:16px;z-index:9999;display:flex;align-items:center;gap:10px;padding:8px 10px 8px 13px;background:rgba(255,255,255,.96);border:1px solid #d9e2ec;border-radius:999px;box-shadow:0 8px 24px rgba(16,42,67,.14);font-size:12px;color:#627d98}
+.auth-chip button{height:30px;padding:0 12px;border:0;border-radius:999px;background:#e6edf8;color:#102a43;font:inherit;font-weight:700;cursor:pointer}
+</style>
+<script src="auth-config.js"></script>
+<script src="auth.js"></script>
+<script>OOEAuth.requireAuth();</script>
 </head>
 <body>
 <header class="topbar"><div class="topbar-inner"><div><h1>Dashboard Podcast</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source">สำนักงานการจัดการศึกษาออนไลน์ (OOE)<br><span id="sourceDate"></span></div></div></header>
@@ -151,4 +160,5 @@ $('resetBtn').addEventListener('click',()=>{$('facultyFilter').value='';$('typeF
 $('refreshBtn').addEventListener('click',loadData);$('prevBtn').addEventListener('click',()=>{currentPage--;render(false)});$('nextBtn').addEventListener('click',()=>{currentPage++;render(false)});
 loadData();
 </script>
+<div class="auth-chip" aria-label="บัญชีผู้ใช้"><span id="authUserEmail"></span><button type="button" onclick="OOEAuth.logout()">ออกจากระบบ</button></div>
 </body></html>
