@@ -16,8 +16,62 @@ html.auth-check body{visibility:hidden}
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
 <script>OOEAuth.requireAuth();</script>
+
+<style>
+/* OOE dashboard micro-interactions */
+.kpi{
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.kpi:hover{
+  transform:translateY(-3px);
+  box-shadow:0 14px 30px rgba(16,42,67,.13);
+}
+.live-indicator{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-right:9px;
+  color:#d9fbe9;
+  font-weight:700;
+  white-space:nowrap;
+}
+.live-indicator i{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#32d583;
+  box-shadow:0 0 0 4px rgba(50,213,131,.14);
+}
+.dashboard-reveal .seg{
+  transform-origin:left center;
+  animation:barReveal .7s cubic-bezier(.2,.75,.25,1) both;
+}
+@property --ooe-sweep{
+  syntax:"<angle>";
+  inherits:false;
+  initial-value:0deg;
+}
+.dashboard-reveal .donut{
+  -webkit-mask:conic-gradient(#000 0 var(--ooe-sweep),transparent var(--ooe-sweep) 360deg);
+  mask:conic-gradient(#000 0 var(--ooe-sweep),transparent var(--ooe-sweep) 360deg);
+  animation:donutReveal .85s cubic-bezier(.2,.75,.25,1) both;
+}
+@keyframes barReveal{
+  from{transform:scaleX(0);opacity:.4}
+  to{transform:scaleX(1);opacity:1}
+}
+@keyframes donutReveal{
+  from{--ooe-sweep:0deg}
+  to{--ooe-sweep:360deg}
+}
+@media (prefers-reduced-motion:reduce){
+  .kpi,.kpi:hover{transition:none;transform:none}
+  .dashboard-reveal .seg,.dashboard-reveal .donut{animation:none}
+}
+</style>
+
 </head><body>
-<header class="topbar"><div class="topbar-inner"><div><h1>ความคืบหน้าการจัดทำรายวิชา GR / GS</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source">สำนักงานการจัดการศึกษาออนไลน์ (OOE)<br>ข้อมูลอ้างอิง ณ วันที่ 18/09/2569<br><span id="sourceDate"></span></div></div></header>
+<header class="topbar"><div class="topbar-inner"><div><h1>ความคืบหน้าการจัดทำรายวิชา GR / GS</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source">สำนักงานการจัดการศึกษาออนไลน์ (OOE)<br>ข้อมูลอ้างอิง ณ วันที่ 18/09/2569<br><span class="live-indicator"><i></i>ข้อมูลออนไลน์</span><span id="sourceDate"></span></div></div></header>
 <main><nav class="page-tabs" aria-label="เลือกหน้าประเภทรายวิชา"><button class="tab" data-type="GR" type="button">หน้า GR</button><button class="tab" data-type="GS" type="button">หน้า GS</button><a class="tab nav-link" href="ai-tutor.html">AI Tutor</a><a class="tab nav-link" href="podcast.html">Podcast</a></nav>
 <section class="panel filters"><div class="field"><label for="facultyFilter">คณะ / วิทยาลัย</label><select id="facultyFilter"><option value="">ทั้งหมด</option></select></div><div class="field"><label for="statusFilter">ความคืบหน้า</label><select id="statusFilter"><option value="">ทั้งหมด</option></select></div><div class="field"><label for="reviewFilter">สถานะการตรวจสอบ</label><select id="reviewFilter"><option value="">ทั้งหมด</option></select></div><div class="field"><label for="searchBox">ค้นหารหัสวิชาหรือรหัสรายวิชาในระบบ</label><input id="searchBox" type="search" placeholder="เช่น ICT401 หรือ 691GS..."></div><div class="filter-actions"><button class="refresh" id="refreshBtn" type="button">อัปเดตข้อมูล</button><button class="reset" id="resetBtn" type="button">ล้างตัวกรอง</button></div></section>
 <section class="kpis"><article class="panel kpi"><div class="kpi-label">รายวิชาทั้งหมด</div><div class="kpi-value" id="totalKpi">0</div><div class="kpi-note" id="totalNote"></div></article><article class="panel kpi green"><div class="kpi-label">ผ่าน</div><div class="kpi-value" id="passKpi">0</div><div class="kpi-note" id="passNote"></div></article><article class="panel kpi amber"><div class="kpi-label">อยู่ระหว่างการตรวจสอบ</div><div class="kpi-value" id="reviewingKpi">0</div><div class="kpi-note" id="reviewingNote"></div></article><article class="panel kpi red"><div class="kpi-label">ไม่ผ่าน</div><div class="kpi-value" id="failKpi">0</div><div class="kpi-note" id="failNote"></div></article></section>
@@ -27,6 +81,13 @@ html.auth-check body{visibility:hidden}
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=131857057&single=true&output=csv';
 let DATA=[];
+let dashboardRevealDone=false;
+function revealDashboardOnce(){
+  if(dashboardRevealDone)return;
+  dashboardRevealDone=true;
+  document.body.classList.add('dashboard-reveal');
+  window.setTimeout(()=>document.body.classList.remove('dashboard-reveal'),950);
+}
 const STATUS={
   good:'มีเนื้อหา มากกว่า 50%',
   low:'มีเนื้อหา น้อยกว่า 50%',
@@ -110,6 +171,7 @@ async function loadData(){
     $('sourceDate').textContent=`ดึงข้อมูลเมื่อ ${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} · ${DATA.length.toLocaleString('th-TH')} รายวิชา`;
     refreshFaculty();
     render();
+    revealDashboardOnce();
   }catch(err){
     console.error(err);
     $('sourceDate').textContent='ไม่สามารถโหลดข้อมูลออนไลน์ได้';
