@@ -17,7 +17,7 @@ html.auth-check body{visibility:hidden}
 <script src="auth.js"></script>
 <script>OOEAuth.requireAuth();</script>
 </head><body>
-<header class="topbar"><div class="topbar-inner"><div><h1>ความคืบหน้าการจัดทำรายวิชา GR / GS</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source">สำนักงานการจัดการศึกษาออนไลน์ (OOE)<br><span id="sourceDate"></span></div></div></header>
+<header class="topbar"><div class="topbar-inner"><div><h1>ความคืบหน้าการจัดทำรายวิชา GR / GS</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source">สำนักงานการจัดการศึกษาออนไลน์ (OOE)<br>ข้อมูลอ้างอิง ณ วันที่ 18/09/2569<br><span id="sourceDate"></span></div></div></header>
 <main><nav class="page-tabs" aria-label="เลือกหน้าประเภทรายวิชา"><button class="tab" data-type="GR" type="button">หน้า GR</button><button class="tab" data-type="GS" type="button">หน้า GS</button><a class="tab nav-link" href="ai-tutor.html">AI Tutor</a><a class="tab nav-link" href="podcast.html">Podcast</a></nav>
 <section class="panel filters"><div class="field"><label for="facultyFilter">คณะ / วิทยาลัย</label><select id="facultyFilter"><option value="">ทั้งหมด</option></select></div><div class="field"><label for="statusFilter">ความคืบหน้า</label><select id="statusFilter"><option value="">ทั้งหมด</option></select></div><div class="field"><label for="reviewFilter">สถานะการตรวจสอบ</label><select id="reviewFilter"><option value="">ทั้งหมด</option></select></div><div class="field"><label for="searchBox">ค้นหารหัสวิชาหรือรหัสรายวิชาในระบบ</label><input id="searchBox" type="search" placeholder="เช่น ICT401 หรือ 691GS..."></div><div class="filter-actions"><button class="refresh" id="refreshBtn" type="button">อัปเดตข้อมูล</button><button class="reset" id="resetBtn" type="button">ล้างตัวกรอง</button></div></section>
 <section class="kpis"><article class="panel kpi"><div class="kpi-label">รายวิชาทั้งหมด</div><div class="kpi-value" id="totalKpi">0</div><div class="kpi-note" id="totalNote"></div></article><article class="panel kpi green"><div class="kpi-label">ผ่าน</div><div class="kpi-value" id="passKpi">0</div><div class="kpi-note" id="passNote"></div></article><article class="panel kpi amber"><div class="kpi-label">อยู่ระหว่างการตรวจสอบ</div><div class="kpi-value" id="reviewingKpi">0</div><div class="kpi-note" id="reviewingNote"></div></article><article class="panel kpi red"><div class="kpi-label">ไม่ผ่าน</div><div class="kpi-value" id="failKpi">0</div><div class="kpi-note" id="failNote"></div></article></section>
@@ -107,7 +107,7 @@ async function loadData(){
     const csv=await response.text();
     DATA=parseCSV(csv).map(mapRow).filter(d=>d['ประเภท']==='GR'||d['ประเภท']==='GS');
     const now=new Date();
-    $('sourceDate').textContent=`โหลดข้อมูลล่าสุด ${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})} · ${DATA.length.toLocaleString('th-TH')} รายวิชา`;
+    $('sourceDate').textContent=`ดึงข้อมูลเมื่อ ${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} · ${DATA.length.toLocaleString('th-TH')} รายวิชา`;
     refreshFaculty();
     render();
   }catch(err){
