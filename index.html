@@ -70,6 +70,58 @@ html.auth-check body{visibility:hidden}
 }
 </style>
 
+
+<style>
+/* Interactive faculty chart + loading skeleton */
+.chart-row[data-faculty]{
+  cursor:pointer;
+  border-radius:8px;
+  transition:background .16s ease,transform .16s ease;
+}
+.chart-row[data-faculty]:hover,
+.chart-row[data-faculty]:focus-visible{
+  background:#f7fbff;
+  transform:translateX(2px);
+  outline:none;
+}
+.skeleton-block,.skeleton-line,.skeleton-pill,.skeleton-circle{
+  position:relative;
+  overflow:hidden;
+  background:#e7edf4 !important;
+}
+.skeleton-block::after,.skeleton-line::after,.skeleton-pill::after,.skeleton-circle::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.72),transparent);
+  animation:skeletonShimmer 1.15s ease-in-out infinite;
+}
+.skeleton-kpi{display:block;width:78px;height:38px;border-radius:8px;margin-top:6px}
+.skeleton-chart-row{display:grid;grid-template-columns:minmax(190px,290px) 1fr 78px;gap:12px;align-items:center;min-height:30px}
+.skeleton-line{display:block;height:14px;border-radius:7px}
+.skeleton-track{height:30px;border-radius:7px}
+.skeleton-pill{display:inline-block;width:64px;height:14px;border-radius:999px}
+.donut.skeleton-circle{background:#e7edf4 !important}
+.skeleton-legend{display:flex;flex-direction:column;gap:13px;width:100%}
+.skeleton-legend .skeleton-line:nth-child(1){width:92%}
+.skeleton-legend .skeleton-line:nth-child(2){width:78%}
+.skeleton-legend .skeleton-line:nth-child(3){width:86%}
+.skeleton-table-row td{padding-top:15px;padding-bottom:15px}
+.skeleton-cell{display:block;height:13px;border-radius:7px;background:#e7edf4;position:relative;overflow:hidden}
+.skeleton-cell::after{
+  content:"";position:absolute;inset:0;transform:translateX(-100%);
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.72),transparent);
+  animation:skeletonShimmer 1.15s ease-in-out infinite;
+}
+@keyframes skeletonShimmer{to{transform:translateX(100%)}}
+@media(max-width:650px){.skeleton-chart-row{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){
+  .chart-row[data-faculty]{transition:none}
+  .skeleton-block::after,.skeleton-line::after,.skeleton-pill::after,.skeleton-circle::after,.skeleton-cell::after{animation:none}
+}
+</style>
+
 </head><body>
 <header class="topbar"><div class="topbar-inner"><div><h1>ความคืบหน้าการจัดทำรายวิชา GR / GS</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source">สำนักงานการจัดการศึกษาออนไลน์ (OOE)<br>ข้อมูลอ้างอิง ณ วันที่ 18/09/2569<br><span class="live-indicator" aria-label="สถานะออนไลน์"><i></i></span><span id="sourceDate"></span></div></div></header>
 <main><nav class="page-tabs" aria-label="เลือกหน้าประเภทรายวิชา"><button class="tab" data-type="GR" type="button">หน้า GR</button><button class="tab" data-type="GS" type="button">หน้า GS</button><a class="tab nav-link" href="ai-tutor.html">AI Tutor</a><a class="tab nav-link" href="podcast.html">Podcast</a></nav>
@@ -104,6 +156,53 @@ let activeType=location.hash.replace('#','').toUpperCase()==='GS'?'GS':'GR';
 
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function showLoadingSkeleton(){
+  document.querySelectorAll('.kpi-value').forEach(el=>{
+    el.innerHTML='<span class="skeleton-block skeleton-kpi" aria-hidden="true"></span>';
+  });
+  $('facultyChart').innerHTML=Array.from({length:6},(_,i)=>`
+    <div class="skeleton-chart-row" aria-hidden="true">
+      <span class="skeleton-line" style="width:${72-(i%3)*9}%"></span>
+      <span class="skeleton-block skeleton-track"></span>
+      <span class="skeleton-pill"></span>
+    </div>`).join('');
+  $('donutChart').classList.add('skeleton-circle');
+  $('donutChart').style.background='';
+  $('donutTotal').textContent='';
+  $('donutLegend').innerHTML='<div class="skeleton-legend" aria-hidden="true"><span class="skeleton-line"></span><span class="skeleton-line"></span><span class="skeleton-line"></span></div>';
+  const cols=document.querySelectorAll('thead th').length||8;
+  $('courseRows').innerHTML=Array.from({length:6},()=>`<tr class="skeleton-table-row" aria-hidden="true">${Array.from({length:cols},(_,i)=>`<td><span class="skeleton-cell" style="width:${55+(i%4)*10}%"></span></td>`).join('')}</tr>`).join('');
+  $('resultCount').innerHTML='<span class="skeleton-pill" aria-hidden="true"></span>';
+  $('pageInfo').textContent='กำลังโหลดข้อมูล...';
+}
+function clearLoadingSkeleton(){
+  $('donutChart').classList.remove('skeleton-circle');
+}
+function selectFacultyFromChart(faculty){
+  const select=$('facultyFilter');
+  if(!select||![...select.options].some(o=>o.value===faculty))return;
+  select.value=faculty;
+  currentPage=1;
+  render();
+}
+function bindFacultyChartFilter(){
+  const chart=$('facultyChart');
+  if(!chart||chart.dataset.filterBound==='1')return;
+  chart.dataset.filterBound='1';
+  chart.addEventListener('click',e=>{
+    const row=e.target.closest('.chart-row[data-faculty]');
+    if(row)selectFacultyFromChart(row.dataset.faculty);
+  });
+  chart.addEventListener('keydown',e=>{
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    const row=e.target.closest('.chart-row[data-faculty]');
+    if(!row)return;
+    e.preventDefault();
+    selectFacultyFromChart(row.dataset.faculty);
+  });
+}
+
 const natural=(a,b)=>String(a).localeCompare(String(b),'th',{numeric:true,sensitivity:'base'});
 const typeRows=()=>DATA.filter(d=>d['ประเภท']===activeType);
 const unique=(rows,key)=>[...new Set(rows.map(d=>d[key]).filter(Boolean))].sort(natural);
@@ -158,6 +257,7 @@ function mapRow(r){
 }
 
 async function loadData(){
+  showLoadingSkeleton();
   $('sourceDate').textContent='กำลังโหลดข้อมูลออนไลน์...';
   $('refreshBtn').disabled=true;
   $('refreshBtn').textContent='กำลังอัปเดต...';
@@ -170,9 +270,11 @@ async function loadData(){
     const now=new Date();
     $('sourceDate').textContent=`ดึงข้อมูลเมื่อ ${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} · ${DATA.length.toLocaleString('th-TH')} รายวิชา`;
     refreshFaculty();
+    clearLoadingSkeleton();
     render();
     revealDashboardOnce();
   }catch(err){
+    clearLoadingSkeleton();
     console.error(err);
     $('sourceDate').textContent='ไม่สามารถโหลดข้อมูลออนไลน์ได้';
     $('facultyChart').innerHTML='<div class="empty">โหลดข้อมูลจาก Google Sheets ไม่สำเร็จ กรุณาลองกด “อัปเดตข้อมูล” อีกครั้ง</div>';
@@ -253,7 +355,7 @@ function renderChart(rows){
 
   $('facultyChart').innerHTML=list.length?list.map(([f,v])=>{
     const seg=(n,c)=>n?`<div class="seg ${c}" style="width:${n/v.reviewed*100}%"><span>${n}</span></div>`:'';
-    return `<div class="chart-row">
+    return `<div class="chart-row" data-faculty="${esc(f)}" role="button" tabindex="0" title="คลิกเพื่อกรองตามคณะนี้">
       <div class="faculty">${esc(f)} <span style="color:var(--muted)">(${v.reviewed} ตรวจแล้ว)</span></div>
       <div class="track" style="width:${v.reviewed/max*100}%">${seg(v.pass,'green')}${seg(v.fail,'red')}</div>
       <div class="total">${v.pass}/${v.reviewed}</div>
@@ -369,6 +471,7 @@ $('refreshBtn').addEventListener('click',()=>loadData());
 $('prevBtn').addEventListener('click',()=>{currentPage--;render(false)});
 $('nextBtn').addEventListener('click',()=>{currentPage++;render(false)});
 
+bindFacultyChartFilter();
 loadData();
 </script><div class="auth-chip" aria-label="บัญชีผู้ใช้"><span id="authUserEmail"></span><button type="button" onclick="OOEAuth.logout()">ออกจากระบบ</button></div>
 </body></html>
