@@ -33,9 +33,63 @@ html.auth-check body{visibility:hidden}
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
 <script>OOEAuth.requireAuth();</script>
+
+<style>
+/* OOE dashboard micro-interactions */
+.kpi{
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.kpi:hover{
+  transform:translateY(-3px);
+  box-shadow:0 14px 30px rgba(16,42,67,.13);
+}
+.live-indicator{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-right:9px;
+  color:#d9fbe9;
+  font-weight:700;
+  white-space:nowrap;
+}
+.live-indicator i{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#32d583;
+  box-shadow:0 0 0 4px rgba(50,213,131,.14);
+}
+.dashboard-reveal .seg{
+  transform-origin:left center;
+  animation:barReveal .7s cubic-bezier(.2,.75,.25,1) both;
+}
+@property --ooe-sweep{
+  syntax:"<angle>";
+  inherits:false;
+  initial-value:0deg;
+}
+.dashboard-reveal .donut{
+  -webkit-mask:conic-gradient(#000 0 var(--ooe-sweep),transparent var(--ooe-sweep) 360deg);
+  mask:conic-gradient(#000 0 var(--ooe-sweep),transparent var(--ooe-sweep) 360deg);
+  animation:donutReveal .85s cubic-bezier(.2,.75,.25,1) both;
+}
+@keyframes barReveal{
+  from{transform:scaleX(0);opacity:.4}
+  to{transform:scaleX(1);opacity:1}
+}
+@keyframes donutReveal{
+  from{--ooe-sweep:0deg}
+  to{--ooe-sweep:360deg}
+}
+@media (prefers-reduced-motion:reduce){
+  .kpi,.kpi:hover{transition:none;transform:none}
+  .dashboard-reveal .seg,.dashboard-reveal .donut{animation:none}
+}
+</style>
+
 </head>
 <body>
-<header class="topbar"><div class="topbar-inner"><div><h1>Dashboard Podcast</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source">สำนักงานการจัดการศึกษาออนไลน์ (OOE)<br>ข้อมูลอ้างอิง ณ วันที่ 18/09/2569<br><span id="sourceDate"></span></div></div></header>
+<header class="topbar"><div class="topbar-inner"><div><h1>Dashboard Podcast</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source">สำนักงานการจัดการศึกษาออนไลน์ (OOE)<br>ข้อมูลอ้างอิง ณ วันที่ 18/09/2569<br><span class="live-indicator"><i></i>ข้อมูลออนไลน์</span><span id="sourceDate"></span></div></div></header>
 <main>
 <nav class="page-tabs"><a class="tab" href="index.html#GR">หน้า GR</a><a class="tab" href="index.html#GS">หน้า GS</a><a class="tab " href="ai-tutor.html">AI Tutor</a><a class="tab active" href="podcast.html">Podcast</a></nav>
 <section class="panel filters">
@@ -56,6 +110,13 @@ html.auth-check body{visibility:hidden}
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=149082930&single=true&output=csv';
 let DATA=[]; const PAGE_SIZE=20; let currentPage=1;
+let dashboardRevealDone=false;
+function revealDashboardOnce(){
+  if(dashboardRevealDone)return;
+  dashboardRevealDone=true;
+  document.body.classList.add('dashboard-reveal');
+  window.setTimeout(()=>document.body.classList.remove('dashboard-reveal'),950);
+}
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const natural=(a,b)=>String(a).localeCompare(String(b),'th',{numeric:true,sensitivity:'base'});
@@ -150,7 +211,7 @@ function renderTable(rows){
 function render(reset=true){if(reset)currentPage=1;const rows=filtered();setKpis(rows);renderChart(rows);renderDonut(rows);renderTable(rows)}
 async function loadData(){
   $('sourceDate').textContent='กำลังโหลดข้อมูลออนไลน์...';$('refreshBtn').disabled=true;
-  try{const res=await fetch(CSV_URL+(CSV_URL.includes('?')?'&':'?')+'_='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);DATA=parseCSV(await res.text()).map(mapRow).filter(d=>d.courseProfile);refillFilters();const now=new Date();$('sourceDate').textContent=`ดึงข้อมูลเมื่อ ${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} · ${DATA.length.toLocaleString('th-TH')} รายวิชา`;render();}
+  try{const res=await fetch(CSV_URL+(CSV_URL.includes('?')?'&':'?')+'_='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);DATA=parseCSV(await res.text()).map(mapRow).filter(d=>d.courseProfile);refillFilters();const now=new Date();$('sourceDate').textContent=`ดึงข้อมูลเมื่อ ${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} · ${DATA.length.toLocaleString('th-TH')} รายวิชา`;render();revealDashboardOnce();}
   catch(e){console.error(e);$('sourceDate').textContent='ยังไม่ได้เผยแพร่ชีทนี้เป็น CSV หรือโหลดข้อมูลไม่สำเร็จ';$('facultyChart').innerHTML='<div class="empty">กรุณา Publish ชีทสำหรับ Dashboard นี้เป็น CSV ก่อน</div>';}
   finally{$('refreshBtn').disabled=false;}
 }
