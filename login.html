@@ -175,44 +175,40 @@ code{font-family:Consolas,monospace}
   font-size:12px;
 }
 .mascot-wrap{
-  flex:0 0 275px;
-  min-height:360px;
+  flex:0 0 300px;
+  min-height:380px;
   display:grid;
   place-items:center;
   pointer-events:none;
 }
 .mascot{
-  width:270px;
+  width:300px;
   max-width:100%;
-  filter:drop-shadow(0 18px 20px rgba(16,42,67,.14));
-  animation:robotFloat 4.4s ease-in-out infinite;
-  transform-origin:50% 72%;
+  overflow:visible;
+  filter:drop-shadow(0 18px 24px rgba(16,42,67,.14));
+  animation:robotFloat 4.6s ease-in-out infinite;
 }
-.robot-book{transform-origin:65% 67%;animation:bookNod 4.4s ease-in-out infinite}
-.robot-pointer{transform-origin:79% 53%;animation:pointerWiggle 3.8s ease-in-out infinite}
-.idea-ray{animation:ideaPulse 1.9s ease-in-out infinite}
-.idea-ray:nth-child(2){animation-delay:.2s}
-.robot-eye-left{transform-box:fill-box;transform-origin:center;animation:softBlink 5.2s ease-in-out infinite}
+.robot-eye{
+  transform-box:fill-box;
+  transform-origin:center;
+  animation:softBlink 5.4s ease-in-out infinite;
+}
+.idea-ray{
+  animation:ideaPulse 1.8s ease-in-out infinite;
+}
+.idea-ray:nth-child(2){animation-delay:.18s}
+.idea-ray:nth-child(3){animation-delay:.36s}
 @keyframes robotFloat{
-  0%,100%{transform:translateY(0) rotate(-.4deg)}
-  50%{transform:translateY(-10px) rotate(.7deg)}
-}
-@keyframes bookNod{
-  0%,100%{transform:rotate(0deg)}
-  50%{transform:rotate(-2deg)}
-}
-@keyframes pointerWiggle{
-  0%,72%,100%{transform:rotate(0deg)}
-  82%{transform:rotate(4deg)}
-  90%{transform:rotate(-2deg)}
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-9px)}
 }
 @keyframes ideaPulse{
-  0%,100%{opacity:.5;transform:scale(.92)}
-  50%{opacity:1;transform:scale(1.08)}
+  0%,100%{opacity:.35}
+  50%{opacity:1}
 }
 @keyframes softBlink{
-  0%,44%,48%,100%{transform:scaleY(1)}
-  46%{transform:scaleY(.15)}
+  0%,45%,49%,100%{transform:scaleY(1)}
+  47%{transform:scaleY(.12)}
 }
 @keyframes enter{
   from{opacity:0;transform:translateY(10px) scale(.99)}
@@ -273,70 +269,87 @@ code{font-family:Consolas,monospace}
   </main>
 
   <div class="mascot-wrap" aria-hidden="true">
-    <svg class="mascot" viewBox="0 0 300 390" role="img" aria-label="หุ่นยนต์ผู้ช่วยการเรียนรู้">
+    <svg class="mascot" viewBox="0 0 360 420" role="img" aria-label="หุ่นยนต์ผู้ช่วยการเรียนรู้">
       <defs>
-        <linearGradient id="shell" x1="0" x2="1" y1="0" y2="1">
+        <linearGradient id="robotShell" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stop-color="#ffffff"/>
           <stop offset=".62" stop-color="#edf3fb"/>
-          <stop offset="1" stop-color="#cfd9e8"/>
+          <stop offset="1" stop-color="#d3deeb"/>
         </linearGradient>
-        <linearGradient id="screen" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0" stop-color="#173451"/>
+        <linearGradient id="robotScreen" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#173955"/>
           <stop offset="1" stop-color="#071d31"/>
         </linearGradient>
-        <linearGradient id="book" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0" stop-color="#3279ee"/>
-          <stop offset="1" stop-color="#164ea9"/>
+        <linearGradient id="robotBlue" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#337cf0"/>
+          <stop offset="1" stop-color="#174fae"/>
         </linearGradient>
       </defs>
 
-      <g class="robot-float">
-        <ellipse cx="149" cy="366" rx="73" ry="10" fill="#102a43" opacity=".10"/>
+      <ellipse cx="181" cy="389" rx="82" ry="12" fill="#102a43" opacity=".09"/>
 
-        <!-- head -->
-        <rect x="55" y="38" width="190" height="142" rx="55" fill="url(#shell)" stroke="#b9c8da" stroke-width="3"/>
-        <rect x="73" y="56" width="154" height="104" rx="36" fill="url(#screen)"/>
-        <path d="M91 71 Q112 61 132 65" stroke="#fff" stroke-width="8" stroke-linecap="round" opacity=".12"/>
-        <rect x="38" y="84" width="27" height="54" rx="14" fill="#dde6f1"/>
-        <rect x="235" y="84" width="27" height="54" rx="14" fill="#dde6f1"/>
-        <rect x="122" y="24" width="56" height="22" rx="11" fill="#dbe4ef"/>
-        <rect x="137" y="31" width="27" height="6" rx="3" fill="#31d7ef"/>
+      <!-- antenna -->
+      <rect x="151" y="18" width="58" height="24" rx="12" fill="#d9e3ef"/>
+      <rect x="166" y="27" width="28" height="7" rx="4" fill="#31d7ef"/>
 
-        <!-- face -->
-        <ellipse class="robot-eye-left" cx="116" cy="100" rx="14" ry="20" fill="#58e7ef"/>
-        <path d="M172 108 Q189 91 204 105" fill="none" stroke="#58e7ef" stroke-width="10" stroke-linecap="round"/>
-        <path d="M143 125 Q151 135 160 125" fill="#58e7ef"/>
+      <!-- head / ears -->
+      <rect x="46" y="93" width="34" height="62" rx="17" fill="#dfe7f1"/>
+      <rect x="280" y="93" width="34" height="62" rx="17" fill="#dfe7f1"/>
+      <rect x="67" y="42" width="226" height="157" rx="62" fill="url(#robotShell)" stroke="#bccbdd" stroke-width="3"/>
+      <rect x="85" y="61" width="190" height="118" rx="42" fill="url(#robotScreen)"/>
+      <path d="M102 78 Q126 66 151 71" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".12"/>
 
-        <!-- neck/body -->
-        <rect x="130" y="171" width="40" height="33" rx="14" fill="#c9d4e2"/>
-        <path d="M85 216 Q103 192 150 192 Q197 192 215 216 L207 294 Q180 324 150 324 Q120 324 93 294 Z" fill="url(#shell)" stroke="#b9c8da" stroke-width="3"/>
-        <path d="M106 221 Q125 207 146 208" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".42"/>
-        <rect x="138" y="232" width="28" height="12" rx="6" fill="#31d7ef"/>
+      <!-- face -->
+      <ellipse class="robot-eye" cx="132" cy="115" rx="15" ry="23" fill="#55e4ed"/>
+      <path d="M198 124 Q217 103 237 121" fill="none" stroke="#55e4ed" stroke-width="11" stroke-linecap="round"/>
+      <path d="M166 145 Q180 158 194 145" fill="#55e4ed"/>
 
-        <!-- left arm holding book -->
-        <path d="M94 228 Q64 244 63 282" fill="none" stroke="#dbe5f1" stroke-width="28" stroke-linecap="round"/>
-        <circle cx="64" cy="286" r="18" fill="#f4f7fb" stroke="#b9c8da" stroke-width="3"/>
+      <!-- neck -->
+      <rect x="153" y="192" width="54" height="38" rx="16" fill="#cad5e3"/>
 
-        <!-- book -->
-        <g class="robot-book">
-          <path d="M58 274 L111 253 L129 328 L76 341 Z" fill="url(#book)" stroke="#0d3e8c" stroke-width="3"/>
-          <path d="M111 253 L153 266 L148 340 L129 328 Z" fill="#1f61c7" stroke="#0d3e8c" stroke-width="3"/>
-          <path d="M63 270 L107 255" stroke="#eaf3ff" stroke-width="6" stroke-linecap="round"/>
-        </g>
+      <!-- body -->
+      <path d="M111 229
+               Q137 210 180 210
+               Q223 210 249 229
+               L240 315
+               Q220 350 180 350
+               Q140 350 120 315
+               Z"
+            fill="url(#robotShell)" stroke="#bccbdd" stroke-width="3"/>
+      <path d="M133 239 Q153 225 180 225" fill="none" stroke="#fff" stroke-width="11" stroke-linecap="round" opacity=".45"/>
+      <rect x="161" y="248" width="38" height="14" rx="7" fill="#31d7ef"/>
 
-        <!-- pointing arm -->
-        <g class="robot-pointer">
-          <path d="M211 225 Q243 231 251 263" fill="none" stroke="#dbe5f1" stroke-width="28" stroke-linecap="round"/>
-          <circle cx="252" cy="268" r="18" fill="#f4f7fb" stroke="#b9c8da" stroke-width="3"/>
-          <path d="M254 266 L260 218" stroke="#f4f7fb" stroke-width="17" stroke-linecap="round"/>
-          <path d="M254 266 L260 218" stroke="#aebdce" stroke-width="3" stroke-linecap="round" opacity=".7"/>
-        </g>
+      <!-- left shoulder / arm -->
+      <circle cx="115" cy="245" r="21" fill="#dbe5f1" stroke="#bccbdd" stroke-width="3"/>
+      <path d="M103 258 Q82 277 82 307" fill="none" stroke="#dfe8f3" stroke-width="30" stroke-linecap="round"/>
+      <circle cx="83" cy="312" r="20" fill="#f5f8fc" stroke="#bccbdd" stroke-width="3"/>
 
-        <!-- idea rays -->
-        <g fill="#f5c84c">
-          <rect class="idea-ray" x="270" y="203" width="8" height="25" rx="4" transform="rotate(14 274 215)"/>
-          <rect class="idea-ray" x="281" y="224" width="8" height="22" rx="4" transform="rotate(54 285 235)"/>
-        </g>
+      <!-- book, clean front perspective -->
+      <g>
+        <path d="M61 288 L118 269 L132 347 L75 364 Z" fill="url(#robotBlue)" stroke="#12458f" stroke-width="3"/>
+        <path d="M118 269 L151 280 L148 355 L132 347 Z" fill="#215fc2" stroke="#12458f" stroke-width="3"/>
+        <path d="M67 286 L115 271" stroke="#eaf3ff" stroke-width="6" stroke-linecap="round"/>
+        <path d="M93 317 l15 8 15-8 -15-8z" fill="#9fd6ff"/>
+        <path d="M108 325 v12" stroke="#9fd6ff" stroke-width="3" stroke-linecap="round"/>
+      </g>
+
+      <!-- right shoulder / arm -->
+      <circle cx="245" cy="245" r="21" fill="#dbe5f1" stroke="#bccbdd" stroke-width="3"/>
+      <path d="M258 255 Q281 268 286 293" fill="none" stroke="#dfe8f3" stroke-width="30" stroke-linecap="round"/>
+
+      <!-- hand -->
+      <circle cx="288" cy="300" r="22" fill="#f5f8fc" stroke="#bccbdd" stroke-width="3"/>
+      <ellipse cx="275" cy="301" rx="7" ry="11" fill="#d3deeb" transform="rotate(-28 275 301)"/>
+
+      <!-- raised index finger -->
+      <path d="M292 288 L299 239" stroke="#f5f8fc" stroke-width="20" stroke-linecap="round"/>
+      <path d="M292 288 L299 239" stroke="#b8c6d7" stroke-width="3" stroke-linecap="round" opacity=".75"/>
+
+      <!-- idea rays -->
+      <g fill="#f4c84d">
+        <rect class="idea-ray" x="312" y="229" width="8" height="24" rx="4" transform="rotate(10 316 241)"/>
+        <rect class="idea-ray" x="322" y="249" width="8" height="22" rx="4" transform="rotate(48 326 260)"/>
+        <rect class="idea-ray" x="309" y="266" width="8" height="20" rx="4" transform="rotate(78 313 276)"/>
       </g>
     </svg>
   </div>
