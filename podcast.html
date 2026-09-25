@@ -139,6 +139,138 @@ html.auth-check body{visibility:hidden}
 }
 </style>
 
+
+<style>
+/* Podcast advice modal */
+.advice-btn{
+  border:1px solid #cfe0f3;
+  background:#eef6ff;
+  color:#1261a8;
+  border-radius:9px;
+  padding:7px 11px;
+  font:inherit;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:transform .16s ease,background .16s ease,border-color .16s ease;
+}
+.advice-btn:hover{transform:translateY(-1px);background:#e4f1ff;border-color:#b9d4ef}
+.advice-dash{color:#9aa8b6}
+.advice-modal{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(16,42,67,.46);
+  backdrop-filter:blur(3px);
+}
+.advice-modal.open{display:flex}
+.advice-dialog{
+  width:min(700px,100%);
+  max-height:min(86vh,820px);
+  overflow:auto;
+  background:#fff;
+  border:1px solid #dbe5ef;
+  border-radius:20px;
+  box-shadow:0 28px 70px rgba(16,42,67,.24);
+  animation:adviceEnter .2s ease-out both;
+}
+.advice-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:22px 24px 14px;
+}
+.advice-head h2{margin:0;color:#102a43;font-size:22px}
+.advice-close{
+  width:36px;height:36px;border:0;border-radius:10px;background:#f1f5f9;
+  color:#334e68;font-size:24px;line-height:1;cursor:pointer
+}
+.advice-body{padding:0 24px 24px}
+.advice-course{
+  padding:14px 16px;
+  border:1px solid #d8e8f7;
+  border-radius:14px;
+  background:#f2f8ff;
+}
+.advice-course strong{display:block;color:#0f5fa8;font-size:17px}
+.advice-course span{display:block;margin-top:3px;color:#627d98;font-size:13px}
+.advice-alert{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:12px;
+  align-items:start;
+  margin-top:12px;
+  padding:14px 16px;
+  border-radius:14px;
+}
+.advice-alert.partial{background:#fff7e8;border:1px solid #f3dfb5}
+.advice-alert.notdone{background:#fff0f2;border:1px solid #f4cdd4}
+.advice-alert .icon{
+  width:34px;height:34px;border-radius:50%;display:grid;place-items:center;
+  color:#fff;font-weight:800;font-size:18px
+}
+.advice-alert.partial .icon{background:#d88700}
+.advice-alert.notdone .icon{background:#e84258}
+.advice-status{font-weight:800;color:#243b53}
+.advice-message{margin-top:5px;color:#334e68;line-height:1.65}
+.advice-metrics{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin-top:12px;
+}
+.advice-metric{
+  padding:13px 10px;
+  border:1px solid #e0e8f0;
+  border-radius:12px;
+  text-align:center;
+  background:#fff;
+}
+.advice-metric span{display:block;color:#627d98;font-size:12px}
+.advice-metric strong{display:block;margin-top:4px;color:#1261a8;font-size:25px}
+.advice-metric.missing strong{color:#e84258}
+.advice-section{
+  margin-top:12px;
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid #dfe8f1;
+}
+.advice-section.criteria{background:#eef7ff}
+.advice-section.example{background:#f1faf5}
+.advice-section.note{background:#fff5f5}
+.advice-section h3{margin:0 0 8px;color:#163a5f;font-size:15px}
+.advice-section ul{margin:0;padding-left:20px;color:#334e68;line-height:1.7}
+.advice-section p{margin:0;color:#334e68;line-height:1.65}
+.advice-foot{
+  display:flex;
+  justify-content:flex-end;
+  padding:0 24px 22px;
+}
+.advice-foot button{
+  border:0;border-radius:10px;padding:9px 18px;background:#eaf0f6;color:#163a5f;
+  font:inherit;font-weight:700;cursor:pointer
+}
+@keyframes adviceEnter{
+  from{opacity:0;transform:translateY(8px) scale(.99)}
+  to{opacity:1;transform:none}
+}
+@media(max-width:600px){
+  .advice-modal{padding:12px}
+  .advice-dialog{border-radius:16px}
+  .advice-head,.advice-body,.advice-foot{padding-left:16px;padding-right:16px}
+  .advice-metrics{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  .advice-dialog{animation:none}
+  .advice-btn{transition:none}
+}
+</style>
+
 </head>
 <body>
 <header class="topbar"><div class="topbar-inner"><div><h1>Dashboard Podcast</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source">สำนักการจัดการศึกษาออนไลน์ (OOE)<br>ข้อมูลอ้างอิง ณ วันที่ 18/09/2569<br><span class="live-indicator" aria-label="สถานะออนไลน์"><i></i></span><span id="sourceDate"></span></div></div></header>
@@ -156,8 +288,73 @@ html.auth-check body{visibility:hidden}
 <article class="panel chart-panel"><div class="section-head"><div><h2>สถานะ Podcast แยกตามคณะ</h2><p>แสดงจำนวนรายวิชาตามสถานะ Podcast แยกตามคณะ</p></div></div><div class="chart" id="facultyChart"></div></article>
 <article class="panel chart-panel"><div class="section-head"><div><h2>สัดส่วนสถานะ Podcast</h2><p>คำนวณตามตัวกรองที่เลือก</p></div></div><div class="donut-body"><div class="donut-wrap"><div class="donut" id="donutChart"></div><div class="donut-center"><span class="donut-number" id="donutTotal">0</span><span class="donut-label">รายวิชา</span></div></div><div class="donut-list" id="donutLegend"></div></div></article>
 </section>
-<section class="panel table-panel"><div class="table-tools"><div><h2>รายละเอียดรายวิชา — Podcast</h2><p>ข้อมูลจาก Google Sheets ที่เผยแพร่สำหรับ Dashboard</p></div><div class="count" id="resultCount"></div></div><div class="table-wrap"><table><thead><tr><th>ลำดับ</th><th>รหัสวิชา</th><th>รหัสรายวิชาในระบบ</th><th>ประเภท</th><th>คณะ / วิทยาลัย</th><th>อาจารย์ผู้สอน</th><th class="center">จำนวน Podcast</th><th class="center">สถานะ Podcast</th><th>รายวิชา</th></tr></thead><tbody id="courseRows"></tbody></table></div><div class="pager"><div class="count" id="pageInfo"></div><div class="pager-controls"><button id="prevBtn">ก่อนหน้า</button><button id="nextBtn">ถัดไป</button></div></div></section>
+<section class="panel table-panel"><div class="table-tools"><div><h2>รายละเอียดรายวิชา — Podcast</h2><p>ข้อมูลจาก Google Sheets ที่เผยแพร่สำหรับ Dashboard</p></div><div class="count" id="resultCount"></div></div><div class="table-wrap"><table><thead><tr><th>ลำดับ</th><th>รหัสวิชา</th><th>รหัสรายวิชาในระบบ</th><th>ประเภท</th><th>คณะ / วิทยาลัย</th><th>อาจารย์ผู้สอน</th><th class="center">จำนวน Podcast</th><th class="center">สถานะ Podcast</th><th class="center">คำแนะนำ</th><th>รายวิชา</th></tr></thead><tbody id="courseRows"></tbody></table></div><div class="pager"><div class="count" id="pageInfo"></div><div class="pager-controls"><button id="prevBtn">ก่อนหน้า</button><button id="nextBtn">ถัดไป</button></div></div></section>
 <p class="note">ข้อมูลจะอัปเดตเมื่อเปิดหน้าเว็บหรือกด “อัปเดตข้อมูล” · ไม่มีการเผยแพร่อีเมลผู้สอนใน Dashboard</p>
+
+<div class="advice-modal" id="podcastAdviceModal" role="dialog" aria-modal="true" aria-labelledby="adviceTitle">
+  <div class="advice-dialog">
+    <div class="advice-head">
+      <h2 id="adviceTitle">คำแนะนำการจัดทำ Podcast</h2>
+      <button class="advice-close" id="adviceClose" type="button" aria-label="ปิด">×</button>
+    </div>
+    <div class="advice-body">
+      <div class="advice-course">
+        <strong id="adviceCourse"></strong>
+        <span id="adviceProfile"></span>
+      </div>
+
+      <div class="advice-alert partial" id="adviceAlert">
+        <div class="icon">!</div>
+        <div>
+          <div class="advice-status" id="adviceStatus"></div>
+          <div class="advice-message" id="adviceMessage"></div>
+        </div>
+      </div>
+
+      <div class="advice-metrics">
+        <div class="advice-metric">
+          <span>จำนวนสัปดาห์ที่กำหนด</span>
+          <strong id="adviceWeeks">0</strong>
+        </div>
+        <div class="advice-metric">
+          <span>จำนวน Podcast ที่พบ</span>
+          <strong id="adviceCount">0</strong>
+        </div>
+        <div class="advice-metric missing">
+          <span>รายการที่ต้องจัดทำเพิ่ม</span>
+          <strong id="adviceMissing">0</strong>
+        </div>
+      </div>
+
+      <div class="advice-section criteria">
+        <h3>เกณฑ์การจัดทำ Podcast</h3>
+        <ul>
+          <li>จำนวน Podcast ควรครบตามจำนวนสัปดาห์ที่กำหนด</li>
+          <li>Podcast อย่างน้อย 1 คลิปเสียง โดยความยาวรวมไม่น้อยกว่า 10 นาที</li>
+          <li>บันทึกเนื้อหาตามรายละเอียด File PDF เอกสารประกอบการสอนตามข้อ 2</li>
+        </ul>
+      </div>
+
+      <div class="advice-section example">
+        <h3>แนวทางการจัดทำ</h3>
+        <ul>
+          <li>ใช้เนื้อหาจาก File PDF ของแต่ละสัปดาห์เป็นข้อมูลหลัก</li>
+          <li>สามารถใช้เครื่องมือ AI เช่น Google NotebookLM ช่วยจัดทำ Podcast</li>
+          <li>ตรวจสอบจำนวน Podcast ให้ครบตามจำนวนสัปดาห์ก่อนส่งรายวิชา</li>
+        </ul>
+      </div>
+
+      <div class="advice-section note">
+        <h3>หมายเหตุ</h3>
+        <p>สถานะใน Dashboard คำนวณจากจำนวน Podcast เทียบกับจำนวนสัปดาห์ ระบบยังไม่ได้ตรวจสอบความยาวของคลิปเสียงโดยอัตโนมัติ</p>
+      </div>
+    </div>
+    <div class="advice-foot">
+      <button type="button" id="adviceCloseBottom">ปิด</button>
+    </div>
+  </div>
+</div>
+
 </main>
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=149082930&single=true&output=csv';
@@ -300,12 +497,59 @@ function statusBadge(s){
   if(s==='ไม่ทำ') return '<span class="badge red">ไม่ทำ</span>';
   return '<span class="badge gray">รอข้อมูล</span>';
 }
+function adviceCell(d){
+  const s=normalizeStatus(d.podcastStatus);
+  if(s==='ทำครบ') return '<span class="advice-dash">—</span>';
+  if(s==='ทำบ้าง'||s==='ไม่ทำ'){
+    return `<button type="button" class="advice-btn" data-advice="${esc(d.courseProfile)}">ดูคำแนะนำ</button>`;
+  }
+  return '<span class="advice-dash">—</span>';
+}
 function renderTable(rows){
   const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));currentPage=Math.min(currentPage,pages);const start=(currentPage-1)*PAGE_SIZE;const p=rows.slice(start,start+PAGE_SIZE);
-  $('courseRows').innerHTML=p.map((d,i)=>`<tr>${td(start+i+1,'num')}${td(d.courseCode,'course nowrap')}${td(d.courseProfile,'nowrap')}${td(d.courseType,'nowrap')}${td(d.faculty)}${td(d.instructors||'—')}${td(d.podcastCount||'0','center')}<td class="center">${statusBadge(d.podcastStatus)}</td><td>${d.courseLink?`<a href="${esc(d.courseLink)}" target="_blank" rel="noopener">เปิด ↗</a>`:'—'}</td></tr>`).join('');
+  $('courseRows').innerHTML=p.map((d,i)=>`<tr>${td(start+i+1,'num')}${td(d.courseCode,'course nowrap')}${td(d.courseProfile,'nowrap')}${td(d.courseType,'nowrap')}${td(d.faculty)}${td(d.instructors||'—')}${td(d.podcastCount||'0','center')}<td class="center">${statusBadge(d.podcastStatus)}</td><td class="center">${adviceCell(d)}</td><td>${d.courseLink?`<a href="${esc(d.courseLink)}" target="_blank" rel="noopener">เปิด ↗</a>`:'—'}</td></tr>`).join('');
   $('resultCount').textContent=`แสดง ${rows.length.toLocaleString('th-TH')} จาก ${DATA.length.toLocaleString('th-TH')} วิชา`;
   $('pageInfo').textContent=rows.length?`แสดง ${start+1}–${Math.min(start+PAGE_SIZE,rows.length)} จาก ${rows.length} รายวิชา`:'ไม่พบข้อมูล';
   $('prevBtn').disabled=currentPage===1;$('nextBtn').disabled=currentPage===pages;
+}
+function openPodcastAdvice(courseProfile){
+  const d=DATA.find(x=>x.courseProfile===courseProfile);
+  if(!d)return;
+  const status=normalizeStatus(d.podcastStatus);
+  if(status==='ทำครบ')return;
+
+  const weeks=Math.max(0,Number(String(d.weeks||'0').replace(/,/g,''))||0);
+  const count=Math.max(0,Number(String(d.podcastCount||'0').replace(/,/g,''))||0);
+  const missing=Math.max(0,weeks-count);
+
+  $('adviceCourse').textContent=d.courseName||d.courseCode||d.courseProfile;
+  $('adviceProfile').textContent=`${d.courseProfile} · ภาคการศึกษา 1/2569`;
+  $('adviceWeeks').textContent=weeks.toLocaleString('th-TH');
+  $('adviceCount').textContent=count.toLocaleString('th-TH');
+  $('adviceMissing').textContent=missing.toLocaleString('th-TH');
+  $('adviceStatus').textContent=`สถานะ: ${status}`;
+
+  const alert=$('adviceAlert');
+  alert.classList.remove('partial','notdone');
+  alert.classList.add(status==='ไม่ทำ'?'notdone':'partial');
+
+  if(status==='ทำบ้าง'){
+    $('adviceMessage').textContent=weeks
+      ? `พบการจัดทำ Podcast แล้ว ${count} จาก ${weeks} รายการ กรุณาจัดทำเพิ่มเติมอีก ${missing} รายการให้ครบตามจำนวนสัปดาห์ที่กำหนด`
+      : `พบการจัดทำ Podcast แล้ว ${count} รายการ แต่ยังไม่ครบตามเกณฑ์ที่กำหนด กรุณาตรวจสอบและจัดทำเพิ่มเติม`;
+  }else{
+    $('adviceMessage').textContent=weeks
+      ? `ยังไม่พบการจัดทำ Podcast จากทั้งหมด ${weeks} สัปดาห์ กรุณาจัดทำ Podcast ให้เป็นไปตามเกณฑ์ที่กำหนด`
+      : 'ยังไม่พบการจัดทำ Podcast กรุณาจัดทำ Podcast ให้เป็นไปตามเกณฑ์ที่กำหนด';
+  }
+
+  $('podcastAdviceModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  $('adviceClose').focus();
+}
+function closePodcastAdvice(){
+  $('podcastAdviceModal').classList.remove('open');
+  document.body.style.overflow='';
 }
 function render(reset=true){if(reset)currentPage=1;const rows=filtered();setKpis(rows);renderChart(rows);renderDonut(rows);renderTable(rows)}
 async function loadData(){
@@ -319,6 +563,18 @@ async function loadData(){
 $('searchBox').addEventListener('input',()=>render());
 $('resetBtn').addEventListener('click',()=>{$('facultyFilter').value='';$('typeFilter').value='';$('statusFilter').value='';$('searchBox').value='';render()});
 $('refreshBtn').addEventListener('click',loadData);$('prevBtn').addEventListener('click',()=>{currentPage--;render(false)});$('nextBtn').addEventListener('click',()=>{currentPage++;render(false)});
+$('courseRows').addEventListener('click',e=>{
+  const btn=e.target.closest('.advice-btn[data-advice]');
+  if(btn)openPodcastAdvice(btn.dataset.advice);
+});
+$('adviceClose').addEventListener('click',closePodcastAdvice);
+$('adviceCloseBottom').addEventListener('click',closePodcastAdvice);
+$('podcastAdviceModal').addEventListener('click',e=>{
+  if(e.target===$('podcastAdviceModal'))closePodcastAdvice();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&$('podcastAdviceModal').classList.contains('open'))closePodcastAdvice();
+});
 bindFacultyChartFilter();
 loadData();
 </script>
