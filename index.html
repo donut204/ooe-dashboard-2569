@@ -141,8 +141,8 @@ function revealDashboardOnce(){
   window.setTimeout(()=>document.body.classList.remove('dashboard-reveal'),950);
 }
 const STATUS={
-  good:'มีเนื้อหา มากกว่า 50%',
-  low:'มีเนื้อหา น้อยกว่า 50%',
+  good:'เนื้อหาและองค์ประกอบมากกว่า 50%',
+  low:'เนื้อหาและองค์ประกอบน้อยกว่า 50%',
   none:'ไม่มีเนื้อหา'
 };
 const REVIEW={
@@ -294,8 +294,8 @@ function addOptions(id,values){
 }
 addOptions('statusFilter',[STATUS.good,STATUS.low,STATUS.none]);
 [...$('statusFilter').options].forEach(o=>{
-  if(o.value===STATUS.good) o.textContent='เนื้อหามากกว่า 50%';
-  if(o.value===STATUS.low) o.textContent='เนื้อหาน้อยกว่า 50%';
+  if(o.value===STATUS.good) o.textContent='เนื้อหาและองค์ประกอบมากกว่า 50%';
+  if(o.value===STATUS.low) o.textContent='เนื้อหาและองค์ประกอบน้อยกว่า 50%';
 });
 addOptions('reviewFilter',[REVIEW.pass,REVIEW.reviewing,REVIEW.fail]);
 
@@ -377,8 +377,8 @@ function renderDonut(rows){
   $('donutTotal').textContent=total.toLocaleString('th-TH');
   const item=(label,n,p,cls)=>`<div class="donut-item"><i class="dot ${cls}"></i><span>${label}</span><strong>${n.toLocaleString('th-TH')} วิชา (${p.toFixed(1)}%)</strong></div>`;
   $('donutLegend').innerHTML=
-    item('เนื้อหามากกว่า 50%',good,gp,'green')+
-    item('เนื้อหาน้อยกว่า 50%',low,lp,'amber')+
+    item('เนื้อหาและองค์ประกอบมากกว่า 50%',good,gp,'green')+
+    item('เนื้อหาและองค์ประกอบน้อยกว่า 50%',low,lp,'amber')+
     item('ไม่มีเนื้อหา',none,np,'red')+
     (pending?item('รอข้อมูล',pending,pp,'gray'):'');
 }
@@ -386,8 +386,8 @@ function renderDonut(rows){
 const td=(v,c='')=>`<td class="${c}">${esc(v)}</td>`;
 
 function badge(s){
-  if(s===STATUS.good) return '<span class="badge green">เนื้อหามากกว่า 50%</span>';
-  if(s===STATUS.low) return '<span class="badge amber">เนื้อหาน้อยกว่า 50%</span>';
+  if(s===STATUS.good) return '<span class="badge green">เนื้อหาและองค์ประกอบมากกว่า 50%</span>';
+  if(s===STATUS.low) return '<span class="badge amber">เนื้อหาและองค์ประกอบน้อยกว่า 50%</span>';
   if(s===STATUS.none) return '<span class="badge red">ไม่มีเนื้อหา</span>';
   return '<span class="badge gray">รอข้อมูล</span>';
 }
