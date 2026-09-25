@@ -329,7 +329,7 @@ html.auth-check body{visibility:hidden}
       <div class="advice-section criteria">
         <h3>เกณฑ์การจัดทำ Podcast</h3>
         <ul>
-          <li>จำนวน Podcast ควรครบตามจำนวนสัปดาห์ที่กำหนด</li>
+          <li>จัดทำ Podcast ให้ครบตามเกณฑ์คงที่ 15 สัปดาห์</li>
           <li>Podcast อย่างน้อย 1 คลิปเสียง โดยความยาวรวมไม่น้อยกว่า 10 นาที</li>
           <li>บันทึกเนื้อหาตามรายละเอียด File PDF เอกสารประกอบการสอนตามข้อ 2</li>
         </ul>
@@ -340,13 +340,13 @@ html.auth-check body{visibility:hidden}
         <ul>
           <li>ใช้เนื้อหาจาก File PDF ของแต่ละสัปดาห์เป็นข้อมูลหลัก</li>
           <li>สามารถใช้เครื่องมือ AI เช่น Google NotebookLM ช่วยจัดทำ Podcast</li>
-          <li>ตรวจสอบจำนวน Podcast ให้ครบตามจำนวนสัปดาห์ก่อนส่งรายวิชา</li>
+          <li>ตรวจสอบจำนวน Podcast ให้ครบ 15 รายการตามเกณฑ์ก่อนส่งรายวิชา</li>
         </ul>
       </div>
 
       <div class="advice-section note">
         <h3>หมายเหตุ</h3>
-        <p>สถานะใน Dashboard คำนวณจากจำนวน Podcast เทียบกับจำนวนสัปดาห์ ระบบยังไม่ได้ตรวจสอบความยาวของคลิปเสียงโดยอัตโนมัติ</p>
+        <p>คำแนะนำนี้ใช้เกณฑ์คงที่ 15 สัปดาห์ในการคำนวณจำนวนที่ต้องจัดทำเพิ่ม และระบบยังไม่ได้ตรวจสอบความยาวของคลิปเสียงโดยอัตโนมัติ</p>
       </div>
     </div>
     <div class="advice-foot">
@@ -518,13 +518,13 @@ function openPodcastAdvice(courseProfile){
   const status=normalizeStatus(d.podcastStatus);
   if(status==='ทำครบ')return;
 
-  const weeks=Math.max(0,Number(String(d.weeks||'0').replace(/,/g,''))||0);
+  const requiredWeeks=15;
   const count=Math.max(0,Number(String(d.podcastCount||'0').replace(/,/g,''))||0);
-  const missing=Math.max(0,weeks-count);
+  const missing=Math.max(0,requiredWeeks-count);
 
   $('adviceCourse').textContent=d.courseName||d.courseCode||d.courseProfile;
   $('adviceProfile').textContent=`${d.courseProfile} · ภาคการศึกษา 1/2569`;
-  $('adviceWeeks').textContent=weeks.toLocaleString('th-TH');
+  $('adviceWeeks').textContent=requiredWeeks.toLocaleString('th-TH');
   $('adviceCount').textContent=count.toLocaleString('th-TH');
   $('adviceMissing').textContent=missing.toLocaleString('th-TH');
   $('adviceStatus').textContent=`สถานะ: ${status}`;
@@ -534,13 +534,9 @@ function openPodcastAdvice(courseProfile){
   alert.classList.add(status==='ไม่ทำ'?'notdone':'partial');
 
   if(status==='ทำบ้าง'){
-    $('adviceMessage').textContent=weeks
-      ? `พบการจัดทำ Podcast แล้ว ${count} จาก ${weeks} รายการ กรุณาจัดทำเพิ่มเติมอีก ${missing} รายการให้ครบตามจำนวนสัปดาห์ที่กำหนด`
-      : `พบการจัดทำ Podcast แล้ว ${count} รายการ แต่ยังไม่ครบตามเกณฑ์ที่กำหนด กรุณาตรวจสอบและจัดทำเพิ่มเติม`;
+    $('adviceMessage').textContent=`พบการจัดทำ Podcast แล้ว ${count} จาก ${requiredWeeks} รายการ กรุณาจัดทำเพิ่มเติมอีก ${missing} รายการให้ครบตามเกณฑ์ 15 สัปดาห์`;
   }else{
-    $('adviceMessage').textContent=weeks
-      ? `ยังไม่พบการจัดทำ Podcast จากทั้งหมด ${weeks} สัปดาห์ กรุณาจัดทำ Podcast ให้เป็นไปตามเกณฑ์ที่กำหนด`
-      : 'ยังไม่พบการจัดทำ Podcast กรุณาจัดทำ Podcast ให้เป็นไปตามเกณฑ์ที่กำหนด';
+    $('adviceMessage').textContent=`ยังไม่พบการจัดทำ Podcast จากเกณฑ์ที่กำหนด ${requiredWeeks} รายการ กรุณาจัดทำ Podcast ให้เป็นไปตามเกณฑ์ที่กำหนด`;
   }
 
   $('podcastAdviceModal').classList.add('open');
