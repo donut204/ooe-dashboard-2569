@@ -1,125 +1,44 @@
 # 📊 OOE Dashboard 2569
 
-แดชบอร์ดสำหรับติดตามข้อมูลรายวิชาออนไลน์ของ **สำนักการจัดการศึกษาออนไลน์ (OOE) มหาวิทยาลัยศรีปทุม**  
+แดชบอร์ดสำหรับติดตามข้อมูลรายวิชาออนไลน์ของ **สำนักการจัดการศึกษาออนไลน์ (OOE) มหาวิทยาลัยศรีปทุม**
 
-> 🎯 จุดประสงค์หลักคือให้ข้อมูลอัปเดตได้จาก Google Sheets โดยไม่ต้องสร้างไฟล์ Dashboard ใหม่ทุกครั้งที่ข้อมูลเปลี่ยน
+ระบบรวบรวมข้อมูลสำหรับติดตาม **GR, GS, AI Tutor และ Podcast** โดยเชื่อมข้อมูลจาก Google Sheets และแสดงผลผ่าน GitHub Pages
 
-## 🧭 Dashboard
+## 🌐 เข้าใช้งาน
 
-| หน้า | รายละเอียด | ไฟล์ |
-|---|---|---|
-| 📘 **GR / GS** | ติดตามความคืบหน้ารายวิชาและสถานะการตรวจสอบ | `index.html` |
-| 🤖 **AI Tutor** | ติดตามการใช้งาน AI Tutor ในแต่ละรายวิชา | `ai-tutor.html` |
-| 🎙️ **Podcast** | ติดตามจำนวนและสถานะ Podcast ในแต่ละรายวิชา | `podcast.html` |
+[เปิด OOE Dashboard 2569](https://donut204.github.io/ooe-dashboard-2569/)
 
-### 🌐 เปิดใช้งานผ่าน GitHub Pages
+การเข้าใช้งาน Dashboard กำหนดให้เข้าสู่ระบบด้วยบัญชี Google Workspace ของมหาวิทยาลัย **@spu.ac.th**
 
-- 📘 [GR / GS Dashboard](https://donut204.github.io/ooe-dashboard-2569/)
-- 🤖 [AI Tutor Dashboard](https://donut204.github.io/ooe-dashboard-2569/ai-tutor.html)
-- 🎙️ [Podcast Dashboard](https://donut204.github.io/ooe-dashboard-2569/podcast.html)
+## ✨ ความสามารถหลัก
 
-## ✨ Features
+- ติดตามความคืบหน้าและสถานะการตรวจสอบรายวิชา GR / GS
+- ติดตามการจัดทำ AI Tutor และ Podcast
+- กรองข้อมูลตามคณะ / วิทยาลัย ประเภทรายวิชา และสถานะ
+- ค้นหารายวิชาด้วยรหัสวิชาและ Course Profile
+- แสดง KPI กราฟสรุป และรายละเอียดรายวิชา
+- คลิกข้อมูลจากกราฟเพื่อกรองรายการที่เกี่ยวข้อง
+- โหลดข้อมูลล่าสุดจาก Google Sheets โดยไม่ต้องสร้าง Dashboard ใหม่
+- รองรับการใช้งานทั้ง Desktop และ Mobile
 
-- 🧩 แยกหน้า Dashboard สำหรับ **GR, GS, AI Tutor และ Podcast**
-- 🏫 กรองข้อมูลตาม **คณะ / วิทยาลัย**
-- 🔎 กรองตาม **สถานะความคืบหน้า / สถานะการตรวจสอบ**
-- 🔍 ค้นหารายวิชาด้วยรหัสวิชาและ Course Profile
-- 📌 แสดง KPI Cards สำหรับสรุปภาพรวม
-- 📈 แสดงกราฟสัดส่วนและผลลัพธ์แยกตามคณะ
-- 🔗 แสดงรายละเอียดรายวิชาและลิงก์เข้าสู่ d-Learning / i-Learning
-- 📱 รองรับ Desktop และ Mobile
-- 🔄 โหลดข้อมูลล่าสุดจาก Google Sheets เมื่อเปิดหน้าเว็บหรือกด **อัปเดตข้อมูล**
+## 🔄 การอัปเดตข้อมูล
 
-## 🔄 Data Flow
+เมื่อข้อมูลต้นทางใน Google Sheets มีการปรับปรุง Dashboard จะดึงข้อมูลชุดล่าสุดเมื่อเปิดหน้าเว็บหรือกด **อัปเดตข้อมูล**
 
-```text
-Source Data
-    │
-    ▼
-Google Sheets
-    │
-    ├── GRGS_Public
-    ├── AI_Tutor_Public
-    └── Podcast_Public
-    │
-    ▼
-Publish to web (.csv)
-    │
-    ▼
-HTML Dashboard
-    │
-    ▼
-GitHub Pages
-```
+การปรับข้อมูลทั่วไปจึงไม่จำเป็นต้องแก้ไขตัว Dashboard หรือ Deploy ใหม่ เว้นแต่มีการเปลี่ยนแปลงด้านหน้าตา ฟังก์ชัน หรือโครงสร้างข้อมูล
 
-💡 การแยกข้อมูลออกเป็นชีท `*_Public` ช่วยให้หน้า Dashboard ใช้เฉพาะข้อมูลที่จำเป็นสำหรับการแสดงผล และไม่ต้องฝังข้อมูลทั้งหมดไว้ในไฟล์ HTML
+## 🔐 การเข้าถึงและข้อมูล
 
-## 🗂️ Data Sources
-
-Dashboard ใช้ข้อมูลจาก Google Sheets ที่ Publish to web เป็น **CSV**
-
-| Public Sheet | ใช้กับ |
-|---|---|
-| `GRGS_Public` | 📘 GR / GS Dashboard |
-| `AI_Tutor_Public` | 🤖 AI Tutor Dashboard |
-| `Podcast_Public` | 🎙️ Podcast Dashboard |
-
-สำหรับ AI Tutor และ Podcast ข้อมูลใน Public Sheet จะอ้างอิงเฉพาะรายการที่ผ่านการกรองในชีทต้นทาง `691-AI Podcast`
-
-## 📁 Project Structure
-
-```text
-ooe-dashboard-2569/
-│
-├── index.html
-├── ai-tutor.html
-├── podcast.html
-└── README.md
-```
-
-## 🛠️ Updating the Dashboard
-
-### 📝 กรณีข้อมูลเปลี่ยน
-
-อัปเดตข้อมูลที่ Google Sheets ตาม workflow ปกติ
-
-```text
-Update Google Sheets
-        ↓
-Public Sheet
-        ↓
-Published CSV
-        ↓
-Dashboard โหลดข้อมูลใหม่
-```
-
-✅ โดยทั่วไป **ไม่ต้องแก้ HTML และไม่ต้อง Commit ใหม่**
-
-### 🎨 กรณีหน้าตาหรือฟังก์ชันเปลี่ยน
-
-เช่น เพิ่ม Filter, KPI Card, กราฟ หรือปรับ UX/UI
-
-1. ✏️ แก้ไฟล์ HTML ที่เกี่ยวข้อง
-2. 💾 Commit การเปลี่ยนแปลงเข้า branch `main`
-3. 🚀 GitHub Pages จะ Deploy เวอร์ชันใหม่
-4. 🔗 URL เดิมยังใช้งานต่อได้
-
-## 🔐 Privacy
-
-Dashboard สำหรับเผยแพร่จะไม่แสดงอีเมลผู้สอนในข้อมูล Public
-
-ข้อมูลที่นำมาแสดงควรเป็นข้อมูลที่ผ่านการตรวจสอบและเหมาะสมสำหรับการเผยแพร่แล้วเท่านั้น
+- ใช้ Google Workspace Sign-In สำหรับควบคุมการเข้าถึงหน้า Dashboard
+- ข้อมูลสำหรับ Dashboard ถูกแยกเฉพาะส่วนที่จำเป็นต่อการแสดงผล
+- ไม่เผยแพร่อีเมลผู้สอนบน Dashboard
+- ควรนำมาแสดงเฉพาะข้อมูลที่ผ่านการตรวจสอบและเหมาะสมสำหรับการใช้งานภายใน
 
 ## 🧰 Technology
 
-- 🌐 HTML5
-- 🎨 CSS3
-- ⚙️ Vanilla JavaScript
-- 📊 Google Sheets
-- 📄 CSV / Publish to web
-- 🚀 GitHub Pages
+HTML5 · CSS3 · Vanilla JavaScript · Google Sheets · CSV · GitHub Pages · Google Identity Services
 
 ---
 
-**🏢 Office of Online Education (OOE)**  
+**Office of Online Education (OOE)**  
 Sripatum University
