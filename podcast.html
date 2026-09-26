@@ -198,16 +198,21 @@ html.auth-check body{visibility:hidden}
   letter-spacing:-.2px;
 }
 .advice-close{
-  width:34px;height:34px;
+  width:40px;
+  height:40px;
+  padding:0;
+  display:grid;
+  place-items:center;
   border:0;
-  border-radius:10px;
+  border-radius:12px;
   background:#f4f7fa;
   color:#334e68;
-  font-size:22px;
-  line-height:1;
   cursor:pointer;
+  appearance:none;
+  -webkit-appearance:none;
 }
 .advice-close:hover{background:#ebf0f5}
+.advice-close svg{width:18px;height:18px;display:block}
 .advice-body{padding:0 24px 24px}
 .advice-course{
   display:flex;
@@ -375,7 +380,11 @@ html.auth-check body{visibility:hidden}
   <div class="advice-dialog">
     <div class="advice-head">
       <h2 id="adviceTitle">คำแนะนำการจัดทำ Podcast</h2>
-      <button class="advice-close" id="adviceClose" type="button" aria-label="ปิด">×</button>
+      <button class="advice-close" id="adviceClose" type="button" aria-label="ปิด">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
     <div class="advice-body">
       <div class="advice-course">
