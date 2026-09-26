@@ -198,47 +198,56 @@ html.auth-check body{visibility:hidden}
   letter-spacing:-.2px;
 }
 .advice-close{
-  width:34px;height:34px;
+  width:40px;
+  height:40px;
+  padding:0;
+  display:grid;
+  place-items:center;
   border:0;
-  border-radius:10px;
+  border-radius:12px;
   background:#f4f7fa;
   color:#334e68;
-  font-size:22px;
-  line-height:1;
   cursor:pointer;
+  appearance:none;
+  -webkit-appearance:none;
 }
 .advice-close:hover{background:#ebf0f5}
+.advice-close svg{width:18px;height:18px;display:block}
 .advice-body{padding:0 24px 24px}
 .advice-course{
-  position:relative;
-  padding:14px 16px 14px 54px;
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  padding:16px 18px;
   border:1px solid #dce9f5;
   border-radius:14px;
   background:#f7fbff;
 }
-.advice-course::before{
-  content:"AI";
-  position:absolute;
-  left:16px;
-  top:15px;
-  width:26px;
-  height:26px;
+.advice-course-icon{
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
   display:grid;
   place-items:center;
-  border-radius:8px;
+  border-radius:10px;
   background:#e8f3ff;
   color:#2b78c5;
-  font-size:11px;
-  font-weight:800;
 }
-.advice-course strong{
+.advice-course-icon svg{
+  width:22px;
+  height:22px;
+  display:block;
+}
+.advice-course-text{min-width:0}
+.advice-course-text strong{
   display:block;
   color:#0f5fa8;
   font-size:17px;
+  line-height:1.4;
 }
-.advice-course span{
+.advice-course-text span{
   display:block;
-  margin-top:3px;
+  margin-top:4px;
   color:#718399;
   font-size:13px;
 }
@@ -342,12 +351,25 @@ html.auth-check body{visibility:hidden}
   <div class="advice-dialog">
     <div class="advice-head">
       <h2 id="aiAdviceTitle">คำแนะนำการจัดทำ AI Tutor</h2>
-      <button class="advice-close" id="aiAdviceClose" type="button" aria-label="ปิด">×</button>
+      <button class="advice-close" id="aiAdviceClose" type="button" aria-label="ปิด">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
     </div>
     <div class="advice-body">
       <div class="advice-course">
-        <strong id="aiAdviceCourse"></strong>
-        <span id="aiAdviceProfile"></span>
+        <div class="advice-course-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="5" y="6" width="14" height="11" rx="4" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M12 3.5V6M9 12h.01M15 12h.01M9.5 17v2.2M14.5 17v2.2M3 10.5h2M19 10.5h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M9.5 14.5c.7.55 1.55.8 2.5.8s1.8-.25 2.5-.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="advice-course-text">
+          <strong id="aiAdviceCourse"></strong>
+          <span id="aiAdviceProfile"></span>
+        </div>
       </div>
 
       <div class="advice-alert">
