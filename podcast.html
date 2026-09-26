@@ -210,41 +210,39 @@ html.auth-check body{visibility:hidden}
 .advice-close:hover{background:#ebf0f5}
 .advice-body{padding:0 24px 24px}
 .advice-course{
-  position:relative;
-  padding:14px 16px 14px 54px;
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  padding:16px 18px;
   border:1px solid #dce9f5;
   border-radius:14px;
   background:#f7fbff;
 }
-.advice-course::before{
-  content:"";
-  position:absolute;
-  left:16px;
-  top:16px;
-  width:24px;
-  height:24px;
-  background:
-    linear-gradient(90deg,transparent 44%,#2b78c5 44% 56%,transparent 56%),
-    linear-gradient(#2b78c5,#2b78c5);
-  mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  -webkit-mask:
-    linear-gradient(#000 0 0) content-box,
-    linear-gradient(#000 0 0);
-  border:2px solid #2b78c5;
-  border-radius:4px;
-  box-sizing:border-box;
-  opacity:.9;
+.advice-course-icon{
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  display:grid;
+  place-items:center;
+  border-radius:10px;
+  background:#e8f3ff;
+  color:#2b78c5;
 }
-.advice-course strong{
+.advice-course-icon svg{
+  width:22px;
+  height:22px;
+  display:block;
+}
+.advice-course-text{min-width:0}
+.advice-course-text strong{
   display:block;
   color:#0f5fa8;
   font-size:17px;
+  line-height:1.4;
 }
-.advice-course span{
+.advice-course-text span{
   display:block;
-  margin-top:3px;
+  margin-top:4px;
   color:#718399;
   font-size:13px;
 }
@@ -381,8 +379,17 @@ html.auth-check body{visibility:hidden}
     </div>
     <div class="advice-body">
       <div class="advice-course">
-        <strong id="adviceCourse"></strong>
-        <span id="adviceProfile"></span>
+        <div class="advice-course-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 15a3 3 0 0 0 3-3V8a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M7 11.5v.5a5 5 0 0 0 10 0v-.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M12 17v3M9.5 20h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="advice-course-text">
+          <strong id="adviceCourse"></strong>
+          <span id="adviceProfile"></span>
+        </div>
       </div>
 
       <div class="advice-alert partial" id="adviceAlert">
