@@ -364,11 +364,11 @@ html.auth-check body{visibility:hidden}
 <section class="panel filters">
 <div class="field"><label>คณะ / วิทยาลัย</label><select id="facultyFilter"><option value="">ทั้งหมด</option></select></div>
 <div class="field"><label>ประเภทรายวิชา</label><select id="typeFilter"><option value="">ทั้งหมด</option></select></div>
-<div class="field"><label>สถานะ Podcast</label><select id="statusFilter"><option value="">ทั้งหมด</option><option value="ทำครบ">ทำครบ</option><option value="ทำบ้าง">ทำบ้าง</option><option value="ไม่ทำ">ไม่ทำ</option></select></div>
+<div class="field"><label>สถานะ Podcast</label><select id="statusFilter"><option value="">ทั้งหมด</option><option value="ทำครบ">ทำครบ</option><option value="จัดทำไม่ครบ">จัดทำไม่ครบ</option><option value="ไม่ทำ">ไม่ทำ</option></select></div>
 <div class="field"><label>ค้นหารหัสวิชาหรือรหัสรายวิชาในระบบ</label><input id="searchBox" type="search" placeholder="เช่น ICT112 หรือ 691GN..."></div>
 <div class="filter-actions"><button class="refresh" id="refreshBtn">อัปเดตข้อมูล</button><button class="reset" id="resetBtn">ล้างตัวกรอง</button></div>
 </section>
-<section class="kpis"><article class="panel kpi "><div class="kpi-label">รายวิชาทั้งหมด</div><div class="kpi-value" id="totalKpi">0</div><div class="kpi-note" id="totalNote"></div></article><article class="panel kpi green"><div class="kpi-label">ทำครบ</div><div class="kpi-value" id="completeKpi">0</div><div class="kpi-note" id="completeNote"></div></article><article class="panel kpi amber"><div class="kpi-label">ทำบ้าง</div><div class="kpi-value" id="partialKpi">0</div><div class="kpi-note" id="partialNote"></div></article><article class="panel kpi red"><div class="kpi-label">ไม่ทำ</div><div class="kpi-value" id="notdoneKpi">0</div><div class="kpi-note" id="notdoneNote"></div></article></section>
+<section class="kpis"><article class="panel kpi "><div class="kpi-label">รายวิชาทั้งหมด</div><div class="kpi-value" id="totalKpi">0</div><div class="kpi-note" id="totalNote"></div></article><article class="panel kpi green"><div class="kpi-label">ทำครบ</div><div class="kpi-value" id="completeKpi">0</div><div class="kpi-note" id="completeNote"></div></article><article class="panel kpi amber"><div class="kpi-label">จัดทำไม่ครบ</div><div class="kpi-value" id="partialKpi">0</div><div class="kpi-note" id="partialNote"></div></article><article class="panel kpi red"><div class="kpi-label">ไม่ทำ</div><div class="kpi-value" id="notdoneKpi">0</div><div class="kpi-note" id="notdoneNote"></div></article></section>
 <section class="charts-grid">
 <article class="panel chart-panel"><div class="section-head"><div><h2>สถานะ Podcast แยกตามคณะ</h2><p>แสดงจำนวนรายวิชาตามสถานะ Podcast แยกตามคณะ</p></div></div><div class="chart" id="facultyChart"></div></article>
 <article class="panel chart-panel"><div class="section-head"><div><h2>สัดส่วนสถานะ Podcast</h2><p>คำนวณตามตัวกรองที่เลือก</p></div></div><div class="donut-body"><div class="donut-wrap"><div class="donut" id="donutChart"></div><div class="donut-center"><span class="donut-number" id="donutTotal">0</span><span class="donut-label">รายวิชา</span></div></div><div class="donut-list" id="donutLegend"></div></div></article>
@@ -509,10 +509,17 @@ function bindFacultyChartFilter(){
 }
 
 const natural=(a,b)=>String(a).localeCompare(String(b),'th',{numeric:true,sensitivity:'base'});
-function normalizeStatus(v){
+function normalizeStatus(v,count){
+  const raw=String(count??'').trim().replace(/,/g,'');
+  if(raw!==''&&!Number.isNaN(Number(raw))){
+    const n=Math.max(0,Number(raw));
+    if(n>=15) return 'ทำครบ';
+    if(n>0) return 'จัดทำไม่ครบ';
+    return 'ไม่ทำ';
+  }
   const s=String(v||'').trim();
   if(s==='ทำครบ') return 'ทำครบ';
-  if(s==='ทำบ้าง') return 'ทำบ้าง';
+  if(s==='จัดทำไม่ครบ'||s==='จัดทำไม่ครบ') return 'จัดทำไม่ครบ';
   if(s==='ไม่ทำ') return 'ไม่ทำ';
   return 'รอข้อมูล';
 }
@@ -547,11 +554,11 @@ function refillFilters(){
 }
 function filtered(){
   const f=$('facultyFilter').value,t=$('typeFilter').value,s=$('statusFilter').value,q=$('searchBox').value.trim().toLowerCase();
-  return DATA.filter(d=>(!f||d.faculty===f)&&(!t||d.courseType===t)&&(!s||normalizeStatus(d.podcastStatus)===s)&&(!q||[d.courseCode,d.courseProfile,d.courseName,d.faculty,d.instructors].some(x=>String(x||'').toLowerCase().includes(q))));
+  return DATA.filter(d=>(!f||d.faculty===f)&&(!t||d.courseType===t)&&(!s||normalizeStatus(d.podcastStatus,d.podcastCount)===s)&&(!q||[d.courseCode,d.courseProfile,d.courseName,d.faculty,d.instructors].some(x=>String(x||'').toLowerCase().includes(q))));
 }
-function setKpis(rows){const total=rows.length,all=DATA.length;const complete=rows.filter(d=>normalizeStatus(d.podcastStatus)==='ทำครบ').length;
-  const partial=rows.filter(d=>normalizeStatus(d.podcastStatus)==='ทำบ้าง').length;
-  const notdone=rows.filter(d=>normalizeStatus(d.podcastStatus)==='ไม่ทำ').length;
+function setKpis(rows){const total=rows.length,all=DATA.length;const complete=rows.filter(d=>normalizeStatus(d.podcastStatus,d.podcastCount)==='ทำครบ').length;
+  const partial=rows.filter(d=>normalizeStatus(d.podcastStatus,d.podcastCount)==='จัดทำไม่ครบ').length;
+  const notdone=rows.filter(d=>normalizeStatus(d.podcastStatus,d.podcastCount)==='ไม่ทำ').length;
   $('totalKpi').textContent=total.toLocaleString('th-TH');
   $('completeKpi').textContent=complete.toLocaleString('th-TH');
   $('partialKpi').textContent=partial.toLocaleString('th-TH');
@@ -564,9 +571,9 @@ function renderChart(rows){
   const groups={};
   rows.forEach(d=>{const f=d.faculty||'ไม่ระบุคณะ';groups[f]??={complete:0,partial:0,notdone:0,pending:0,total:0};
     groups[f].total++;
-    const s=normalizeStatus(d.podcastStatus);
+    const s=normalizeStatus(d.podcastStatus,d.podcastCount);
     if(s==='ทำครบ') groups[f].complete++;
-    else if(s==='ทำบ้าง') groups[f].partial++;
+    else if(s==='จัดทำไม่ครบ') groups[f].partial++;
     else if(s==='ไม่ทำ') groups[f].notdone++;
     else groups[f].pending++;});
   const list=Object.entries(groups).sort((a,b)=>b[1].total-a[1].total||natural(a[0],b[0]));
@@ -574,26 +581,26 @@ function renderChart(rows){
   const seg=(n,c,total)=>n?`<div class="seg ${c}" style="width:${n/total*100}%"><span>${n}</span></div>`:'';
   $('facultyChart').innerHTML=list.length?list.map(([f,v])=>`<div class="chart-row" data-faculty="${esc(f)}" role="button" tabindex="0" title="คลิกเพื่อกรองตามคณะนี้"><div class="faculty">${esc(f)} (${v.total})</div><div class="track" style="width:${v.total/max*100}%">${seg(v.complete,'green',v.total)}${seg(v.partial,'amber',v.total)}${seg(v.notdone,'red',v.total)}</div><div class="total">${v.complete}/${v.total}</div></div>`).join(''):'<div class="empty">ไม่พบข้อมูลตามตัวกรอง</div>';
 }
-function renderDonut(rows){const total=rows.length;const item=(label,n,p,cls)=>`<div class="donut-item"><i class="dot ${cls}"></i><span>${label}</span><strong>${n} (${p.toFixed(1)}%)</strong></div>`;const complete=rows.filter(d=>normalizeStatus(d.podcastStatus)==='ทำครบ').length;
-  const partial=rows.filter(d=>normalizeStatus(d.podcastStatus)==='ทำบ้าง').length;
-  const notdone=rows.filter(d=>normalizeStatus(d.podcastStatus)==='ไม่ทำ').length;
-  const pending=rows.filter(d=>normalizeStatus(d.podcastStatus)==='รอข้อมูล').length;
+function renderDonut(rows){const total=rows.length;const item=(label,n,p,cls)=>`<div class="donut-item"><i class="dot ${cls}"></i><span>${label}</span><strong>${n} (${p.toFixed(1)}%)</strong></div>`;const complete=rows.filter(d=>normalizeStatus(d.podcastStatus,d.podcastCount)==='ทำครบ').length;
+  const partial=rows.filter(d=>normalizeStatus(d.podcastStatus,d.podcastCount)==='จัดทำไม่ครบ').length;
+  const notdone=rows.filter(d=>normalizeStatus(d.podcastStatus,d.podcastCount)==='ไม่ทำ').length;
+  const pending=rows.filter(d=>normalizeStatus(d.podcastStatus,d.podcastCount)==='รอข้อมูล').length;
   const cp=total?complete/total*100:0,pp=total?partial/total*100:0,np=total?notdone/total*100:0,rp=total?pending/total*100:0;
   $('donutChart').style.background=total?`conic-gradient(var(--green) 0 ${cp}%,var(--amber) ${cp}% ${cp+pp}%,var(--red) ${cp+pp}% ${cp+pp+np}%,var(--gray) ${cp+pp+np}% 100%)`:'#e8eef5';
   $('donutTotal').textContent=total.toLocaleString('th-TH');
-  $('donutLegend').innerHTML=item('ทำครบ',complete,cp,'green')+item('ทำบ้าง',partial,pp,'amber')+item('ไม่ทำ',notdone,np,'red');}
+  $('donutLegend').innerHTML=item('ทำครบ',complete,cp,'green')+item('จัดทำไม่ครบ',partial,pp,'amber')+item('ไม่ทำ',notdone,np,'red');}
 const td=(v,c='')=>`<td class="${c}">${esc(v)}</td>`;
-function statusBadge(s){
-  s=normalizeStatus(s);
+function statusBadge(s,count){
+  s=normalizeStatus(s,count);
   if(s==='ทำครบ') return '<span class="badge green">ทำครบ</span>';
-  if(s==='ทำบ้าง') return '<span class="badge amber">ทำบ้าง</span>';
+  if(s==='จัดทำไม่ครบ') return '<span class="badge amber">จัดทำไม่ครบ</span>';
   if(s==='ไม่ทำ') return '<span class="badge red">ไม่ทำ</span>';
   return '<span class="badge gray">รอข้อมูล</span>';
 }
 function adviceCell(d){
-  const s=normalizeStatus(d.podcastStatus);
+  const s=normalizeStatus(d.podcastStatus,d.podcastCount);
   if(s==='ทำครบ') return '<span class="advice-dash">—</span>';
-  if(s==='ทำบ้าง'||s==='ไม่ทำ'){
+  if(s==='จัดทำไม่ครบ'||s==='ไม่ทำ'){
     return `<button type="button" class="advice-btn" data-advice="${esc(d.courseProfile)}" aria-label="ดูคำแนะนำ" title="ดูคำแนะนำ">
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4.5 5.5c2.6-.8 4.9-.4 7 1.2v11.8c-2.1-1.6-4.4-2-7-1.2V5.5Zm15 0c-2.6-.8-4.9-.4-7 1.2v11.8c2.1-1.6 4.4-2 7-1.2V5.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
@@ -604,7 +611,7 @@ function adviceCell(d){
 }
 function renderTable(rows){
   const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));currentPage=Math.min(currentPage,pages);const start=(currentPage-1)*PAGE_SIZE;const p=rows.slice(start,start+PAGE_SIZE);
-  $('courseRows').innerHTML=p.map((d,i)=>`<tr>${td(start+i+1,'num')}${td(d.courseCode,'course nowrap')}${td(d.courseProfile,'nowrap')}${td(d.courseType,'nowrap')}${td(d.faculty)}${td(d.instructors||'—')}${td(d.podcastCount||'0','center')}<td class="center">${statusBadge(d.podcastStatus)}</td><td class="center">${adviceCell(d)}</td><td>${d.courseLink?`<a href="${esc(d.courseLink)}" target="_blank" rel="noopener">เปิด ↗</a>`:'—'}</td></tr>`).join('');
+  $('courseRows').innerHTML=p.map((d,i)=>`<tr>${td(start+i+1,'num')}${td(d.courseCode,'course nowrap')}${td(d.courseProfile,'nowrap')}${td(d.courseType,'nowrap')}${td(d.faculty)}${td(d.instructors||'—')}${td(d.podcastCount||'0','center')}<td class="center">${statusBadge(d.podcastStatus,d.podcastCount)}</td><td class="center">${adviceCell(d)}</td><td>${d.courseLink?`<a href="${esc(d.courseLink)}" target="_blank" rel="noopener">เปิด ↗</a>`:'—'}</td></tr>`).join('');
   $('resultCount').textContent=`แสดง ${rows.length.toLocaleString('th-TH')} จาก ${DATA.length.toLocaleString('th-TH')} วิชา`;
   $('pageInfo').textContent=rows.length?`แสดง ${start+1}–${Math.min(start+PAGE_SIZE,rows.length)} จาก ${rows.length} รายวิชา`:'ไม่พบข้อมูล';
   $('prevBtn').disabled=currentPage===1;$('nextBtn').disabled=currentPage===pages;
@@ -612,7 +619,7 @@ function renderTable(rows){
 function openPodcastAdvice(courseProfile){
   const d=DATA.find(x=>x.courseProfile===courseProfile);
   if(!d)return;
-  const status=normalizeStatus(d.podcastStatus);
+  const status=normalizeStatus(d.podcastStatus,d.podcastCount);
   if(status==='ทำครบ')return;
 
   const requiredWeeks=15;
@@ -630,7 +637,7 @@ function openPodcastAdvice(courseProfile){
   alert.classList.remove('partial','notdone');
   alert.classList.add(status==='ไม่ทำ'?'notdone':'partial');
 
-  if(status==='ทำบ้าง'){
+  if(status==='จัดทำไม่ครบ'){
     $('adviceMessage').textContent=`พบการจัดทำ Podcast แล้ว ${count} จาก ${requiredWeeks} รายการ กรุณาจัดทำเพิ่มเติมอีก ${missing} รายการให้ครบตามเกณฑ์ 15 สัปดาห์`;
   }else{
     $('adviceMessage').textContent=`ยังไม่พบการจัดทำ Podcast จากเกณฑ์ที่กำหนด ${requiredWeeks} รายการ กรุณาจัดทำ Podcast ให้เป็นไปตามเกณฑ์ที่กำหนด`;
