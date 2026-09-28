@@ -451,6 +451,7 @@ html.auth-check body{visibility:hidden}
 </main>
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=149082930&single=true&output=csv';
+const PODCAST_REQUIRED_COUNT=15;
 let DATA=[]; const PAGE_SIZE=20; let currentPage=1;
 let dashboardRevealDone=false;
 function revealDashboardOnce(){
@@ -513,13 +514,13 @@ function normalizeStatus(v,count){
   const raw=String(count??'').trim().replace(/,/g,'');
   if(raw!==''&&!Number.isNaN(Number(raw))){
     const n=Math.max(0,Number(raw));
-    if(n>=15) return 'ทำครบ';
+    if(n>=PODCAST_REQUIRED_COUNT) return 'ทำครบ';
     if(n>0) return 'จัดทำไม่ครบ';
     return 'ไม่ทำ';
   }
   const s=String(v||'').trim();
   if(s==='ทำครบ') return 'ทำครบ';
-  if(s==='จัดทำไม่ครบ'||s==='จัดทำไม่ครบ') return 'จัดทำไม่ครบ';
+  if(s==='จัดทำไม่ครบ'||s==='ทำบ้าง') return 'จัดทำไม่ครบ';
   if(s==='ไม่ทำ') return 'ไม่ทำ';
   return 'รอข้อมูล';
 }
@@ -622,7 +623,7 @@ function openPodcastAdvice(courseProfile){
   const status=normalizeStatus(d.podcastStatus,d.podcastCount);
   if(status==='ทำครบ')return;
 
-  const requiredWeeks=15;
+  const requiredWeeks=PODCAST_REQUIRED_COUNT;
   const count=Math.max(0,Number(String(d.podcastCount||'0').replace(/,/g,''))||0);
   const missing=Math.max(0,requiredWeeks-count);
 
