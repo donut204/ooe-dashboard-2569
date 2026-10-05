@@ -325,6 +325,167 @@ html.auth-check body{visibility:hidden}
   .advice-dialog{animation:none}
   .advice-btn{transition:none}
 }
+
+/* AI Tutor counting criteria modal */
+.criteria-dialog{
+  width:min(720px,100%);
+  max-height:min(90vh,820px);
+}
+.criteria-head{
+  padding-bottom:16px;
+}
+.criteria-head h2{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:23px;
+}
+.criteria-body{
+  display:grid;
+  gap:12px;
+}
+.criteria-card{
+  display:grid;
+  grid-template-columns:44px 1fr;
+  gap:14px;
+  align-items:start;
+  padding:16px 18px;
+  border:1px solid #e1e9f1;
+  border-radius:15px;
+  background:#fff;
+}
+.criteria-card.primary{
+  border-color:#cfe3f7;
+  background:#f7fbff;
+}
+.criteria-icon{
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:#e8f3ff;
+  color:#216fba;
+}
+.criteria-card:not(.primary) .criteria-icon{
+  background:#f1f4f7;
+  color:#486581;
+}
+.criteria-icon svg{
+  width:22px;
+  height:22px;
+  display:block;
+}
+.criteria-copy h3{
+  margin:0;
+  color:#163a5f;
+  font-size:18px;
+}
+.criteria-copy .criteria-lead{
+  margin:5px 0 0;
+  color:#243b53;
+  font-weight:800;
+}
+.criteria-highlight{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:11px;
+  padding:7px 11px;
+  border-radius:10px;
+  background:#eaf4ff;
+  color:#155fa0;
+  font-weight:800;
+}
+.criteria-highlight::before{
+  content:"";
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#2b78c5;
+}
+.criteria-copy .criteria-muted{
+  margin:6px 0 0;
+  color:#627d98;
+  font-weight:700;
+}
+.criteria-list{
+  list-style:none;
+  padding:0;
+  margin:10px 0 0;
+  display:grid;
+  gap:7px;
+  counter-reset:criteria;
+}
+.criteria-list li{
+  counter-increment:criteria;
+  display:grid;
+  grid-template-columns:28px 1fr;
+  gap:9px;
+  align-items:start;
+  color:#334e68;
+  line-height:1.5;
+}
+.criteria-list li::before{
+  content:counter(criteria);
+  width:26px;
+  height:26px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  background:#f1f4f7;
+  color:#486581;
+  font-size:12px;
+  font-weight:800;
+}
+.criteria-list .accent{color:#2b78c5}
+.criteria-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:16px 24px 22px;
+  border-top:1px solid #edf2f7;
+}
+.criteria-hide{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  color:#486581;
+  font-size:14px;
+  cursor:pointer;
+  user-select:none;
+}
+.criteria-hide input{
+  width:18px;
+  height:18px;
+  margin:0;
+  accent-color:#2b78c5;
+}
+.criteria-hide svg{
+  width:18px;
+  height:18px;
+  color:#627d98;
+}
+.criteria-confirm{
+  min-width:118px;
+  border:0;
+  border-radius:10px;
+  padding:10px 18px;
+  background:#1f73d2;
+  color:#fff;
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+}
+.criteria-confirm:hover{background:#1767bf}
+@media(max-width:600px){
+  .criteria-head h2{font-size:20px}
+  .criteria-card{grid-template-columns:38px 1fr;padding:14px}
+  .criteria-icon{width:38px;height:38px}
+  .criteria-foot{align-items:stretch;flex-direction:column}
+  .criteria-confirm{width:100%}
+}
 </style>
 
 </head>
@@ -346,6 +507,70 @@ html.auth-check body{visibility:hidden}
 </section>
 <section class="panel table-panel"><div class="table-tools"><div><h2>รายละเอียดรายวิชา — AI Tutor</h2><p>ข้อมูลจาก Google Sheets ที่เผยแพร่สำหรับ Dashboard</p></div><div class="count" id="resultCount"></div></div><div class="table-wrap"><table><thead><tr><th>ลำดับ</th><th>รหัสวิชา</th><th>รหัสรายวิชาในระบบ</th><th>ประเภท</th><th>คณะ / วิทยาลัย</th><th>อาจารย์ผู้สอน</th><th class="center">AI Tutor</th><th class="center">สถานะ AI Tutor</th><th class="center">คำแนะนำ</th><th>รายวิชา</th></tr></thead><tbody id="courseRows"></tbody></table></div><div class="pager"><div class="count" id="pageInfo"></div><div class="pager-controls"><button id="prevBtn">ก่อนหน้า</button><button id="nextBtn">ถัดไป</button></div></div></section>
 <p class="note">ข้อมูลจะอัปเดตเมื่อเปิดหน้าเว็บหรือกด “อัปเดตข้อมูล” · ไม่มีการเผยแพร่อีเมลผู้สอนใน Dashboard</p>
+
+<div class="advice-modal" id="aiCriteriaModal" role="dialog" aria-modal="true" aria-labelledby="aiCriteriaTitle">
+  <div class="advice-dialog criteria-dialog">
+    <div class="advice-head criteria-head">
+      <h2 id="aiCriteriaTitle">🤖 เกณฑ์การนับรายวิชาสำหรับ AI Tutor</h2>
+      <button class="advice-close" id="aiCriteriaClose" type="button" aria-label="ปิด">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="advice-body criteria-body">
+      <section class="criteria-card primary">
+        <div class="criteria-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <rect x="5" y="6" width="14" height="11" rx="4" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M12 3.5V6M9 12h.01M15 12h.01M9.5 17v2.2M14.5 17v2.2M3 10.5h2M19 10.5h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M9.5 14.5c.7.55 1.55.8 2.5.8s1.8-.25 2.5-.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="criteria-copy">
+          <h3>ตัวตั้ง</h3>
+          <p class="criteria-lead">จำนวนรายวิชา (ระดับปริญญาตรี)</p>
+          <div class="criteria-highlight">หนึ่งวิชาต้องมี 1 AI Tutor</div>
+        </div>
+      </section>
+
+      <section class="criteria-card">
+        <div class="criteria-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M7 4.5h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M8.5 9h7M8.5 12.5h7M8.5 16h4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="criteria-copy">
+          <h3>ตัวหาร</h3>
+          <p class="criteria-lead">จำนวนรายวิชา (ระดับปริญญาตรี)</p>
+          <p class="criteria-muted">ไม่นับ รายวิชาที่</p>
+          <ol class="criteria-list">
+            <li>สอนโดยอาจารย์พิเศษท่านเดียว</li>
+            <li>เป็นโครงงาน / เตรียมโครงงาน</li>
+            <li>รายวิชาสหกิจศึกษา / เตรียมสหกิจ</li>
+            <li>วิชาสัมมนา</li>
+            <li>รายวิชาอื่น ๆ ที่ไม่ได้สอนในห้องเรียน</li>
+            <li>รายวิชา นศ. เป็นศูนย์</li>
+            <li>วิชาที่ได้รับให้ดำเนินการในรูปแบบอื่น ๆ เช่น <span class="accent">Active Learning</span></li>
+          </ol>
+        </div>
+      </section>
+    </div>
+
+    <div class="criteria-foot">
+      <label class="criteria-hide" for="aiCriteriaDontShow">
+        <input type="checkbox" id="aiCriteriaDontShow">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M3 3l18 18M10.6 10.7a2 2 0 0 0 2.7 2.7M9.9 4.3A10.4 10.4 0 0 1 12 4c5.5 0 9 5 9 5a16.8 16.8 0 0 1-2.6 3.1M6.2 6.2C4.1 7.6 3 9 3 9s3.5 5 9 5c1.1 0 2.1-.2 3-.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>ห้ามแสดงอีก</span>
+      </label>
+      <button type="button" class="criteria-confirm" id="aiCriteriaConfirm">เข้าใจแล้ว</button>
+    </div>
+  </div>
+</div>
 
 <div class="advice-modal" id="aiAdviceModal" role="dialog" aria-modal="true" aria-labelledby="aiAdviceTitle">
   <div class="advice-dialog">
@@ -549,6 +774,25 @@ function renderTable(rows){
   $('pageInfo').textContent=rows.length?`แสดง ${start+1}–${Math.min(start+PAGE_SIZE,rows.length)} จาก ${rows.length} รายวิชา`:'ไม่พบข้อมูล';
   $('prevBtn').disabled=currentPage===1;$('nextBtn').disabled=currentPage===pages;
 }
+const AI_CRITERIA_HIDE_KEY='ooe_ai_tutor_criteria_hidden_v1';
+function shouldHideAICriteria(){
+  try{return localStorage.getItem(AI_CRITERIA_HIDE_KEY)==='1';}
+  catch(e){return false;}
+}
+function openAICriteria(){
+  if(shouldHideAICriteria())return;
+  $('aiCriteriaModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  window.setTimeout(()=>$('aiCriteriaClose').focus(),0);
+}
+function closeAICriteria(){
+  if($('aiCriteriaDontShow').checked){
+    try{localStorage.setItem(AI_CRITERIA_HIDE_KEY,'1');}catch(e){}
+  }
+  $('aiCriteriaModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
 function openAIAdvice(courseProfile){
   const d=DATA.find(x=>x.courseProfile===courseProfile);
   if(!d||normalizeStatus(d.aiStatus)!=='ไม่ทำ')return;
@@ -578,15 +822,23 @@ $('courseRows').addEventListener('click',e=>{
   const btn=e.target.closest('.advice-btn[data-advice]');
   if(btn)openAIAdvice(btn.dataset.advice);
 });
+$('aiCriteriaClose').addEventListener('click',closeAICriteria);
+$('aiCriteriaConfirm').addEventListener('click',closeAICriteria);
+$('aiCriteriaModal').addEventListener('click',e=>{
+  if(e.target===$('aiCriteriaModal'))closeAICriteria();
+});
 $('aiAdviceClose').addEventListener('click',closeAIAdvice);
 $('aiAdviceCloseBottom').addEventListener('click',closeAIAdvice);
 $('aiAdviceModal').addEventListener('click',e=>{
   if(e.target===$('aiAdviceModal'))closeAIAdvice();
 });
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&$('aiAdviceModal').classList.contains('open'))closeAIAdvice();
+  if(e.key!=='Escape')return;
+  if($('aiCriteriaModal').classList.contains('open'))closeAICriteria();
+  else if($('aiAdviceModal').classList.contains('open'))closeAIAdvice();
 });
 bindFacultyChartFilter();
+openAICriteria();
 loadData();
 </script>
 <div class="auth-chip" aria-label="บัญชีผู้ใช้"><span id="authUserEmail"></span><button type="button" onclick="OOEAuth.logout()">ออกจากระบบ</button></div>
