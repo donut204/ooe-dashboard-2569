@@ -354,6 +354,165 @@ html.auth-check body{visibility:hidden}
   .advice-dialog{animation:none}
   .advice-btn{transition:none}
 }
+
+/* Podcast counting criteria modal */
+.criteria-dialog{
+  width:min(720px,100%);
+  max-height:min(90vh,820px);
+}
+.criteria-head{padding-bottom:16px}
+.criteria-head h2{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:23px;
+}
+.criteria-body{
+  display:grid;
+  gap:12px;
+}
+.criteria-card{
+  display:grid;
+  grid-template-columns:44px 1fr;
+  gap:14px;
+  align-items:start;
+  padding:16px 18px;
+  border:1px solid #e1e9f1;
+  border-radius:15px;
+  background:#fff;
+}
+.criteria-card.primary{
+  border-color:#cfe3f7;
+  background:#f7fbff;
+}
+.criteria-icon{
+  width:44px;
+  height:44px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  background:#e8f3ff;
+  color:#216fba;
+}
+.criteria-card:not(.primary) .criteria-icon{
+  background:#f1f4f7;
+  color:#486581;
+}
+.criteria-icon svg{
+  width:22px;
+  height:22px;
+  display:block;
+}
+.criteria-copy h3{
+  margin:0;
+  color:#163a5f;
+  font-size:18px;
+}
+.criteria-copy .criteria-lead{
+  margin:5px 0 0;
+  color:#243b53;
+  font-weight:800;
+}
+.criteria-highlight{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:11px;
+  padding:7px 11px;
+  border-radius:10px;
+  background:#eaf4ff;
+  color:#155fa0;
+  font-weight:800;
+}
+.criteria-highlight::before{
+  content:"";
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#2b78c5;
+}
+.criteria-copy .criteria-muted{
+  margin:6px 0 0;
+  color:#627d98;
+  font-weight:700;
+}
+.criteria-list{
+  list-style:none;
+  padding:0;
+  margin:10px 0 0;
+  display:grid;
+  gap:7px;
+  counter-reset:criteria;
+}
+.criteria-list li{
+  counter-increment:criteria;
+  display:grid;
+  grid-template-columns:28px 1fr;
+  gap:9px;
+  align-items:start;
+  color:#334e68;
+  line-height:1.5;
+}
+.criteria-list li::before{
+  content:counter(criteria);
+  width:26px;
+  height:26px;
+  display:grid;
+  place-items:center;
+  border-radius:999px;
+  background:#f1f4f7;
+  color:#486581;
+  font-size:12px;
+  font-weight:800;
+}
+.criteria-item-text{min-width:0}
+.criteria-term{
+  color:#2b78c5;
+  font-weight:700;
+  white-space:nowrap;
+}
+.criteria-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:16px 24px 22px;
+  border-top:1px solid #edf2f7;
+}
+.criteria-hide{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  color:#486581;
+  font-size:14px;
+  cursor:pointer;
+  user-select:none;
+}
+.criteria-hide input{
+  width:18px;
+  height:18px;
+  margin:0;
+  accent-color:#2b78c5;
+}
+.criteria-confirm{
+  min-width:118px;
+  border:0;
+  border-radius:10px;
+  padding:10px 18px;
+  background:#1f73d2;
+  color:#fff;
+  font:inherit;
+  font-weight:800;
+  cursor:pointer;
+}
+.criteria-confirm:hover{background:#1767bf}
+@media(max-width:600px){
+  .criteria-head h2{font-size:20px}
+  .criteria-card{grid-template-columns:38px 1fr;padding:14px}
+  .criteria-icon{width:38px;height:38px}
+  .criteria-foot{align-items:stretch;flex-direction:column}
+  .criteria-confirm{width:100%}
+}
 </style>
 
 </head>
@@ -375,6 +534,66 @@ html.auth-check body{visibility:hidden}
 </section>
 <section class="panel table-panel"><div class="table-tools"><div><h2>รายละเอียดรายวิชา — Podcast</h2><p>ข้อมูลจาก Google Sheets ที่เผยแพร่สำหรับ Dashboard</p></div><div class="count" id="resultCount"></div></div><div class="table-wrap"><table><thead><tr><th>ลำดับ</th><th>รหัสวิชา</th><th>รหัสรายวิชาในระบบ</th><th>ประเภท</th><th>คณะ / วิทยาลัย</th><th>อาจารย์ผู้สอน</th><th class="center">จำนวน Podcast</th><th class="center">สถานะ Podcast</th><th class="center">คำแนะนำ</th><th>รายวิชา</th></tr></thead><tbody id="courseRows"></tbody></table></div><div class="pager"><div class="count" id="pageInfo"></div><div class="pager-controls"><button id="prevBtn">ก่อนหน้า</button><button id="nextBtn">ถัดไป</button></div></div></section>
 <p class="note">ข้อมูลจะอัปเดตเมื่อเปิดหน้าเว็บหรือกด “อัปเดตข้อมูล” · ไม่มีการเผยแพร่อีเมลผู้สอนใน Dashboard</p>
+
+<div class="advice-modal" id="podcastCriteriaModal" role="dialog" aria-modal="true" aria-labelledby="podcastCriteriaTitle">
+  <div class="advice-dialog criteria-dialog">
+    <div class="advice-head criteria-head">
+      <h2 id="podcastCriteriaTitle">🎙️ เกณฑ์การนับรายวิชาสำหรับ Podcast</h2>
+      <button class="advice-close" id="podcastCriteriaClose" type="button" aria-label="ปิด">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="advice-body criteria-body">
+      <section class="criteria-card primary">
+        <div class="criteria-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 15a3 3 0 0 0 3-3V8a3 3 0 1 0-6 0v4a3 3 0 0 0 3 3Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M7 11.5v.5a5 5 0 0 0 10 0v-.5M12 17v3M9.5 20h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="criteria-copy">
+          <h3>ตัวตั้ง</h3>
+          <p class="criteria-lead">จำนวนรายวิชา (ระดับปริญญาตรี)</p>
+          <div class="criteria-highlight">หนึ่งวิชาต้องมี 15 Podcast</div>
+        </div>
+      </section>
+
+      <section class="criteria-card">
+        <div class="criteria-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M7 4.5h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-11a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M8.5 9h7M8.5 12.5h7M8.5 16h4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="criteria-copy">
+          <h3>ตัวหาร</h3>
+          <p class="criteria-lead">จำนวนรายวิชา (ระดับปริญญาตรี)</p>
+          <p class="criteria-muted">ไม่นับ รายวิชาที่</p>
+          <ol class="criteria-list">
+            <li>สอนโดยอาจารย์พิเศษท่านเดียว</li>
+            <li>เป็นโครงงาน / เตรียมโครงงาน</li>
+            <li>รายวิชาสหกิจศึกษา / เตรียมสหกิจ</li>
+            <li>วิชาสัมมนา</li>
+            <li>รายวิชาอื่น ๆ ที่ไม่ได้สอนในห้องเรียน</li>
+            <li>รายวิชา นศ. เป็นศูนย์</li>
+            <li><span class="criteria-item-text">วิชาที่ได้รับให้ดำเนินการในรูปแบบอื่น ๆ เช่น <span class="criteria-term">Active Learning</span></span></li>
+          </ol>
+        </div>
+      </section>
+    </div>
+
+    <div class="criteria-foot">
+      <label class="criteria-hide" for="podcastCriteriaDontShow">
+        <input type="checkbox" id="podcastCriteriaDontShow">
+        <span>ห้ามแสดงอีก</span>
+      </label>
+      <button type="button" class="criteria-confirm" id="podcastCriteriaConfirm">เข้าใจแล้ว</button>
+    </div>
+  </div>
+</div>
 
 <div class="advice-modal" id="podcastAdviceModal" role="dialog" aria-modal="true" aria-labelledby="adviceTitle">
   <div class="advice-dialog">
@@ -647,6 +866,25 @@ function renderTable(rows){
   $('pageInfo').textContent=rows.length?`แสดง ${start+1}–${Math.min(start+PAGE_SIZE,rows.length)} จาก ${rows.length} รายวิชา`:'ไม่พบข้อมูล';
   $('prevBtn').disabled=currentPage===1;$('nextBtn').disabled=currentPage===pages;
 }
+const PODCAST_CRITERIA_HIDE_KEY='ooe_podcast_criteria_hidden_v1';
+function shouldHidePodcastCriteria(){
+  try{return localStorage.getItem(PODCAST_CRITERIA_HIDE_KEY)==='1';}
+  catch(e){return false;}
+}
+function openPodcastCriteria(){
+  if(shouldHidePodcastCriteria())return;
+  $('podcastCriteriaModal').classList.add('open');
+  document.body.style.overflow='hidden';
+  window.setTimeout(()=>$('podcastCriteriaClose').focus(),0);
+}
+function closePodcastCriteria(){
+  if($('podcastCriteriaDontShow').checked){
+    try{localStorage.setItem(PODCAST_CRITERIA_HIDE_KEY,'1');}catch(e){}
+  }
+  $('podcastCriteriaModal').classList.remove('open');
+  document.body.style.overflow='';
+}
+
 function openPodcastAdvice(courseProfile){
   const d=DATA.find(x=>x.courseProfile===courseProfile);
   if(!d)return;
@@ -698,15 +936,23 @@ $('courseRows').addEventListener('click',e=>{
   const btn=e.target.closest('.advice-btn[data-advice]');
   if(btn)openPodcastAdvice(btn.dataset.advice);
 });
+$('podcastCriteriaClose').addEventListener('click',closePodcastCriteria);
+$('podcastCriteriaConfirm').addEventListener('click',closePodcastCriteria);
+$('podcastCriteriaModal').addEventListener('click',e=>{
+  if(e.target===$('podcastCriteriaModal'))closePodcastCriteria();
+});
 $('adviceClose').addEventListener('click',closePodcastAdvice);
 $('adviceCloseBottom').addEventListener('click',closePodcastAdvice);
 $('podcastAdviceModal').addEventListener('click',e=>{
   if(e.target===$('podcastAdviceModal'))closePodcastAdvice();
 });
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&$('podcastAdviceModal').classList.contains('open'))closePodcastAdvice();
+  if(e.key!=='Escape')return;
+  if($('podcastCriteriaModal').classList.contains('open'))closePodcastCriteria();
+  else if($('podcastAdviceModal').classList.contains('open'))closePodcastAdvice();
 });
 bindFacultyChartFilter();
+openPodcastCriteria();
 loadData();
 </script>
 <div class="auth-chip" aria-label="บัญชีผู้ใช้"><span id="authUserEmail"></span><button type="button" onclick="OOEAuth.logout()">ออกจากระบบ</button></div>
