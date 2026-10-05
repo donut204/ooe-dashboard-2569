@@ -438,7 +438,12 @@ html.auth-check body{visibility:hidden}
   font-size:12px;
   font-weight:800;
 }
-.criteria-list .accent{color:#2b78c5}
+.criteria-item-text{min-width:0}
+.criteria-term{
+  color:#2b78c5;
+  font-weight:700;
+  white-space:nowrap;
+}
 .criteria-foot{
   display:flex;
   align-items:center;
@@ -461,11 +466,6 @@ html.auth-check body{visibility:hidden}
   height:18px;
   margin:0;
   accent-color:#2b78c5;
-}
-.criteria-hide svg{
-  width:18px;
-  height:18px;
-  color:#627d98;
 }
 .criteria-confirm{
   min-width:118px;
@@ -553,7 +553,7 @@ html.auth-check body{visibility:hidden}
             <li>วิชาสัมมนา</li>
             <li>รายวิชาอื่น ๆ ที่ไม่ได้สอนในห้องเรียน</li>
             <li>รายวิชา นศ. เป็นศูนย์</li>
-            <li>วิชาที่ได้รับให้ดำเนินการในรูปแบบอื่น ๆ เช่น <span class="accent">Active Learning</span></li>
+            <li><span class="criteria-item-text">วิชาที่ได้รับให้ดำเนินการในรูปแบบอื่น ๆ เช่น <span class="criteria-term">Active Learning</span></span></li>
           </ol>
         </div>
       </section>
@@ -562,9 +562,6 @@ html.auth-check body{visibility:hidden}
     <div class="criteria-foot">
       <label class="criteria-hide" for="aiCriteriaDontShow">
         <input type="checkbox" id="aiCriteriaDontShow">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M3 3l18 18M10.6 10.7a2 2 0 0 0 2.7 2.7M9.9 4.3A10.4 10.4 0 0 1 12 4c5.5 0 9 5 9 5a16.8 16.8 0 0 1-2.6 3.1M6.2 6.2C4.1 7.6 3 9 3 9s3.5 5 9 5c1.1 0 2.1-.2 3-.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
         <span>ห้ามแสดงอีก</span>
       </label>
       <button type="button" class="criteria-confirm" id="aiCriteriaConfirm">เข้าใจแล้ว</button>
