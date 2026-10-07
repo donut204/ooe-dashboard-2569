@@ -256,11 +256,11 @@ Internal status ระดับรายวิชาสามารถจัด�
 มี experimental branch:
 - `course-profile-scoring`
 
-และ Draft PR ที่เคยสร้าง:
-- PR #2 — แนวคิด group รายวิชา/เฉลี่ย Profile
+PR ที่เกี่ยวข้อง:
+- PR #2 — แนวคิด group รายวิชา/เฉลี่ย Profile — **ปิดแล้ว 07/10/2569, ไม่ได้ merge**
 
 Branch นี้ใช้เป็น **prototype/reference เท่านั้น ไม่ใช่ source of truth**  
-หากต้องการหยิบ logic มาใช้ ให้ fetch `main` ล่าสุดก่อน แล้วตรวจ diff/reimplement เฉพาะส่วนที่ยังตรง requirement ปัจจุบัน ห้าม merge PR #2 แบบอัตโนมัติ
+หากต้องการหยิบ logic มาใช้ ให้ fetch `main` ล่าสุดก่อน แล้วตรวจ diff/reimplement เฉพาะส่วนที่ยังตรง requirement ปัจจุบัน
 
 ### คำสั่งสำหรับแชท/ผู้พัฒนาคนถัดไป
 
@@ -747,6 +747,7 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ปิด PR #2 (`course-profile-scoring` → `main`) โดย **ไม่ merge** เพื่อเคลียร์ Pull Request ที่ค้างอยู่
 - ปรับ UI ตาราง AI Tutor / Podcast ตามภาพอ้างอิงให้เป็น Tree Hierarchy: **คณะ/วิทยาลัย → รายวิชา → Course Profile**
 - เพิ่มแถวกลุ่มคณะ/วิทยาลัยพื้นชมพูอ่อน พร้อมปุ่ม Collapse/Expand
 - เพิ่มแถวรายวิชาแบบ Nested พร้อมจำนวน Profile และปุ่ม Collapse/Expand
