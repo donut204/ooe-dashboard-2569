@@ -1,7 +1,7 @@
 # OOE Dashboard 2569 — Handoff & Knowledge Base
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 06/10/2569**  
+> **อัปเดตล่าสุด: 07/10/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -449,7 +449,86 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 
 ---
 
-## 15. Change Log
+## 15. Logic การนับระดับรายวิชาแบบ Profile-weighted (ใหม่ 07/10/2569)
+
+ผู้ใช้ยืนยันวิธีคิดใหม่สำหรับหน้า AI Tutor และ Podcast:
+
+- หน่วยนับหลัก = `faculty + courseCode`
+- 1 รหัสวิชา = คะแนนเต็ม 1 คะแนน
+- หากรายวิชามีหลาย Profile ให้แบ่งน้ำหนักเท่ากันตามจำนวน Profile
+- Dashboard ต้องยังสามารถกด Expand เพื่อดูผลราย Profile ได้
+- ชีท `691 AI Tutor` และ `691 Podcast` เป็นข้อมูลที่ผ่านการคัดรายวิชาตามเกณฑ์ตัวหารแล้ว ไม่ต้องคัด 7 เงื่อนไขซ้ำใน Dashboard
+
+### AI Tutor
+
+แต่ละ Profile:
+- ทำ = 1
+- ไม่ทำ = 0
+
+คะแนนรายวิชา:
+```
+AVERAGE(Profile scores)
+```
+
+ตัวอย่าง:
+- 2 Profile: 1 และ 0 → คะแนนรายวิชา = 0.50 / 1
+- 2 Profile: 1 และ 1 → คะแนนรายวิชา = 1.00 / 1
+
+### Podcast
+
+แต่ละ Profile ใช้เกณฑ์ 15 Podcast และต้อง cap ที่ 15:
+
+```
+Profile score = MIN(PodcastCount, 15) / 15
+Course score = AVERAGE(Profile scores)
+```
+
+ห้ามให้ Profile ที่ทำเกิน 15 ชดเชย Profile อื่น
+
+ตัวอย่าง:
+- Profile A = 8 → 8/15 = 0.5333
+- Profile B = 15 → 15/15 = 1.0000
+- รายวิชา = (0.5333 + 1.0000) / 2 = 0.7667 = 76.67%
+
+### Dashboard UI ที่ตกลง
+
+ทั้ง AI Tutor และ Podcast:
+- KPI / กราฟ / Donut ใช้คะแนนระดับรายวิชา
+- รายวิชาทั้งหมดต้องนับ unique `faculty + courseCode`
+- ตารางรายละเอียดเป็นแบบ Parent/Child
+  - Parent = courseCode
+  - Child = courseProfile / coursename
+  - กด + / − เพื่อ Expand/Collapse
+- Parent แสดงคะแนนเช่น `0.77 / 1`
+- Child แสดงค่าจริงของ Profile และสถานะเดิมจาก Sheet
+- Search ต้องค้นได้ทั้ง courseCode และ courseProfile
+- Filter ประเภทรายวิชายังใช้กับ Profile ก่อนนำมาคิดคะแนน
+- ไม่เผยแพร่อีเมลผู้สอน
+
+### สถานะระดับรายวิชา
+
+- score = 1 → ครบทุก Profile
+- 0 < score < 1 → ทำ/จัดทำบางส่วน
+- score = 0 → ไม่ทำ
+
+### Branch สำหรับรอบพัฒนา
+
+รอบนี้พัฒนาใน branch:
+`course-profile-scoring`
+
+ยังไม่ขึ้น `main` จนกว่าจะตรวจ UI/logic และผู้ใช้อนุมัติ
+
+---
+
+## 16. Change Log
+
+### 07/10/2569
+- ยืนยันหน่วยนับใหม่: 1 courseCode = 1 รายวิชา คะแนนเต็ม 1 คะแนน
+- เพิ่ม Profile-weighted scoring สำหรับ AI Tutor และ Podcast
+- Podcast cap แต่ละ Profile ที่ 15 ก่อนเฉลี่ย
+- ปรับหน้า AI Tutor / Podcast ใน branch `course-profile-scoring` ให้ group ตามรายวิชาและ Expand ดู Profile
+- KPI / กราฟ / Donut เปลี่ยนเป็นคะแนนความครบถ้วนระดับรายวิชา
+- ยังไม่ merge ขึ้น main
 
 ### 06/10/2569
 - เพิ่มกฎบังคับ: ต้องอ่าน Handoff จาก `main` ก่อนเริ่มงานทุกครั้ง
