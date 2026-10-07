@@ -517,6 +517,10 @@ html.auth-check body{visibility:hidden}
 .kpi-grid-v2{display:grid;grid-template-columns:repeat(4,minmax(190px,1fr));gap:14px}
 .kpi-card-v2{position:relative;min-height:146px;padding:18px 20px;overflow:hidden;box-shadow:0 7px 20px rgba(16,42,67,.065);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
 .kpi-card-v2:hover{transform:translateY(-2px);box-shadow:0 11px 26px rgba(16,42,67,.10)}
+.kpi-filter-card{cursor:pointer;user-select:none}
+.kpi-filter-card:focus-visible{outline:3px solid rgba(47,111,214,.22);outline-offset:3px}
+.kpi-filter-card.is-active{outline:2px solid #2f6fd6;outline-offset:0;box-shadow:0 10px 25px rgba(47,111,214,.13)}
+
 .kpi-card-v2::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:#2f6fd6}
 .kpi-card-v2.complete::before{background:var(--green)}
 .kpi-card-v2.partial::before{background:var(--amber)}
@@ -573,25 +577,25 @@ html.auth-check body{visibility:hidden}
 </section>
 <section class="kpi-area-v2">
 <div class="kpi-grid-v2">
-  <article class="panel kpi-card-v2">
+  <article class="panel kpi-card-v2 kpi-filter-card" data-status-filter="" data-kpi-primary="true" role="button" tabindex="0" aria-pressed="false" title="แสดงทุกสถานะ">
     <div class="kpi-card-mainline">
       <span class="kpi-icon-v2"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 5.5c2.6-.8 4.9-.4 7 1.2v11.8c-2.1-1.6-4.4-2-7-1.2V5.5Zm15 0c-2.6-.8-4.9-.4-7 1.2v11.8c2.1-1.6 4.4-2 7-1.2V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
       <div class="kpi-card-copy"><div class="kpi-label">รายวิชาทั้งหมด</div><div class="kpi-status-value"><span class="kpi-value" id="totalKpi">0</span><span class="kpi-unit">รายวิชา</span></div><div class="kpi-note" id="totalNote">จาก 0 Profile</div></div>
     </div>
   </article>
-  <article class="panel kpi-card-v2 complete">
+  <article class="panel kpi-card-v2 complete kpi-filter-card" data-status-filter="complete" data-kpi-primary="true" role="button" tabindex="0" aria-pressed="false" title="กรองเฉพาะรายวิชาที่ครบทุก Profile">
     <div class="kpi-card-mainline">
       <span class="kpi-icon-v2 green"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12.5 4.2 4.2L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <div class="kpi-card-copy"><div class="kpi-label">ครบทุก Profile</div><div class="kpi-status-value"><span class="kpi-value" id="completeCourseKpi">0</span><span class="kpi-unit">รายวิชา</span></div><div class="kpi-note" id="completeCourseNote">0.00%</div></div>
     </div>
   </article>
-  <article class="panel kpi-card-v2 partial">
+  <article class="panel kpi-card-v2 partial kpi-filter-card" data-status-filter="partial" data-kpi-primary="true" role="button" tabindex="0" aria-pressed="false" title="กรองเฉพาะรายวิชาที่จัดทำไม่ครบ">
     <div class="kpi-card-mainline">
       <span class="kpi-icon-v2 amber"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 6.5v7.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1" fill="currentColor"/></svg></span>
       <div class="kpi-card-copy"><div class="kpi-label">จัดทำไม่ครบ</div><div class="kpi-status-value"><span class="kpi-value" id="partialCourseKpi">0</span><span class="kpi-unit">รายวิชา</span></div><div class="kpi-note" id="partialCourseNote">0.00%</div></div>
     </div>
   </article>
-  <article class="panel kpi-card-v2 notdone">
+  <article class="panel kpi-card-v2 notdone kpi-filter-card" data-status-filter="notdone" data-kpi-primary="true" role="button" tabindex="0" aria-pressed="false" title="กรองเฉพาะรายวิชาที่ไม่ทำ">
     <div class="kpi-card-mainline">
       <span class="kpi-icon-v2 red"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span>
       <div class="kpi-card-copy"><div class="kpi-label">ไม่ทำ</div><div class="kpi-status-value"><span class="kpi-value" id="notdoneCourseKpi">0</span><span class="kpi-unit">รายวิชา</span></div><div class="kpi-note" id="notdoneCourseNote">0.00%</div></div>
@@ -611,7 +615,7 @@ html.auth-check body{visibility:hidden}
 <section class="charts-grid">
 <article class="panel chart-panel"><div class="section-head"><div><h2>ความคืบหน้า AI Tutor แยกตามคณะ</h2><p>คิดคะแนนระดับรายวิชาโดยเฉลี่ยความครบถ้วนของทุก Profile</p></div></div><div class="chart" id="facultyChart"></div></article>
 <div class="right-summary-stack">
-<article class="panel kpi-card-v2 kpi-score-card">
+<article class="panel kpi-card-v2 kpi-score-card kpi-filter-card" data-status-filter="" data-kpi-reset="true" role="button" tabindex="0" title="แสดงทุกสถานะ">
   <div class="kpi-card-mainline">
     <span class="kpi-icon-v2"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19V9M12 19V5M19 19v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3.5 19.5h17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
     <div class="kpi-card-copy">
@@ -1006,7 +1010,7 @@ function closeAIAdvice(){
   $('aiAdviceModal').classList.remove('open');
   document.body.style.overflow='';
 }
-function render(reset=true){if(reset)currentPage=1;const rows=filtered();setKpis(rows);renderChart(rows);renderDonut(rows);renderTable(rows)}
+function render(reset=true){if(reset)currentPage=1;const rows=filtered();setKpis(rows);renderChart(rows);renderDonut(rows);renderTable(rows);syncKpiCardState()}
 async function loadData(){
   showLoadingSkeleton();
   $('sourceDate').textContent='กำลังโหลดข้อมูลออนไลน์...';$('refreshBtn').disabled=true;
@@ -1014,6 +1018,28 @@ async function loadData(){
   catch(e){clearLoadingSkeleton();console.error(e);$('sourceDate').textContent='ยังไม่ได้เผยแพร่ชีทนี้เป็น CSV หรือโหลดข้อมูลไม่สำเร็จ';$('facultyChart').innerHTML='<div class="empty">กรุณา Publish ชีทสำหรับ Dashboard นี้เป็น CSV ก่อน</div>';}
   finally{$('refreshBtn').disabled=false;}
 }
+function syncKpiCardState(){
+  const current=$('statusFilter').value;
+  document.querySelectorAll('.kpi-filter-card[data-kpi-primary="true"]').forEach(card=>{
+    const active=(card.dataset.statusFilter||'')===current;
+    card.classList.toggle('is-active',active);
+    card.setAttribute('aria-pressed',String(active));
+  });
+}
+function applyKpiCardFilter(card){
+  const target=card.dataset.statusFilter||'';
+  const current=$('statusFilter').value;
+  $('statusFilter').value=target&&current===target?'':target;
+  render();
+}
+document.querySelectorAll('.kpi-filter-card[data-status-filter]').forEach(card=>{
+  card.addEventListener('click',()=>applyKpiCardFilter(card));
+  card.addEventListener('keydown',e=>{
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    e.preventDefault();
+    applyKpiCardFilter(card);
+  });
+});
 ['facultyFilter','typeFilter','statusFilter'].forEach(id=>$(id).addEventListener('change',()=>render()));
 $('searchBox').addEventListener('input',()=>render());
 $('resetBtn').addEventListener('click',()=>{$('facultyFilter').value='';$('typeFilter').value='';$('statusFilter').value='';$('searchBox').value='';render()});
