@@ -132,7 +132,7 @@ html.auth-check body{visibility:hidden}
 </style>
 
 </head><body>
-<header class="topbar"><div class="topbar-inner"><div><h1>ความคืบหน้าการจัดทำรายวิชา GR / GS</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source">สำนักการจัดการศึกษาออนไลน์ (OOE)<br>ข้อมูลอ้างอิง ณ วันที่ 05/10/2569<br><span class="live-indicator" aria-label="สถานะออนไลน์"><i></i></span><span id="sourceDate"></span></div></div></header>
+<header class="topbar"><div class="topbar-inner"><div><h1 id="pageTitle">Dashboard รายวิชา GR</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source">สำนักการจัดการศึกษาออนไลน์ (OOE)<br>ข้อมูลอ้างอิง ณ วันที่ 05/10/2569<br><span class="live-indicator" aria-label="สถานะออนไลน์"><i></i></span><span id="sourceDate"></span></div></div></header>
 <main><nav class="page-tabs" aria-label="เลือกหน้าประเภทรายวิชา"><button class="tab" data-type="GS" type="button">หน้า GS</button><button class="tab" data-type="GR" type="button">หน้า GR</button><a class="tab nav-link" href="ai-tutor.html">AI Tutor</a><a class="tab nav-link" href="podcast.html">Podcast</a></nav>
 <section class="panel filters"><div class="field"><label for="facultyFilter">คณะ / วิทยาลัย</label><select id="facultyFilter"><option value="">ทั้งหมด</option></select></div><div class="field"><label for="statusFilter">ความคืบหน้า</label><select id="statusFilter"><option value="">ทั้งหมด</option></select></div><div class="field"><label for="reviewFilter">สถานะการตรวจสอบ</label><select id="reviewFilter"><option value="">ทั้งหมด</option></select></div><div class="field"><label for="searchBox">ค้นหารหัสวิชาหรือรหัสรายวิชาในระบบ</label><input id="searchBox" type="search" placeholder="เช่น ICT401 หรือ 691GS..."></div><div class="filter-actions"><button class="refresh" id="refreshBtn" type="button">อัปเดตข้อมูล</button><button class="reset" id="resetBtn" type="button">ล้างตัวกรอง</button></div></section>
 <section class="kpis"><article class="panel kpi kpi-filter-card" data-review-filter="" role="button" tabindex="0" aria-pressed="false" title="แสดงทุกสถานะการตรวจสอบ"><div class="kpi-mainline"><span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 5.5c2.6-.8 4.9-.4 7 1.2v11.8c-2.1-1.6-4.4-2-7-1.2V5.5Zm15 0c-2.6-.8-4.9-.4-7 1.2v11.8c2.1-1.6 4.4-2 7-1.2V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><div class="kpi-copy"><div class="kpi-label">รายวิชาทั้งหมด</div><div class="kpi-value" id="totalKpi">0</div><div class="kpi-note" id="totalNote"></div></div></div></article><article class="panel kpi green kpi-filter-card" data-review-filter="ผ่าน" role="button" tabindex="0" aria-pressed="false" title="กรองเฉพาะรายวิชาที่ผ่าน"><div class="kpi-mainline"><span class="kpi-icon green"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12.5 4.2 4.2L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="kpi-copy"><div class="kpi-label">ผ่าน</div><div class="kpi-value" id="passKpi">0</div><div class="kpi-note" id="passNote"></div></div></div></article><article class="panel kpi amber kpi-filter-card" data-review-filter="อยู่ระหว่างการตรวจสอบ" role="button" tabindex="0" aria-pressed="false" title="กรองเฉพาะรายวิชาที่อยู่ระหว่างการตรวจสอบ"><div class="kpi-mainline"><span class="kpi-icon amber"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 6.5v7.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1" fill="currentColor"/></svg></span><div class="kpi-copy"><div class="kpi-label">อยู่ระหว่างการตรวจสอบ</div><div class="kpi-value" id="reviewingKpi">0</div><div class="kpi-note" id="reviewingNote"></div></div></div></article><article class="panel kpi red kpi-filter-card" data-review-filter="ไม่ผ่าน" role="button" tabindex="0" aria-pressed="false" title="กรองเฉพาะรายวิชาที่ไม่ผ่าน"><div class="kpi-mainline"><span class="kpi-icon red"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span><div class="kpi-copy"><div class="kpi-label">ไม่ผ่าน</div><div class="kpi-value" id="failKpi">0</div><div class="kpi-note" id="failNote"></div></div></div></article></section>
@@ -164,6 +164,12 @@ let currentPage=1;
 let activeType=location.hash.replace('#','').toUpperCase()==='GS'?'GS':'GR';
 
 const $=id=>document.getElementById(id);
+function syncPageIdentity(){
+  const label=`Dashboard รายวิชา ${activeType}`;
+  $('pageTitle').textContent=label;
+  document.title=`${label} | OOE 2569`;
+}
+syncPageIdentity();
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 function showLoadingSkeleton(){
@@ -443,6 +449,7 @@ function renderTable(rows){
 
 function render(reset=true){
   if(reset) currentPage=1;
+  syncPageIdentity();
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.type===activeType));
   $('chartTitle').textContent=`ผลการตรวจแยกตามคณะ — ${activeType}`;
   $('donutTitle').textContent=`สัดส่วนความคืบหน้าของเนื้อหา — ${activeType}`;
