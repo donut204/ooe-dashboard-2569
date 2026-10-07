@@ -26,6 +26,36 @@
 > **ส่วนนี้เป็น Requirement ปัจจุบันที่มีลำดับความสำคัญสูงสำหรับแชท/ผู้พัฒนาคนถัดไป**  
 > ให้ศึกษา section นี้ทั้งหมดก่อนแก้ `ai-tutor.html` หรือ `podcast.html` และห้ามย้อนกลับไปใช้ logic เก่าที่นับ 1 Profile = 1 รายวิชา
 
+
+### สถานะการดำเนินการ — Implemented on `main` (07/10/2569)
+
+ดำเนินการตาม section 1A แล้ว:
+
+- `ai-tutor.html` ใช้ `ProfileScore` จาก `AI_Tutor_Public` และ Group ด้วย `faculty + courseCode`
+- `podcast.html` ใช้ `ProfileScore` จาก `Podcast_Public` และ Group ด้วย `faculty + courseCode`
+- CourseScore = AVERAGE(ProfileScore ของทุก Profile ในรายวิชาเดียวกัน)
+- Filter, KPI, Faculty summary, Donut และ Course list ทำงานที่ระดับ “รายวิชา”
+- การเลือก `courseType` / คณะ / สถานะ / Search จะกรองหลัง Group แล้ว จึงไม่ทำให้ CourseScore ถูกคำนวณใหม่จาก Profile บางส่วน
+- รายการหลักเป็นรายวิชา และกด `+` เพื่อ Expand ดู Profile ย่อยได้
+- Profile ย่อยแสดงค่า AI Tutor / Podcast พร้อม `ProfileScore`
+- Podcast ไม่คำนวณคะแนนจาก `podcastCount` ซ้ำใน Dashboard อีกต่อไป แต่ใช้ `ProfileScore` upstream โดยตรง
+- Source ยังคงเป็น Public CSV เดิม ไม่ได้เปลี่ยนไปใช้ Pivot
+- ไม่ re-filter เกณฑ์ตัวหาร 7 ข้อใน Dashboard
+- ไม่ hard-code จำนวน 767 รายวิชา หรือคะแนนรวม
+
+Validation กับ source จริง ณ 07/10/2569:
+- AI Tutor = **921 Profile / 767 รายวิชา**, TotalPoints = **410.6667**, Progress = **53.54%**
+- Podcast = **921 Profile / 767 รายวิชา**, TotalPoints = **264.8668**, Progress = **34.53%**
+- Test cases ผ่าน:
+  - `BSC21467` = **66.67%**
+  - `GEC13267` = **50.00%**
+  - `BBA31367` = **50.00%**
+  - `BBA21267` = **76.67%**
+
+Commits:
+- AI Tutor: `b3efe13befb69a94552150b28a0ce258c5b99b14`
+- Podcast: `81a8de21d10b883a17c3cac9c562db4b320185aa`
+
 ### เป้าหมาย
 
 Dashboard AI Tutor และ Podcast ต้องประเมินผลที่ **ระดับรายวิชา** ไม่ใช่ระดับ Course Profile
@@ -676,6 +706,17 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- **ดำเนินการ section 1A บน `main` แล้ว**
+- ปรับ AI Tutor และ Podcast จากการนับ Profile เป็นการให้คะแนนระดับรายวิชา
+- ใช้ `ProfileScore` จาก Public CSV เป็น source ของคะแนนจริง
+- Group ด้วย `faculty + courseCode` และเฉลี่ย ProfileScore เป็น CourseScore
+- เปลี่ยน KPI / Faculty summary / Donut / Filter / Course list ให้ใช้หน่วย “รายวิชา”
+- เพิ่ม Expand/Collapse เพื่อดู Profile ย่อย พร้อม ProfileScore
+- แก้ filter ให้กรองหลัง Group เพื่อไม่ให้การเลือกประเภทวิชาทำให้คะแนนรายวิชาถูกคำนวณใหม่จาก Profile บางส่วน
+- ตรวจ source จริงได้ 921 Profile / 767 รายวิชา
+- Validation: AI Tutor 53.54% และ Podcast 34.53% ตรงกับ control figure
+- Commit AI Tutor: `b3efe13befb69a94552150b28a0ce258c5b99b14`
+- Commit Podcast: `81a8de21d10b883a17c3cac9c562db4b320185aa`
 - เพิ่ม requirement หลักสำหรับ AI Tutor / Podcast แบบ **1 รายวิชาเต็ม 1 คะแนน**
 - กำหนด key รายวิชา = `faculty + courseCode`
 - กำหนด CourseScore = AVERAGE(ProfileScore ของทุก Profile ในรายวิชาเดียวกัน)
