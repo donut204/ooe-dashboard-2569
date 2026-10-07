@@ -1,7 +1,7 @@
 # OOE Dashboard 2569 — Handoff & Knowledge Base
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 06/10/2569**  
+> **อัปเดตล่าสุด: 07/10/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -18,6 +18,228 @@
 - ถ้าผู้ใช้บอกว่า Google Sheet “เพิ่งเปลี่ยน / ล่าสุด / เพิ่มข้อมูล” ต้องอ่าน source ล่าสุดก่อนแก้ Dashboard
 - ห้ามเดาเกณฑ์เอง หากไม่มีข้อมูลจากผู้ใช้หรือเอกสารต้นทาง
 - หลังแก้ระบบควรตรวจซ้ำว่า code ที่แก้มีผลจริง และไม่ทับงานใหม่
+
+---
+
+## 1A. งานถัดไปที่ต้องทำ — AI Tutor / Podcast แบบ “1 รายวิชาเต็ม 1 คะแนน” (คำสั่งล่าสุด 07/10/2569)
+
+> **ส่วนนี้เป็น Requirement ปัจจุบันที่มีลำดับความสำคัญสูงสำหรับแชท/ผู้พัฒนาคนถัดไป**  
+> ให้ศึกษา section นี้ทั้งหมดก่อนแก้ `ai-tutor.html` หรือ `podcast.html` และห้ามย้อนกลับไปใช้ logic เก่าที่นับ 1 Profile = 1 รายวิชา
+
+### เป้าหมาย
+
+Dashboard AI Tutor และ Podcast ต้องประเมินผลที่ **ระดับรายวิชา** ไม่ใช่ระดับ Course Profile
+
+- Key ของ 1 รายวิชา = `faculty + courseCode`
+- 1 รายวิชา มีคะแนนเต็มสูงสุด = **1.00 คะแนน**
+- หากรายวิชาหนึ่งมีหลาย Course Profile ให้เฉลี่ยคะแนนของทุก Profile ภายในรายวิชานั้น
+- จำนวน Profile มากหรือน้อยต้องไม่ทำให้รายวิชานั้นมีน้ำหนักเกิน 1 คะแนน
+- KPI ระดับมหาวิทยาลัย/คณะ ต้องคำนวณจากคะแนนระดับรายวิชา ไม่ใช่นับ Profile เป็นตัวหาร
+
+### Source ที่ต้องใช้จริง
+
+**ให้ใช้ Public CSV เดิมเป็น Data Source ของ Dashboard:**
+- `AI_Tutor_Public` — gid `223035731`
+- `Podcast_Public` — gid `149082930`
+
+**ห้ามเปลี่ยน Dashboard ไปใช้ Pivot เป็น CSV Source** ใน requirement ปัจจุบัน
+
+Pivot มีหน้าที่เป็น **Control Report / Validation** เท่านั้น:
+- `Pivot AI Tutor`
+- `Pivot Podcast`
+
+Source flow ที่ต้องยึด:
+
+```text
+691 AI Tutor
+├─ Pivot AI Tutor        ← ตรวจสอบผล
+└─ AI_Tutor_Public       ← CSV Source → Dashboard
+
+691 Podcast
+├─ Pivot Podcast         ← ตรวจสอบผล
+└─ Podcast_Public        ← CSV Source → Dashboard
+```
+
+### ข้อสำคัญเกี่ยวกับการคัดรายวิชา
+
+ชีท `691 AI Tutor` และ `691 Podcast` **ผ่านการคัด/กรองรายวิชาตามเกณฑ์ตัวหารมาแล้ว**  
+ดังนั้น Dashboard **ห้ามนำเกณฑ์ตัดออก 7 ข้อมากรองซ้ำอีกครั้ง** เพราะจะเสี่ยงตัดข้อมูลซ้ำและทำให้ตัวหารผิด
+
+เกณฑ์ 7 ข้อใน Modal ยังใช้เพื่ออธิบายเกณฑ์แก่ผู้ใช้ได้ แต่ business logic การคัดรายวิชาเกิดขึ้น upstream แล้ว
+
+### Schema ล่าสุดของ Public CSV
+
+`AI_Tutor_Public`:
+
+```text
+faculty
+courseType
+courseCode
+credits
+courseProfile
+profileType
+createdDate
+courseName
+instructors
+teacherType
+teacherCount
+students
+weeks
+aiTutor
+aiStatus
+ProfileScore
+courseLink
+```
+
+`Podcast_Public`:
+
+```text
+faculty
+courseType
+courseCode
+credits
+courseProfile
+profileType
+createdDate
+courseName
+instructors
+teacherType
+teacherCount
+students
+weeks
+podcastCount
+podcastStatus
+ProfileScore
+courseLink
+```
+
+### ProfileScore — กติกาที่ต้องใช้
+
+ค่าจริงของ `ProfileScore` อยู่ในสเกล **0–1** และใน Google Sheet/Public CSV จะแสดงเป็นเปอร์เซ็นต์ เช่น `53.33%`, `100.00%`
+
+Dashboard ต้อง parse ค่าเปอร์เซ็นต์กลับเป็น 0–1 ก่อนนำไปเฉลี่ย เช่น:
+
+```text
+0.00%   → 0
+53.33%  → 0.5333
+100.00% → 1
+```
+
+ห้ามคูณ 100 ซ้ำ และห้ามเปลี่ยนคะแนนเต็มของรายวิชาจาก 1 เป็น 100
+
+#### AI Tutor — ProfileScore
+
+ต่อ 1 Profile:
+
+```text
+AI Tutor = 1 → ProfileScore = 1.00 = 100%
+AI Tutor = 0 → ProfileScore = 0.00 = 0%
+```
+
+คะแนนระดับรายวิชา:
+
+```text
+CourseScore = AVERAGE(ProfileScore ของทุก Profile ใน faculty + courseCode เดียวกัน)
+```
+
+ตัวอย่างควบคุม:
+- `BSC21467` → Profile = 0%, 100%, 100% → CourseScore = **66.67% = 0.6667/1**
+- `GEC13267` → Profile = 100%, 0% → CourseScore = **50.00% = 0.50/1**
+- `BBA31367` → Profile = 0%, 0%, 100%, 100% → CourseScore = **50.00% = 0.50/1**
+
+#### Podcast — ProfileScore
+
+ต่อ 1 Profile upstream ใช้หลัก:
+
+```text
+ProfileScore = MIN(podcastCount, 15) / 15
+```
+
+จึงต้องมีเพดานสูงสุด 1.00 ต่อ Profile  
+Podcast ที่เกิน 15 **ห้ามเอาส่วนเกินไปชดเชย Profile อื่น**
+
+ตัวอย่าง:
+- Podcast 8 → 8/15 = 53.33%
+- Podcast 15 → 100.00%
+- Podcast 28 → ยังเป็น 100.00%
+
+คะแนนระดับรายวิชา:
+
+```text
+CourseScore = AVERAGE(ProfileScore ของทุก Profile ใน faculty + courseCode เดียวกัน)
+```
+
+ตัวอย่างควบคุม:
+- `BBA21267` → 53.33%, 100.00% → CourseScore = **76.67% = 0.7667/1**
+
+### KPI ระดับภาพรวม
+
+ให้คำนวณโดยใช้ “รายวิชา” เป็นหน่วย:
+
+```text
+TotalCourses = จำนวน unique (faculty + courseCode)
+TotalPoints  = SUM(CourseScore)
+Progress %   = TotalPoints / TotalCourses × 100
+```
+
+**ห้ามใช้จำนวน Profile เป็นตัวหาร KPI**
+
+ค่าควบคุมล่าสุดที่ตรวจจาก Public source เมื่อ 07/10/2569:
+- AI Tutor = **921 Profile / 767 รายวิชา**, TotalPoints ≈ **410.6667**, Progress ≈ **53.54%**
+- Podcast = **921 Profile / 767 รายวิชา**, TotalPoints ≈ **264.8668**, Progress ≈ **34.53%**
+
+> ตัวเลขเหล่านี้เป็น control figure ณ เวลาตรวจ ไม่ใช่ค่าที่ให้ hard-code หาก source เปลี่ยน ต้องคำนวณใหม่จาก CSV
+
+### การแสดงผลระดับรายวิชา / Profile
+
+Direction ที่ผู้ใช้ต้องการ:
+- รายการหลักควร Group เป็น **รายวิชา**
+- แสดง `courseCode` / ข้อมูลระดับรายวิชา / `CourseScore`
+- รายวิชาที่มีหลาย Profile ควรสามารถ **Expand** เพื่อดู Profile ย่อยได้
+- Profile ย่อยแสดงข้อมูลเดิมจาก CSV เช่น `courseProfile`, ผู้สอน, AI Tutor/Podcast count, status, ProfileScore, link
+- UI expand/collapse เป็นเรื่องการแสดงผลเท่านั้น **ห้ามมีผลต่อการคำนวณ KPI**
+
+Internal status ระดับรายวิชาสามารถจัดกลุ่มเพื่อใช้กับ KPI/filter ได้ดังนี้:
+- `CourseScore = 1` → complete
+- `0 < CourseScore < 1` → partial
+- `CourseScore = 0` → notdone
+
+ข้อความที่แสดงควรรักษา wording เดิมของแต่ละหน้าเท่าที่ทำได้ และห้ามสร้าง wording ใหม่โดยไม่จำเป็น
+
+### สิ่งที่ห้ามทำ
+
+- **ห้าม** นับ 1 Profile = 1 รายวิชา
+- **ห้าม** รวม ProfileScore ด้วย SUM แล้วปล่อยให้ 1 รายวิชาเกิน 1 คะแนน
+- **ห้าม** ใช้ `podcastCount รวม / (15 × จำนวน Profile)` แบบที่ Podcast ส่วนเกินของ Profile หนึ่งไปชดเชยอีก Profile
+- **ห้าม** re-filter เกณฑ์ตัวหารซ้ำใน Dashboard เพราะ upstream ตัดแล้ว
+- **ห้าม** hard-code จำนวน 767 หรือค่าคะแนนรวม เพราะ source เปลี่ยนได้
+- **ห้าม** เปลี่ยน source ไป Pivot โดยไม่ได้รับคำสั่งใหม่จากผู้ใช้
+- **ห้าม** merge/คัดลอก experimental branch แบบทั้งก้อนโดยไม่เทียบกับ `main` ล่าสุด
+
+### Branch / PR ทดลองที่มีอยู่
+
+มี experimental branch:
+- `course-profile-scoring`
+
+และ Draft PR ที่เคยสร้าง:
+- PR #2 — แนวคิด group รายวิชา/เฉลี่ย Profile
+
+Branch นี้ใช้เป็น **prototype/reference เท่านั้น ไม่ใช่ source of truth**  
+หากต้องการหยิบ logic มาใช้ ให้ fetch `main` ล่าสุดก่อน แล้วตรวจ diff/reimplement เฉพาะส่วนที่ยังตรง requirement ปัจจุบัน ห้าม merge PR #2 แบบอัตโนมัติ
+
+### คำสั่งสำหรับแชท/ผู้พัฒนาคนถัดไป
+
+1. อ่าน Handoff นี้จาก `main` ให้ครบ โดยเฉพาะ section **1A**
+2. Fetch `ai-tutor.html`, `podcast.html` และ source mapping ล่าสุดจาก `main` ก่อนแก้
+3. ถ้าผู้ใช้บอกว่า Sheet เปลี่ยน/ล่าสุด ให้ตรวจ Google Sheet exact source ก่อนคำนวณหรือแก้ code
+4. ปรับ AI Tutor และ Podcast ให้ใช้ `ProfileScore` จาก Public CSV และ Group ด้วย `faculty + courseCode`
+5. ให้ KPI, Faculty summary, filter/status และ course list ใช้หน่วย “รายวิชา” อย่างสอดคล้องกัน
+6. ตรวจ test case อย่างน้อย `BBA21267`, `BSC21467`, `GEC13267`, `BBA31367`
+7. เทียบ aggregate กับ control figure ล่าสุด แต่ห้าม hard-code
+8. รักษา UI/UX เดิมที่ไม่เกี่ยวข้อง หลีกเลี่ยงการรื้อหน้าโดยไม่จำเป็น
+9. **ก่อนแก้ `main` ต้องอ่านไฟล์ล่าสุดและใช้ SHA ล่าสุด ป้องกันการทับงานจากอีกแชท**
+10. หลังแก้ code ต้องตรวจ diff/test และ **อัปเดตไฟล์ Handoff นี้ในรอบเดียวกัน**
+11. หากพบว่า requirement ใน code/branch เก่าขัดกับ section 1A ให้ถือ **section 1A เป็น requirement ปัจจุบัน** จนกว่าผู้ใช้จะสั่งเปลี่ยน
 
 ---
 
@@ -56,13 +278,14 @@ Branches ที่เคยมี:
 - `main`
 - `backup-before-google-login`
 - `google-login`
+- `course-profile-scoring` — experimental prototype; ห้าม merge เข้า main แบบอัตโนมัติ
 
 ---
 
 ## 3. Google Sheet ต้นทาง
 
 Spreadsheet:
-`Report691_18_09_2569`
+`Report691_05_10_2569`
 
 Spreadsheet ID:
 `1q8Dfe2f79ehjk7NsefGGYP6UduajKJDV7E79w1_fKMg`
@@ -73,8 +296,10 @@ Public sheets:
 - `Podcast_Public` — gid `149082930`
 
 ชีทสำคัญอื่น:
-- `691-Data`
-- `691-AI Podcast`
+- `691 AI Tutor`
+- `691 Podcast`
+- `Pivot AI Tutor`
+- `Pivot Podcast`
 - `69/1-GS`
 - `69/1-GR`
 - `AI_Podcast_Result`
@@ -321,26 +546,22 @@ localStorage.removeItem('ooe_podcast_criteria_hidden_v1')
 
 ## 8. ฐานรายวิชา AI Tutor / Podcast
 
-เดิมใช้ฐาน 879 รายวิชา หลังการคัดกรอง
+ฐานรายวิชาสำหรับ Dashboard มาจากข้อมูลที่ผ่านการคัดกรอง upstream แล้วใน:
+- `691 AI Tutor`
+- `691 Podcast`
 
-เกณฑ์คัดออกที่ตกลง:
-- รายวิชาที่ลงท้าย `-(L)`
-- สอนโดยอาจารย์พิเศษเพียงคนเดียว
-- รายวิชาโครงงาน / เตรียมโครงงาน
-- รายวิชาเตรียมสหกิจ / สหกิจศึกษา
-- รายวิชาบัณฑิตศึกษาด้านการจัดการ
+Public CSV ที่ Dashboard ต้องใช้:
+- `AI_Tutor_Public`
+- `Podcast_Public`
 
-กติกาผู้สอน:
-- มีอาจารย์ประจำอย่างน้อย 1 คน → ยังนับ
-- มีแต่อาจารย์พิเศษ → ตัดออก
+**ห้ามใช้ 879 เป็นค่าตายตัว** และ **ห้าม re-filter เกณฑ์ตัวหารซ้ำใน Dashboard**  
+หน่วย KPI ปัจจุบัน = unique `faculty + courseCode` และ 1 รายวิชาเต็ม 1 คะแนน ตาม section 1A
 
-International College:
-- ใช้ i-Learning เป็นหลัก
-- ไม่ควรนับ d-Learning ซ้ำกับ i-Learning
+ค่าควบคุมล่าสุด ณ 07/10/2569:
+- Public ทั้งสองชุดมี 921 Profile
+- unique course key = 767 รายวิชา
 
-หมายเหตุ:
-จำนวนฐานอาจเปลี่ยนตามข้อมูลล่าสุด จึงต้องตรวจใหม่เมื่อ source/filter เปลี่ยน  
-ปัจจุบันหน้า AI Tutor เคยแสดงจำนวนมากกว่า 879 จากข้อมูล source ใหม่ ดังนั้นอย่ายึด 879 เป็นค่าตายตัวโดยไม่ตรวจชีทล่าสุด
+จำนวนนี้เปลี่ยนได้เมื่อ source เปลี่ยน จึงต้องคำนวณ runtime จาก CSV และห้าม hard-code
 
 ---
 
@@ -401,7 +622,7 @@ Robot login:
 - search/filter
 - guidance modal
 
-ปัจจุบันมีแผนจะ **ปรับรูปแบบการแสดงผลรายวิชาในหน้า AI Tutor และ Podcast** ในอนาคต แต่ยังไม่ได้ลงรายละเอียด/แก้ระบบ
+Requirement ปัจจุบันสำหรับหน้า AI Tutor / Podcast ถูกกำหนดแล้วใน section 1A: ให้ Group ระดับรายวิชา, คำนวณ CourseScore จากค่าเฉลี่ย ProfileScore และสามารถ Expand ดู Profile ย่อยได้ โดยรักษา UI เดิมที่ไม่เกี่ยวข้อง
 
 ---
 
@@ -438,6 +659,9 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 - [ ] Fetch ไฟล์ล่าสุดจาก `main`
 - [ ] ถ้า source เปลี่ยน ให้ตรวจ Google Sheet ล่าสุด
 - [ ] เช็ก header ก่อน mapping
+- [ ] AI Tutor / Podcast: ยืนยันว่า source คือ `AI_Tutor_Public` / `Podcast_Public`
+- [ ] AI Tutor / Podcast: Group ด้วย `faculty + courseCode` และ 1 รายวิชาเต็ม 1 คะแนน
+- [ ] AI Tutor / Podcast: ห้าม re-filter เกณฑ์ตัวหารซ้ำใน Dashboard
 - [ ] ทวน logic เดิมก่อนแก้
 - [ ] รักษา UI minimal
 - [ ] ไม่เผยแพร่อีเมลผู้สอน
@@ -450,6 +674,21 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ---
 
 ## 15. Change Log
+
+### 07/10/2569
+- เพิ่ม requirement หลักสำหรับ AI Tutor / Podcast แบบ **1 รายวิชาเต็ม 1 คะแนน**
+- กำหนด key รายวิชา = `faculty + courseCode`
+- กำหนด CourseScore = AVERAGE(ProfileScore ของทุก Profile ในรายวิชาเดียวกัน)
+- ยืนยันให้ใช้ `AI_Tutor_Public` / `Podcast_Public` เป็น CSV Source ต่อไป ไม่ใช้ Pivot เป็น source
+- กำหนด Pivot AI Tutor / Pivot Podcast เป็น Control Report สำหรับ validation
+- บันทึก schema ใหม่ที่มี `ProfileScore` ก่อน `courseLink`
+- บันทึกว่า ProfileScore แสดงเป็นเปอร์เซ็นต์ แต่ค่าจริงยังอยู่ในสเกล 0–1
+- บันทึกว่า `691 AI Tutor` / `691 Podcast` ผ่านการคัดเกณฑ์ตัวหาร upstream แล้ว ห้ามกรองซ้ำใน Dashboard
+- บันทึก control figure ล่าสุด: 921 Profile / 767 รายวิชา ทั้ง AI Tutor และ Podcast
+- เพิ่ม test cases สำหรับตรวจ logic: BBA21267, BSC21467, GEC13267, BBA31367
+- เพิ่มข้อห้าม hard-code จำนวนรายวิชา/คะแนนรวม
+- เพิ่มคำสั่งป้องกันการทับงาน: fetch main ล่าสุดและใช้ SHA ล่าสุดก่อนแก้
+- บันทึก `course-profile-scoring` / PR #2 เป็น prototype เท่านั้น ห้าม merge อัตโนมัติ
 
 ### 06/10/2569
 - เพิ่มกฎบังคับ: ต้องอ่าน Handoff จาก `main` ก่อนเริ่มงานทุกครั้ง
