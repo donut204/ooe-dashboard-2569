@@ -1,0 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap");
+
+:root{
+  --ooe-font:"Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif;
+}
+
+html,
+body,
+button,
+input,
+select,
+textarea{
+  font-family:var(--ooe-font)!important;
+}
