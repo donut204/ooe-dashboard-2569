@@ -518,6 +518,21 @@ Course score = AVERAGE(Profile scores)
 
 ยังไม่ขึ้น `main` จนกว่าจะตรวจ UI/logic และผู้ใช้อนุมัติ
 
+### Source architecture decision — Pivot as CSV source (07/10/2569)
+
+ผู้ใช้ปรับ Pivot Podcast ให้เป็น flat output แล้ว โดย:
+- Repeat row labels เพื่อให้ทุกแถวมี `name` และ `รหัสวิชา`
+- ปิด totals/subtotals ที่ไม่ต้องการ
+- ทุกแถวแทน 1 Profile
+- มีคอลัมน์ `คะแนนความครบถ้วน` ต่อ Profile พร้อมใช้
+
+ตัดสินใจใหม่:
+- สามารถใช้ `Pivot Podcast` เป็น CSV source ของ Dashboard ได้โดยตรง
+- Dashboard ทำหน้าที่ group ตาม `faculty/name + courseCode/รหัสวิชา` และคำนวณคะแนนระดับรายวิชาจาก Profile rows
+- ต้องรักษา Pivot source ให้อยู่ในสถานะ fully expanded / ไม่ collapse กลุ่ม เพราะการเปลี่ยน state ของ Pivot อาจทำให้ชุดแถวที่เผยแพร่เปลี่ยน
+- ก่อนใช้ `Pivot AI Tutor` เป็น source ต้องปรับให้ Repeat row labels และปิด totals ให้เป็น flat output แบบเดียวกับ Podcast
+- Pivot เป็นทั้ง control report และ source; Dashboard ยังทำเฉพาะ aggregation ระดับรายวิชาและ UI expand/collapse
+
 ### Workflow validation ก่อนขึ้น Dashboard
 
 ก่อน merge logic ใหม่เข้า `main` ให้สร้าง Pivot ตรวจสอบจากชีทต้นทางที่คัดเกณฑ์แล้วแยกกัน:
