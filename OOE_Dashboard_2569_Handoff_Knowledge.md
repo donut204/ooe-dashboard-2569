@@ -318,6 +318,14 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - **การแสดง TotalPoints ใน Card ใช้การปัดขึ้นด้วย `Math.ceil()`** ทั้ง AI Tutor และ Podcast เช่น 410.67 → 411, 264.87 → 265
 - การปัดขึ้นเป็น **presentation เท่านั้น**; ค่า Progress % และ logic คำนวณ KPI ยังคงใช้คะแนนจริงก่อนปัด
 - Card ผลลัพธ์หลักใช้ icon ขนาดใหญ่ขึ้น และวาง **icon ทางซ้าย / label + จำนวนทางขวา** แทนการวางจำนวนใต้ icon
+- **Main KPI Card กดเพื่อกรองข้อมูลได้ทุกหน้า**
+  - GR / GS: `รายวิชาทั้งหมด` = ทุกสถานะการตรวจสอบ, `ผ่าน`, `อยู่ระหว่างการตรวจสอบ`, `ไม่ผ่าน` → sync กับ `reviewFilter`
+  - AI Tutor / Podcast: `รายวิชาทั้งหมด` = ทุกสถานะ, `ครบทุก Profile`, `จัดทำไม่ครบ`, `ไม่ทำ` → sync กับ `statusFilter`
+  - Card `คะแนน KPI รวม` ของ AI Tutor / Podcast กดเพื่อกลับไปแสดงทุกสถานะ
+  - กด Card สถานะเดิมซ้ำ = ยกเลิกสถานะนั้นและกลับเป็นทั้งหมด
+  - การกด Card **ไม่ล้าง filter อื่น** เช่น คณะ, ประเภทรายวิชา, ความคืบหน้า หรือ Search
+  - Card ที่เป็น filter ปัจจุบันมี Active state; รองรับเมาส์และ keyboard Enter / Space
+  - Profile Summary / Mini Card **ไม่ใช้เป็นตัวกรอง** เพราะรายการหลักเป็นหน่วยรายวิชา
 - Secondary Profile Summary:
   - AI Tutor: Profile ทั้งหมด / Profile ที่ทำ / Profile ที่ไม่ทำ
   - Podcast: Profile ทั้งหมด / Profile ที่ทำครบ / Profile ที่จัดทำไม่ครบ / Profile ที่ไม่ทำ
@@ -352,6 +360,9 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - Podcast minimal warning icon: `30c549a98f73090aafdc134a8baedda475da7b45`
 - AI Tutor KPI round-up display: `7da3a459dea72318ccebbeec82f361f16ab92d18`
 - Podcast KPI round-up display: `dc033233305e9faecc4cfeba8bdfb08d6d65b845`
+- GR/GS KPI card filters: `a60df8648fd484f9ef81e62ee2c7e798a5515ad9`
+- AI Tutor KPI card filters: `a011d2edc92118ebb19477214d456d1361dc9850`
+- Podcast KPI card filters: `5982912492a36c42f13f6ac1add34ca03f615ba3`
 
 ---
 
@@ -788,6 +799,11 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- เพิ่ม Click-to-filter ให้ Main KPI Card ทุกหน้า: GR, GS, AI Tutor และ Podcast
+- GR/GS Card sync กับ `reviewFilter`; AI Tutor/Podcast Card sync กับ `statusFilter`
+- กดสถานะเดิมซ้ำเพื่อกลับ `ทั้งหมด`; Card คะแนน KPI รวมใช้เป็น reset status บน AI Tutor/Podcast
+- รักษา filter อื่นไว้เมื่อกด Card และเพิ่ม Active state + keyboard Enter/Space
+- Profile Summary ยังคงเป็นข้อมูลประกอบ ไม่ใช้กรองรายวิชา
 - ปรับการแสดง `คะแนน KPI รวม` ให้ปัดขึ้นด้วย `Math.ceil()` ทั้ง AI Tutor และ Podcast; ค่าเปอร์เซ็นต์ยังคำนวณจากคะแนนจริงก่อนปัด
 - ปรับ Warning icon ของ Card `จัดทำไม่ครบ` ให้เบาลงทั้ง AI Tutor และ Podcast: ใช้เครื่องหมาย `!` แบบเส้นบาง ไม่มีกรอบสามเหลี่ยม
 - เปลี่ยน icon Card `จัดทำไม่ครบ` เป็น Warning / เครื่องหมายตกใจสี Amber ทั้ง AI Tutor และ Podcast
