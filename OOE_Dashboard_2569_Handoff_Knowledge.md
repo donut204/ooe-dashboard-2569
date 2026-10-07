@@ -914,6 +914,11 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- บังคับให้แสดงจำนวนในทุกสีของกราฟแท่งทุกหน้า: GR/GS, AI Tutor, Podcast แม้ segment แคบ
+- ปรับ CSS ของ segment ให้ label ตัวเลขสามารถล้นเล็กน้อยได้, ลดขนาดเป็น 12px และเพิ่ม text-shadow เพื่ออ่านง่าย
+- Commit GR/GS chart labels: `aaa3ae15dd45e0454d906381f049c049f68e91d6`
+- Commit AI Tutor chart labels: `e374ab6f65b7c817374a236a37f91f25ce565758`
+- Commit Podcast chart labels: `04f6ffdf61370e3e0eb2eddb88b50a1cac2d3364`
 - ปรับ GR/GS KPI Card ให้ใช้ visual system แบบ AI Tutor / Podcast โดยคงข้อความเดิมทั้งหมด และเพิ่ม icon/ขนาดตัวอักษร/ขนาด card ให้สอดคล้องกัน
 - เปลี่ยนกราฟคณะของ AI Tutor / Podcast เป็น 100% stacked status proportion: ครบทุก Profile / จัดทำไม่ครบ / ไม่ทำ
 - Donut ของ AI Tutor / Podcast **ยังไม่เปลี่ยนในรอบนี้**; คงแสดงคะแนน KPI ที่ได้ vs คะแนนที่ยังขาด เพื่อไม่ซ้ำกับกราฟสถานะรายวิชา
