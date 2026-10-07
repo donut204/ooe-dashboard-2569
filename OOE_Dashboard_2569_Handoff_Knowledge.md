@@ -279,6 +279,21 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 11. หากพบว่า requirement ใน code/branch เก่าขัดกับ section 1A ให้ถือ **section 1A เป็น requirement ปัจจุบัน** จนกว่าผู้ใช้จะสั่งเปลี่ยน
 
 
+## 1C. Navigation / Sidebar Proposal (รออนุมัติ 07/10/2569)
+
+- ลำดับ Navigation ล่าสุดเปลี่ยนเป็น: **หน้า GS → หน้า GR → AI Tutor → Podcast** ทุกหน้าหลัก
+- ปัจจุบันยังใช้ Top navigation buttons อยู่
+- ผู้ใช้ขอร่างแนวทาง **Sidebar Navigation** ก่อน implement จริง
+- Proposal:
+  - Desktop: Sidebar ซ้ายกว้างประมาณ 200–220px อยู่ใต้ Header หลัก
+  - เมนูเรียง: หน้า GS, หน้า GR, AI Tutor, Podcast
+  - Active menu ใช้ Blue filled; เมนูอื่นพื้นโปร่ง/ขาว
+  - Main content อยู่ด้านขวาและยังคง Filter → KPI → Chart → Table ตามเดิม
+  - Sidebar ควร sticky ขณะ scroll
+  - Mobile/Tablet: Sidebar ยุบเป็นปุ่ม Menu / Drawer เพื่อไม่กินพื้นที่
+  - Header หลักยังคง Navy เดิม ไม่ย้ายข้อมูลอ้างอิง/สถานะออนไลน์เข้า Sidebar ในร่างแรก
+- **ยังไม่ implement Sidebar จนกว่าผู้ใช้จะอนุมัติภาพร่าง**
+
 ## 1B. UI Implementation — AI Tutor / Podcast (อนุมัติและดำเนินการ 07/10/2569)
 
 > ดำเนินการตามร่างเดิมแล้ว **ยกเว้น KPI Card** ตามคำสั่งผู้ใช้ล่าสุด
@@ -321,6 +336,7 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - **การแสดง TotalPoints ใน Card ใช้การปัดขึ้นด้วย `Math.ceil()`** ทั้ง AI Tutor และ Podcast เช่น 410.67 → 411, 264.87 → 265
 - การปัดขึ้นเป็น **presentation เท่านั้น**; ค่า Progress % และ logic คำนวณ KPI ยังคงใช้คะแนนจริงก่อนปัด
 - Card ผลลัพธ์หลักใช้ icon ขนาดใหญ่ขึ้น และวาง **icon ทางซ้าย / label + จำนวนทางขวา** แทนการวางจำนวนใต้ icon
+- **GR/GS Active state ใช้สีตามสถานะของ Card**: รายวิชาทั้งหมด = Blue, ผ่าน = Green, อยู่ระหว่างการตรวจสอบ = Amber, ไม่ผ่าน = Red
 - **Main KPI Card กดเพื่อกรองข้อมูลได้ทุกหน้า**
   - GR / GS: `รายวิชาทั้งหมด` = ทุกสถานะการตรวจสอบ, `ผ่าน`, `อยู่ระหว่างการตรวจสอบ`, `ไม่ผ่าน` → sync กับ `reviewFilter`
   - AI Tutor / Podcast: `รายวิชาทั้งหมด` = ทุกสถานะ, `ครบทุก Profile`, `จัดทำไม่ครบ`, `ไม่ทำ` → sync กับ `statusFilter`
@@ -377,6 +393,9 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - Podcast faculty/filter/chart refinement: `235fa6424b67c881fddb7b1f8b51a18563ab90d6`
 - AI Tutor dynamic Profile-count filter: `34c6fcb2fd3392ab7f2eb7bf6dc5078b242a1348`
 - Podcast dynamic Profile-count filter: `e52eb1ced14f155aa5f6c01397bd2b79eec0acd7`
+- GR/GS active colors + GS-first nav: `41dd555f22c5d58d613b9050d3e9a2690ec38d81`
+- AI Tutor GS-first nav: `45d05e2fb2d1793f847b633e6fa1423f120d4c67`
+- Podcast GS-first nav: `9117a75e5b2800d60fe13de6f4bf9b236be533bf`
 
 ---
 
@@ -813,6 +832,9 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ปรับ GR/GS Active KPI Card ให้ใช้สีตามสถานะ ไม่ใช้ Blue เหมือนกันทุก Card
+- เปลี่ยนลำดับ Navigation ทุกหน้าเป็น GS → GR → AI Tutor → Podcast
+- บันทึก Sidebar Navigation เป็น proposal รอผู้ใช้อนุมัติภาพก่อน implement
 - ปรับ Filter `จำนวน Profile` ให้สร้าง option ตามจำนวนที่พบจริงใน source แบบ dynamic และกรองแบบ exact match
 - Source ปัจจุบันทั้ง AI Tutor และ Podcast พบจำนวน Profile ต่อรายวิชา = 1, 2, 3, 4
 - หากอนาคตมีจำนวนอื่น ระบบเพิ่ม option อัตโนมัติโดยไม่ต้องแก้ HTML
