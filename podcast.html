@@ -807,7 +807,7 @@ const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2
 const PODCAST_REQUIRED_COUNT=15;
 const DEFAULT_STATUS_LABELS={complete:'ทำครบ',partial:'จัดทำไม่ครบ',notdone:'ไม่ทำ',pending:'รอข้อมูล'};
 let STATUS_LABELS={...DEFAULT_STATUS_LABELS};
-let DATA=[]; const PAGE_SIZE=20; let currentPage=1;
+let DATA=[]; const FACULTY_PAGE_SIZE=4; let currentPage=1;
 let dashboardRevealDone=false;
 function revealDashboardOnce(){
   if(dashboardRevealDone)return;
@@ -1051,27 +1051,27 @@ function adviceCell(d){
   return '<span class="advice-dash">—</span>';
 }
 function renderTable(rows){
-  const facultyTotals=new Map();
+  // rows already reflect all active filters/search.
+  // Group filtered courses by faculty first, then paginate the faculty groups.
+  const facultyGroups=new Map();
   rows.forEach(g=>{
     const faculty=g.faculty||'ไม่ระบุคณะ';
-    facultyTotals.set(faculty,(facultyTotals.get(faculty)||0)+1);
-  });
-  const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));
-  currentPage=Math.min(currentPage,pages);
-  const start=(currentPage-1)*PAGE_SIZE;
-  const p=rows.slice(start,start+PAGE_SIZE);
-  const facultyGroups=new Map();
-  p.forEach((g,i)=>{
-    const faculty=g.faculty||'ไม่ระบุคณะ';
     if(!facultyGroups.has(faculty))facultyGroups.set(faculty,[]);
-    facultyGroups.get(faculty).push({g,index:start+i});
+    facultyGroups.get(faculty).push(g);
   });
-  let facultyIndex=0;
+
+  const facultyEntries=[...facultyGroups.entries()];
+  const facultyTotal=facultyEntries.length;
+  const pages=Math.max(1,Math.ceil(facultyTotal/FACULTY_PAGE_SIZE));
+  currentPage=Math.min(currentPage,pages);
+  const facultyStart=(currentPage-1)*FACULTY_PAGE_SIZE;
+  const pageFaculties=facultyEntries.slice(facultyStart,facultyStart+FACULTY_PAGE_SIZE);
+
   const html=[];
-  facultyGroups.forEach((items,faculty)=>{
-    const fid='f'+currentPage+'_'+facultyIndex++;
-    html.push(`<tr class="faculty-group-row"><td colspan="8"><div class="faculty-group-content"><button type="button" class="tree-toggle faculty-toggle" data-faculty-group="${fid}" aria-expanded="true" aria-label="ย่อกลุ่ม ${esc(faculty)}">−</button><span>${esc(faculty)}</span><small>${(facultyTotals.get(faculty)||items.length).toLocaleString('th-TH')} รายวิชา</small></div></td></tr>`);
-    items.forEach(({g,index},courseIndex)=>{
+  pageFaculties.forEach(([faculty,items],facultyIndex)=>{
+    const fid='f'+currentPage+'_'+facultyIndex;
+    html.push(`<tr class="faculty-group-row"><td colspan="8"><div class="faculty-group-content"><button type="button" class="tree-toggle faculty-toggle" data-faculty-group="${fid}" aria-expanded="true" aria-label="ย่อกลุ่ม ${esc(faculty)}">−</button><span>${esc(faculty)}</span><small>${items.length.toLocaleString('th-TH')} รายวิชา</small></div></td></tr>`);
+    items.forEach((g,courseIndex)=>{
       const id=fid+'_c'+courseIndex;
       html.push(`<tr class="course-group-row" data-faculty-parent="${fid}"><td class="tree-course-cell"><span class="course-group-main"><button type="button" class="tree-toggle course-toggle" data-group="${id}" aria-expanded="false" aria-label="ขยาย ${esc(g.courseCode)}">+</button><strong>${esc(g.courseCode)}</strong><small>(${g.profileCount} Profile)</small></span></td><td>—</td><td>${esc([...g.courseTypes].join(', ')||'—')}</td><td>—</td><td class="center"><span class="score-pill">${g.score.toFixed(2)} / 1</span></td><td class="center">${courseBadge(g.score)}</td><td class="center">—</td><td>—</td></tr>`);
       g.profiles.forEach(d=>{
@@ -1079,9 +1079,12 @@ function renderTable(rows){
       });
     });
   });
+
   $('courseRows').innerHTML=html.join('');
   $('resultCount').textContent=`แสดง ${rows.length.toLocaleString('th-TH')} จาก ${allCourseCount().toLocaleString('th-TH')} รายวิชา`;
-  $('pageInfo').textContent=rows.length?`แสดง ${start+1}–${Math.min(start+PAGE_SIZE,rows.length)} จาก ${rows.length} รายวิชา`:'ไม่พบข้อมูล';
+  $('pageInfo').textContent=rows.length
+    ? `แสดงคณะ ${facultyStart+1}–${Math.min(facultyStart+FACULTY_PAGE_SIZE,facultyTotal)} จาก ${facultyTotal.toLocaleString('th-TH')} คณะ · ${rows.length.toLocaleString('th-TH')} รายวิชา`
+    : 'ไม่พบข้อมูล';
   $('prevBtn').disabled=currentPage===1;
   $('nextBtn').disabled=currentPage===pages;
 }
