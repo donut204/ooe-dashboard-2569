@@ -306,9 +306,26 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - **หมายเหตุ:** ปัจจุบันยังไม่ได้ bundle binary font file ลง repo; ใช้ stylesheet กลางใน project + remote web font
 
 ### KPI Card
-- **ยังไม่ปรับ**
-- รักษา HTML / KPI Card เดิมของ AI Tutor และ Podcast ไว้ตามคำสั่งผู้ใช้
-- การเปลี่ยนรอบนี้ตรวจแล้วว่า KPI section ก่อน/หลังเหมือนเดิม
+- **ปรับใหม่แล้ว 07/10/2569** สำหรับทั้ง AI Tutor และ Podcast
+- ใช้โครงสร้าง 2 ระดับ: **ระดับรายวิชา (หลัก)** + **ระดับ Profile (รอง)**
+- Main cards มี 5 ใบ:
+  1. `รายวิชาทั้งหมด`
+  2. `คะแนน KPI รวม` — แสดง TotalPoints / TotalCourses + Progress % + horizontal progress bar
+  3. `ครบทุก Profile`
+  4. AI Tutor = `ทำบางส่วน` / Podcast = `จัดทำไม่ครบ`
+  5. `ไม่ทำ`
+- Secondary Profile Summary:
+  - AI Tutor: Profiles ทั้งหมด / Profile ที่ทำ / Profile ที่ไม่ทำ
+  - Podcast: Profiles ทั้งหมด / Profile ที่ทำครบ / Profile ที่จัดทำไม่ครบ / Profile ที่ไม่ทำ
+- ใช้สี Navy / Blue / Slate / White เป็นฐาน และใช้ Green / Amber / Red เฉพาะสถานะ
+- ห้าม hard-code ตัวเลขควบคุม เช่น 767, 921, 410.67, 53.54%, 264.87, 34.53%
+- ตัวเลข KPI ทุกตัวอัปเดตจาก Public CSV ของ Google Sheet ผ่าน `DATA` ปัจจุบัน และเปลี่ยนตาม filter/search
+- Course KPI ใช้ CourseScore ตาม Section 1A; Profile KPI ใช้ `ProfileScore` จาก source
+- ตัวเลขคะแนนและเปอร์เซ็นต์แสดง 2 ตำแหน่งทศนิยม
+- Validation source ณ 07/10/2569:
+  - AI Tutor: 767 รายวิชา / 921 Profile / 410.67 คะแนน / 53.54% / complete 389 / partial 43 / notdone 335 / Profile complete 482 / notdone 439
+  - Podcast: 767 รายวิชา / 921 Profile / 264.87 คะแนน / 34.53% / complete 161 / partial 223 / notdone 383 / Profile complete 203 / partial 225 / notdone 493
+- ค่าข้างต้นเป็น control figure สำหรับตรวจสอบเท่านั้น ไม่ใช่ค่าที่เขียนค้างใน HTML/JS
 
 ### Commits
 - Shared font stylesheet: `895edf283ab08acdf81fc308a6c211aee7c9091b`
@@ -316,6 +333,8 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - login.html font: `c44ced282fde5f962a0d4ba770a958ad408f4ecf`
 - AI Tutor UI: `09686cd983f96410959f21ebe22614ee831ee308`
 - Podcast UI: `1888705cb3d13a9c11c62cb055e9e629eaa286d6`
+- AI Tutor KPI v2: `ab94f9283390976e641a4e670a2264a3a51a2fee`
+- Podcast KPI v2: `2da36a9e86bd4732457c59c9f46f156341925de1`
 
 ---
 
@@ -752,6 +771,14 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ปรับ KPI Card AI Tutor / Podcast เป็น 5 Main Cards ระดับรายวิชา + Secondary Profile Summary
+- เพิ่ม Card `คะแนน KPI รวม` พร้อม TotalPoints / TotalCourses, Progress % และ Progress Bar
+- เพิ่มสถานะรายวิชา complete / partial / notdone พร้อมจำนวนและเปอร์เซ็นต์
+- เพิ่ม Profile summary แยกจาก KPI รายวิชาเพื่อไม่ให้สับสนหน่วย
+- KPI ใช้ข้อมูลจาก Google Sheet Public CSV แบบ dynamic; **ไม่ hard-code ตัวเลขควบคุม**
+- ตรวจ source ล่าสุดแล้วตรงกับ control figure AI Tutor 53.54% และ Podcast 34.53%
+- Commit AI Tutor KPI: `ab94f9283390976e641a4e670a2264a3a51a2fee`
+- Commit Podcast KPI: `2da36a9e86bd4732457c59c9f46f156341925de1`
 - ปรับ Tree table รอบล่าสุดให้รายวิชาเริ่มต้นแบบ collapsed; คณะยังเปิดให้เห็นรายการรายวิชา
 - ตัดสีชมพูจาก Tree table และเปลี่ยนเป็น Navy / Blue / Slate / White
 - เพิ่ม `assets/ooe-font.css` และใช้ Noto Sans Thai Web Font ร่วมกันในทุกหน้าหลัก
