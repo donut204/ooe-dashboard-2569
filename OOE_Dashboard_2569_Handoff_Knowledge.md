@@ -276,6 +276,42 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 10. หลังแก้ code ต้องตรวจ diff/test และ **อัปเดตไฟล์ Handoff นี้ในรอบเดียวกัน**
 11. หากพบว่า requirement ใน code/branch เก่าขัดกับ section 1A ให้ถือ **section 1A เป็น requirement ปัจจุบัน** จนกว่าผู้ใช้จะสั่งเปลี่ยน
 
+
+## 1B. UI Proposal — AI Tutor / Podcast (รอผู้ใช้อนุมัติ 07/10/2569)
+
+> **ยังไม่ implement ลง `ai-tutor.html` / `podcast.html`** ส่วนนี้เป็นร่างแนวทางตามภาพอ้างอิงล่าสุดของผู้ใช้
+
+### ตารางรายวิชา
+- ใช้โครงสร้าง Tree เดิม: `คณะ / วิทยาลัย → รายวิชา → Course Profile`
+- ค่าเริ่มต้น: **คณะเปิดอยู่ แต่รายวิชาแต่ละตัวยังไม่ Expand Profile**
+- แถวคณะแสดงชื่อคณะ + จำนวนรายวิชา
+- แถวรายวิชาแสดง `courseCode` + จำนวน Profile, Course Type, CourseScore, status
+- กดปุ่ม `+` ที่รายวิชาจึงค่อยแสดง Profile ย่อย
+- Profile ย่อยแสดง Course Profile, ผู้สอน, ProfileScore, status, คำแนะนำ และลิงก์
+- รักษา Section 1A scoring / KPI / source เดิมทั้งหมด
+
+### สี
+- **ตัดโทนชมพูออกจากตาราง**
+- ใช้ Navy / Blue / Slate / White เป็นฐาน
+- Faculty group row ใช้ฟ้าอ่อนหรือ Blue-gray
+- Course row ใช้ขาว/เทาอ่อน
+- ปุ่ม Expand/Collapse ใช้สีน้ำเงิน
+- Status ใช้ Green / Amber / Red ตามความหมายเดิม
+
+### Card direction
+- ปรับ KPI cards ให้เป็น white card + thin border + accent color/icon
+- ใช้สีแบบเดียวกันทั้ง AI Tutor และ Podcast
+- เน้น 4 กลุ่มข้อมูล: รายวิชาทั้งหมด / คะแนนความครบถ้วน / ความคืบหน้าเฉลี่ย / รายวิชาครบทุก Profile
+- ใช้ตัวเลขใหญ่, label ชัด, note สั้น และ progress bar เฉพาะความคืบหน้า
+- หลีกเลี่ยง card ที่มีพื้นสีสดเต็มใบ
+
+### Font
+- ปัจจุบัน code ใช้ `"Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif` แต่ไม่ได้ bundle font จึงอาจ fallback ต่างกันแต่ละเครื่อง
+- แนวทางที่เสนอ: self-host ฟอนต์ open-source ภายใน repo ด้วย `@font-face` และไฟล์ `.woff2` ใน `assets/fonts/`
+- ต้องใช้ฟอนต์ที่ license อนุญาต เช่น Noto Sans Thai หรือ IBM Plex Sans Thai
+- หลัง bundle แล้ว browser ของผู้ใช้จะใช้ font จาก project แทนการพึ่ง font ที่ติดตั้งในเครื่อง
+
+
 ---
 
 ## 2. ข้อมูลโครงการ
