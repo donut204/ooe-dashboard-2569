@@ -12,7 +12,7 @@ h1{margin:0;font-size:clamp(23px,3vw,34px)}.subtitle{margin:5px 0 0;color:#d9e8f
 main{max-width:1500px;margin:auto;padding:22px 28px 40px}.panel{background:#fff;border:1px solid #e2e8f0;border-radius:14px;box-shadow:var(--shadow)}
 .page-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}.tab{min-width:112px;height:42px;background:#dfe8f4;color:var(--navy);border:1px solid #c8d5e5;border-radius:9px;padding:0 18px;font:inherit;font-weight:700;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
 .tab:hover{text-decoration:none;background:#cfdced}.tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
-.filters{padding:18px;display:grid;grid-template-columns:minmax(170px,1fr) minmax(150px,.8fr) minmax(170px,1fr) minmax(260px,1.35fr) auto;gap:12px;align-items:end}
+.filters{padding:18px;display:grid;grid-template-columns:minmax(155px,1fr) minmax(135px,.8fr) minmax(150px,.9fr) minmax(145px,.85fr) minmax(240px,1.35fr) auto;gap:12px;align-items:end}
 .field label{display:block;margin:0 0 6px;color:var(--muted);font-size:12px;font-weight:700}.field select,.field input{width:100%;height:42px;padding:0 12px;border:1px solid #bcccdc;border-radius:9px;background:#fff;color:var(--ink);font:inherit}
 button{height:42px;border:0;border-radius:9px;padding:0 18px;font:inherit;font-weight:700;cursor:pointer}.refresh{background:var(--blue);color:#fff}.reset{background:#e6edf8;color:var(--navy)}.filter-actions{display:flex;gap:8px}
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:16px 0}.kpi{position:relative;padding:19px 22px;min-height:122px;border-left:5px solid var(--blue)}.kpi.green{border-color:var(--green)}.kpi.amber{border-color:var(--amber)}.kpi.red{border-color:var(--red)}.kpi.gray{border-color:var(--gray)}.kpi-label{font-size:13px;color:var(--muted)}.kpi-value{font-size:34px;font-weight:800;line-height:1.25;margin:7px 0 4px;color:#071d40}.kpi-note{font-size:12px;color:var(--muted)}
@@ -521,6 +521,9 @@ html.auth-check body{visibility:hidden}
 .kpi-filter-card{cursor:pointer;user-select:none}
 .kpi-filter-card:focus-visible{outline:3px solid rgba(47,111,214,.22);outline-offset:3px}
 .kpi-filter-card.is-active{outline:2px solid #2f6fd6;outline-offset:0;box-shadow:0 10px 25px rgba(47,111,214,.13)}
+.kpi-card-v2.complete.kpi-filter-card.is-active{outline-color:var(--green);box-shadow:0 10px 25px rgba(31,157,112,.16)}
+.kpi-card-v2.partial.kpi-filter-card.is-active{outline-color:var(--amber);box-shadow:0 10px 25px rgba(209,128,0,.16)}
+.kpi-card-v2.notdone.kpi-filter-card.is-active{outline-color:var(--red);box-shadow:0 10px 25px rgba(230,65,86,.15)}
 
 .kpi-card-v2::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:#2f6fd6}
 .kpi-card-v2.complete::before{background:var(--green)}
@@ -538,8 +541,11 @@ html.auth-check body{visibility:hidden}
 .kpi-card-v2 .kpi-note{margin-top:7px;font-size:13px;color:var(--muted);line-height:1.4}
 .kpi-status-value{display:flex;align-items:baseline;gap:7px}
 .kpi-status-value .kpi-unit{font-size:14px;font-weight:700;color:#627d98}
-.right-summary-stack{display:grid;grid-template-rows:auto auto;gap:16px;min-width:0}
+.right-summary-stack{display:grid;grid-template-rows:auto minmax(0,1fr);gap:16px;min-width:0;height:100%}
 .kpi-score-card{background:linear-gradient(145deg,#fff,#f8fbff);min-height:166px}
+.charts-grid{align-items:stretch}
+.right-summary-stack>.chart-panel{height:100%;display:flex;flex-direction:column}
+.right-summary-stack>.chart-panel .donut-body{flex:1;align-content:center}
 .kpi-score-card .kpi-card-mainline{min-height:auto;align-items:flex-start}
 .kpi-score-main{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:4px}
 .kpi-score-main .kpi-value{font-size:31px;margin:0}
@@ -561,6 +567,7 @@ html.auth-check body{visibility:hidden}
 .profile-mini.partial strong{color:#b66f00}
 .profile-mini.notdone strong{color:var(--red)}
 @media(max-width:1250px){.kpi-grid-v2{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:1150px){.right-summary-stack{height:auto;grid-template-rows:auto auto}.right-summary-stack>.chart-panel{height:auto}}
 @media(max-width:900px){.profile-mini-grid.podcast{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:650px){.kpi-grid-v2{grid-template-columns:1fr}.profile-mini-grid.ai,.profile-mini-grid.podcast{grid-template-columns:1fr}.profile-summary-head{align-items:flex-start;flex-direction:column}.kpi-card-v2{min-height:132px}.kpi-card-mainline{min-height:92px}.kpi-icon-v2{width:48px;height:48px;flex-basis:48px}.kpi-card-v2 .kpi-value{font-size:34px}}
 </style>
@@ -573,6 +580,7 @@ html.auth-check body{visibility:hidden}
 <div class="field"><label>คณะ / วิทยาลัย</label><select id="facultyFilter"><option value="">ทั้งหมด</option></select></div>
 <div class="field"><label>ประเภทรายวิชา</label><select id="typeFilter"><option value="">ทั้งหมด</option></select></div>
 <div class="field"><label>สถานะ AI Tutor</label><select id="statusFilter"><option value="">ทั้งหมด</option><option value="complete">ทำครบทุก Profile</option><option value="partial">จัดทำไม่ครบ</option><option value="notdone">ไม่ทำ</option></select></div>
+<div class="field"><label>จำนวน Profile</label><select id="profileCountFilter"><option value="">ทั้งหมด</option><option value="single">1 Profile</option><option value="multiple">มากกว่า 1 Profile</option></select></div>
 <div class="field"><label>ค้นหารหัสวิชาหรือรหัสรายวิชาในระบบ</label><input id="searchBox" type="search" placeholder="เช่น ICT112 หรือ 691GN..."></div>
 <div class="filter-actions"><button class="refresh" id="refreshBtn">อัปเดตข้อมูล</button><button class="reset" id="resetBtn">ล้างตัวกรอง</button></div>
 </section>
@@ -876,11 +884,13 @@ function groupCourses(rows){
   }).sort((a,b)=>natural(a.faculty,b.faculty)||natural(a.courseCode,b.courseCode));
 }
 function filtered(){
-  const f=$('facultyFilter').value,t=$('typeFilter').value,s=$('statusFilter').value,q=$('searchBox').value.trim().toLowerCase();
+  const f=$('facultyFilter').value,t=$('typeFilter').value,s=$('statusFilter').value,p=$('profileCountFilter').value,q=$('searchBox').value.trim().toLowerCase();
   return groupCourses(DATA).filter(g=>{
     if(f&&g.faculty!==f)return false;
     if(t&&!g.courseTypes.has(t))return false;
     if(s&&courseStatus(g.score)!==s)return false;
+    if(p==='single'&&g.profileCount!==1)return false;
+    if(p==='multiple'&&g.profileCount<=1)return false;
     if(!q)return true;
     return [g.faculty,g.courseCode,g.courseName,...g.profiles.flatMap(d=>[d.courseProfile,d.instructors])].some(x=>String(x||'').toLowerCase().includes(q));
   });
@@ -950,6 +960,11 @@ function adviceCell(d){
   return '<span class="advice-dash">—</span>';
 }
 function renderTable(rows){
+  const facultyTotals=new Map();
+  rows.forEach(g=>{
+    const faculty=g.faculty||'ไม่ระบุคณะ';
+    facultyTotals.set(faculty,(facultyTotals.get(faculty)||0)+1);
+  });
   const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));
   currentPage=Math.min(currentPage,pages);
   const start=(currentPage-1)*PAGE_SIZE;
@@ -964,7 +979,7 @@ function renderTable(rows){
   const html=[];
   facultyGroups.forEach((items,faculty)=>{
     const fid='f'+currentPage+'_'+facultyIndex++;
-    html.push(`<tr class="faculty-group-row"><td colspan="8"><div class="faculty-group-content"><button type="button" class="tree-toggle faculty-toggle" data-faculty-group="${fid}" aria-expanded="true" aria-label="ย่อกลุ่ม ${esc(faculty)}">−</button><span>${esc(faculty)}</span><small>${items.length} รายวิชา</small></div></td></tr>`);
+    html.push(`<tr class="faculty-group-row"><td colspan="8"><div class="faculty-group-content"><button type="button" class="tree-toggle faculty-toggle" data-faculty-group="${fid}" aria-expanded="true" aria-label="ย่อกลุ่ม ${esc(faculty)}">−</button><span>${esc(faculty)}</span><small>${(facultyTotals.get(faculty)||items.length).toLocaleString('th-TH')} รายวิชา</small></div></td></tr>`);
     items.forEach(({g,index},courseIndex)=>{
       const id=fid+'_c'+courseIndex;
       html.push(`<tr class="course-group-row" data-faculty-parent="${fid}"><td class="tree-course-cell"><span class="course-group-main"><button type="button" class="tree-toggle course-toggle" data-group="${id}" aria-expanded="false" aria-label="ขยาย ${esc(g.courseCode)}">+</button><strong>${esc(g.courseCode)}</strong><small>(${g.profileCount} Profile)</small></span></td><td>—</td><td>${esc([...g.courseTypes].join(', ')||'—')}</td><td>—</td><td class="center"><span class="score-pill">${g.score.toFixed(2)} / 1</span></td><td class="center">${courseBadge(g.score)}</td><td class="center">—</td><td>—</td></tr>`);
@@ -1041,9 +1056,9 @@ document.querySelectorAll('.kpi-filter-card[data-status-filter]').forEach(card=>
     applyKpiCardFilter(card);
   });
 });
-['facultyFilter','typeFilter','statusFilter'].forEach(id=>$(id).addEventListener('change',()=>render()));
+['facultyFilter','typeFilter','statusFilter','profileCountFilter'].forEach(id=>$(id).addEventListener('change',()=>render()));
 $('searchBox').addEventListener('input',()=>render());
-$('resetBtn').addEventListener('click',()=>{$('facultyFilter').value='';$('typeFilter').value='';$('statusFilter').value='';$('searchBox').value='';render()});
+$('resetBtn').addEventListener('click',()=>{$('facultyFilter').value='';$('typeFilter').value='';$('statusFilter').value='';$('profileCountFilter').value='';$('searchBox').value='';render()});
 $('refreshBtn').addEventListener('click',loadData);$('prevBtn').addEventListener('click',()=>{currentPage--;render(false)});$('nextBtn').addEventListener('click',()=>{currentPage++;render(false)});
 $('courseRows').addEventListener('click',e=>{
   const facultyToggle=e.target.closest('.faculty-toggle[data-faculty-group]');
