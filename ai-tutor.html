@@ -580,7 +580,7 @@ html.auth-check body{visibility:hidden}
 <div class="field"><label>คณะ / วิทยาลัย</label><select id="facultyFilter"><option value="">ทั้งหมด</option></select></div>
 <div class="field"><label>ประเภทรายวิชา</label><select id="typeFilter"><option value="">ทั้งหมด</option></select></div>
 <div class="field"><label>สถานะ AI Tutor</label><select id="statusFilter"><option value="">ทั้งหมด</option><option value="complete">ทำครบทุก Profile</option><option value="partial">จัดทำไม่ครบ</option><option value="notdone">ไม่ทำ</option></select></div>
-<div class="field"><label>จำนวน Profile</label><select id="profileCountFilter"><option value="">ทั้งหมด</option><option value="single">1 Profile</option><option value="multiple">มากกว่า 1 Profile</option></select></div>
+<div class="field"><label>จำนวน Profile</label><select id="profileCountFilter"><option value="">ทั้งหมด</option></select></div>
 <div class="field"><label>ค้นหารหัสวิชาหรือรหัสรายวิชาในระบบ</label><input id="searchBox" type="search" placeholder="เช่น ICT112 หรือ 691GN..."></div>
 <div class="filter-actions"><button class="refresh" id="refreshBtn">อัปเดตข้อมูล</button><button class="reset" id="resetBtn">ล้างตัวกรอง</button></div>
 </section>
@@ -855,6 +855,9 @@ function refillFilters(){
   const ts=[...new Set(DATA.map(d=>d.courseType).filter(Boolean))].sort(natural);
   $('facultyFilter').innerHTML='<option value="">ทั้งหมด</option>';addOptions('facultyFilter',fs);
   $('typeFilter').innerHTML='<option value="">ทั้งหมด</option>';addOptions('typeFilter',ts);
+  const profileCounts=[...new Set(groupCourses(DATA).map(g=>g.profileCount))].sort((a,b)=>a-b);
+  $('profileCountFilter').innerHTML='<option value="">ทั้งหมด</option>';
+  profileCounts.forEach(count=>{const o=document.createElement('option');o.value=String(count);o.textContent=String(count)+' Profile';$('profileCountFilter').appendChild(o)});
 }
 function baseFiltered(){
   const f=$('facultyFilter').value,t=$('typeFilter').value;
@@ -889,8 +892,7 @@ function filtered(){
     if(f&&g.faculty!==f)return false;
     if(t&&!g.courseTypes.has(t))return false;
     if(s&&courseStatus(g.score)!==s)return false;
-    if(p==='single'&&g.profileCount!==1)return false;
-    if(p==='multiple'&&g.profileCount<=1)return false;
+    if(p&&g.profileCount!==Number(p))return false;
     if(!q)return true;
     return [g.faculty,g.courseCode,g.courseName,...g.profiles.flatMap(d=>[d.courseProfile,d.instructors])].some(x=>String(x||'').toLowerCase().includes(q));
   });
