@@ -1,7 +1,7 @@
 # OOE Dashboard 2569 — Handoff & Knowledge Base
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 07/10/2569**  
+> **อัปเดตล่าสุด: 08/10/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -1039,6 +1039,9 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 
 
 ### 08/10/2569
+- ปรับ Header หลักของหน้า GR/GS ให้เปลี่ยนตามหน้าที่เลือก: `Dashboard รายวิชา GS` และ `Dashboard รายวิชา GR`
+- เพิ่ม `syncPageIdentity()` เพื่อ sync ทั้งข้อความ H1 และ browser title ตาม `activeType` เมื่อสลับ GS/GR หรือเปลี่ยน hash
+- Commit GR/GS dynamic page title: `030c2b60602fc8768f7e98d54a3f41092efa9cf9`
 - ปรับกราฟคณะ AI Tutor / Podcast ให้แสดงจำนวนรายวิชาจริง ไม่ใช่เปอร์เซ็นต์ 100% stacked; ความยาวแท่งเทียบกับคณะที่มีรายวิชามากที่สุด
 - ปรับ Card `คะแนน KPI รวม` ใหม่เป็น Header + score/total + progress % แบบ side-by-side + progress bar
 - เปลี่ยน Donut `คะแนนที่ยังขาด` จาก Gray เป็น Amber ทั้ง AI Tutor และ Podcast
