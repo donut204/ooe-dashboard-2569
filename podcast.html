@@ -513,12 +513,27 @@ html.auth-check body{visibility:hidden}
   .criteria-foot{align-items:stretch;flex-direction:column}
   .criteria-confirm{width:100%}
 }
-.group-toggle{width:28px;height:28px;border-radius:7px;border:1px solid #cbd5e1;background:#fff;color:#0b5cad;font-weight:800;padding:0;line-height:1}
-.course-group-row{background:#fffaf3;font-weight:700}
-.course-group-row td{border-top:2px solid #f3dfbf}
+.tree-toggle{width:22px;height:22px;border:0;border-radius:6px;background:#e20074;color:#fff;font:inherit;font-size:16px;font-weight:900;line-height:1;display:inline-grid;place-items:center;padding:0;cursor:pointer;flex:0 0 22px;box-shadow:0 1px 2px rgba(16,42,67,.12)}
+.tree-toggle:hover{filter:brightness(.94)}
+.tree-toggle:focus-visible{outline:3px solid rgba(226,0,116,.18);outline-offset:2px}
+.faculty-group-row td{padding:10px 14px;background:#fde7f1;border-top:1px solid #f7c7da;border-bottom:1px solid #f7c7da;color:#17365d;font-weight:800}
+.faculty-group-content{display:flex;align-items:center;gap:10px;min-width:max-content}
+.faculty-group-content small{color:#7b5b6b;font-size:12px;font-weight:700}
+.course-group-row{background:#fff5f9;font-weight:700}
+.course-group-row td{border-bottom:1px solid #f4dbe5}
+.tree-course-cell{position:relative;padding-left:34px!important;white-space:nowrap}
+.tree-course-cell::before{content:"";position:absolute;left:20px;top:-1px;bottom:50%;width:1px;background:#d9e2ec}
+.tree-course-cell::after{content:"";position:absolute;left:20px;top:50%;width:10px;height:1px;background:#d9e2ec}
+.course-group-main{display:inline-flex;align-items:center;gap:8px}
+.course-group-main small{color:#5f6f82;font-size:12px;font-weight:600}
 .profile-row td{background:#fff}
-.profile-indent{padding-left:28px!important;color:#334e68}
-.score-pill{display:inline-flex;align-items:center;justify-content:center;min-width:72px;padding:5px 9px;border-radius:999px;background:#fff2dd;color:#9a5b00;font-weight:800}
+.profile-tree-cell{position:relative}
+.profile-tree-cell::before{content:"";position:absolute;left:20px;top:0;bottom:0;width:1px;background:#e2e8f0}
+.profile-code-cell{position:relative;padding-left:30px!important;color:#334e68;white-space:nowrap}
+.profile-code-cell::before{content:"";position:absolute;left:10px;top:-14px;bottom:50%;width:1px;background:#d9e2ec}
+.profile-code-cell::after{content:"";position:absolute;left:10px;top:50%;width:13px;height:1px;background:#d9e2ec}
+.score-pill{display:inline-flex;align-items:center;justify-content:center;min-width:72px;padding:5px 9px;border-radius:999px;background:#edf4ff;color:#0b5cad;font-weight:800}
+@media(max-width:650px){.tree-course-cell{padding-left:30px!important}.profile-code-cell{padding-left:26px!important}}
 </style>
 
 </head>
@@ -538,7 +553,7 @@ html.auth-check body{visibility:hidden}
 <article class="panel chart-panel"><div class="section-head"><div><h2>ความคืบหน้า Podcast แยกตามคณะ</h2><p>แต่ละ Profile ตันที่ 15 Podcast แล้วเฉลี่ยเป็นคะแนนรายวิชา</p></div></div><div class="chart" id="facultyChart"></div></article>
 <article class="panel chart-panel"><div class="section-head"><div><h2>คะแนนความครบถ้วน Podcast</h2><p>คะแนนเต็ม 1 คะแนนต่อรายวิชา และหารตามจำนวน Profile</p></div></div><div class="donut-body"><div class="donut-wrap"><div class="donut" id="donutChart"></div><div class="donut-center"><span class="donut-number" id="donutTotal">0%</span><span class="donut-label">ความคืบหน้า</span></div></div><div class="donut-list" id="donutLegend"></div></div></article>
 </section>
-<section class="panel table-panel"><div class="table-tools"><div><h2>รายละเอียดรายวิชา — Podcast</h2><p>1 รหัสวิชา = 1 รายวิชา · กด + เพื่อดูผลแต่ละ Profile</p></div><div class="count" id="resultCount"></div></div><div class="table-wrap"><table><thead><tr><th>ลำดับ</th><th>รหัสวิชา / Profile</th><th>ประเภท</th><th>คณะ / วิทยาลัย</th><th>อาจารย์ผู้สอน</th><th class="center">คะแนน / Podcast</th><th class="center">สถานะ</th><th class="center">คำแนะนำ</th><th>รายวิชา</th></tr></thead><tbody id="courseRows"></tbody></table></div><div class="pager"><div class="count" id="pageInfo"></div><div class="pager-controls"><button id="prevBtn">ก่อนหน้า</button><button id="nextBtn">ถัดไป</button></div></div></section>
+<section class="panel table-panel"><div class="table-tools"><div><h2>รายละเอียดรายวิชา — Podcast</h2><p>1 รหัสวิชา = 1 รายวิชา · กด + เพื่อดูผลแต่ละ Profile</p></div><div class="count" id="resultCount"></div></div><div class="table-wrap"><table><thead><tr><th>คณะ / วิทยาลัย · รายวิชา</th><th>Course Profile</th><th>Course Type</th><th>อาจารย์ผู้สอน</th><th class="center">คะแนน / Podcast</th><th class="center">สถานะ</th><th class="center">คำแนะนำ</th><th>รายวิชา</th></tr></thead><tbody id="courseRows"></tbody></table></div><div class="pager"><div class="count" id="pageInfo"></div><div class="pager-controls"><button id="prevBtn">ก่อนหน้า</button><button id="nextBtn">ถัดไป</button></div></div></section>
 <p class="note">ข้อมูลจะอัปเดตเมื่อเปิดหน้าเว็บหรือกด “อัปเดตข้อมูล” · ไม่มีการเผยแพร่อีเมลผู้สอนใน Dashboard</p>
 
 <div class="advice-modal" id="podcastCriteriaModal" role="dialog" aria-modal="true" aria-labelledby="podcastCriteriaTitle">
@@ -899,16 +914,34 @@ function adviceCell(d){
   return '<span class="advice-dash">—</span>';
 }
 function renderTable(rows){
-  const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));currentPage=Math.min(currentPage,pages);const start=(currentPage-1)*PAGE_SIZE;const p=rows.slice(start,start+PAGE_SIZE);
-  $('courseRows').innerHTML=p.map((g,i)=>{
-    const id='g'+(start+i);
-    const parent=`<tr class="course-group-row"><td class="num">${start+i+1}</td><td class="course nowrap"><button class="group-toggle" data-group="${id}" aria-expanded="false">+</button> ${esc(g.courseCode)} <small>(${g.profileCount} Profile)</small></td><td>${esc([...g.courseTypes].join(', '))}</td><td>${esc(g.faculty)}</td><td>—</td><td class="center"><span class="score-pill">${g.score.toFixed(2)} / 1</span></td><td class="center">${courseBadge(g.score)}</td><td class="center">—</td><td>—</td></tr>`;
-    const children=g.profiles.map(d=>`<tr class="profile-row" data-parent="${id}" hidden><td></td><td class="profile-indent">${esc(d.courseProfile)}</td><td>${esc(d.courseType)}</td><td>${esc(d.faculty)}</td><td>${esc(d.instructors||'—')}</td><td class="center">${esc(d.podcastCount||'0')} · ${formatPct(d.profileScore)}</td><td class="center">${statusBadge(d.podcastStatus,d.podcastCount)}</td><td class="center">${adviceCell(d)}</td><td>${d.courseLink?`<a href="${esc(d.courseLink)}" target="_blank" rel="noopener">เปิด ↗</a>`:'—'}</td></tr>`).join('');
-    return parent+children;
-  }).join('');
+  const pages=Math.max(1,Math.ceil(rows.length/PAGE_SIZE));
+  currentPage=Math.min(currentPage,pages);
+  const start=(currentPage-1)*PAGE_SIZE;
+  const p=rows.slice(start,start+PAGE_SIZE);
+  const facultyGroups=new Map();
+  p.forEach((g,i)=>{
+    const faculty=g.faculty||'ไม่ระบุคณะ';
+    if(!facultyGroups.has(faculty))facultyGroups.set(faculty,[]);
+    facultyGroups.get(faculty).push({g,index:start+i});
+  });
+  let facultyIndex=0;
+  const html=[];
+  facultyGroups.forEach((items,faculty)=>{
+    const fid='f'+currentPage+'_'+facultyIndex++;
+    html.push(`<tr class="faculty-group-row"><td colspan="8"><div class="faculty-group-content"><button type="button" class="tree-toggle faculty-toggle" data-faculty-group="${fid}" aria-expanded="true" aria-label="ย่อกลุ่ม ${esc(faculty)}">−</button><span>${esc(faculty)}</span><small>${items.length} รายวิชา</small></div></td></tr>`);
+    items.forEach(({g,index},courseIndex)=>{
+      const id=fid+'_c'+courseIndex;
+      html.push(`<tr class="course-group-row" data-faculty-parent="${fid}"><td class="tree-course-cell"><span class="course-group-main"><button type="button" class="tree-toggle course-toggle" data-group="${id}" aria-expanded="true" aria-label="ย่อ ${esc(g.courseCode)}">−</button><strong>${esc(g.courseCode)}</strong><small>(${g.profileCount} Profile)</small></span></td><td>—</td><td>${esc([...g.courseTypes].join(', ')||'—')}</td><td>—</td><td class="center"><span class="score-pill">${g.score.toFixed(2)} / 1</span></td><td class="center">${courseBadge(g.score)}</td><td class="center">—</td><td>—</td></tr>`);
+      g.profiles.forEach(d=>{
+        html.push(`<tr class="profile-row" data-parent="${id}" data-faculty-parent="${fid}"><td class="profile-tree-cell"></td><td class="profile-code-cell">${esc(d.courseProfile)}</td><td>${esc(d.courseType||'—')}</td><td>${esc(d.instructors||'—')}</td><td class="center">${`${esc(d.podcastCount||'0')} · ${formatPct(d.profileScore)}`}</td><td class="center">${statusBadge(d.podcastStatus,d.podcastCount)}</td><td class="center">${adviceCell(d)}</td><td>${d.courseLink?`<a href="${esc(d.courseLink)}" target="_blank" rel="noopener">เปิด ↗</a>`:'—'}</td></tr>`);
+      });
+    });
+  });
+  $('courseRows').innerHTML=html.join('');
   $('resultCount').textContent=`แสดง ${rows.length.toLocaleString('th-TH')} จาก ${allCourseCount().toLocaleString('th-TH')} รายวิชา`;
   $('pageInfo').textContent=rows.length?`แสดง ${start+1}–${Math.min(start+PAGE_SIZE,rows.length)} จาก ${rows.length} รายวิชา`:'ไม่พบข้อมูล';
-  $('prevBtn').disabled=currentPage===1;$('nextBtn').disabled=currentPage===pages;
+  $('prevBtn').disabled=currentPage===1;
+  $('nextBtn').disabled=currentPage===pages;
 }
 const PODCAST_CRITERIA_HIDE_KEY='ooe_podcast_criteria_hidden_v1';
 function shouldHidePodcastCriteria(){
@@ -977,10 +1010,27 @@ $('searchBox').addEventListener('input',()=>render());
 $('resetBtn').addEventListener('click',()=>{$('facultyFilter').value='';$('typeFilter').value='';$('statusFilter').value='';$('searchBox').value='';render()});
 $('refreshBtn').addEventListener('click',loadData);$('prevBtn').addEventListener('click',()=>{currentPage--;render(false)});$('nextBtn').addEventListener('click',()=>{currentPage++;render(false)});
 $('courseRows').addEventListener('click',e=>{
-  const toggle=e.target.closest('.group-toggle[data-group]');
-  if(toggle){
-    const id=toggle.dataset.group,open=toggle.getAttribute('aria-expanded')==='true';
-    toggle.setAttribute('aria-expanded',String(!open));toggle.textContent=open?'+':'−';
+  const facultyToggle=e.target.closest('.faculty-toggle[data-faculty-group]');
+  if(facultyToggle){
+    const fid=facultyToggle.dataset.facultyGroup;
+    const open=facultyToggle.getAttribute('aria-expanded')==='true';
+    facultyToggle.setAttribute('aria-expanded',String(!open));
+    facultyToggle.textContent=open?'+':'−';
+    document.querySelectorAll(`tr[data-faculty-parent="${CSS.escape(fid)}"]`).forEach(row=>{
+      if(open){row.hidden=true;return;}
+      if(row.classList.contains('course-group-row')){row.hidden=false;return;}
+      const courseId=row.dataset.parent;
+      const courseToggle=document.querySelector(`.course-toggle[data-group="${CSS.escape(courseId)}"]`);
+      row.hidden=courseToggle?courseToggle.getAttribute('aria-expanded')!=='true':false;
+    });
+    return;
+  }
+  const courseToggle=e.target.closest('.course-toggle[data-group]');
+  if(courseToggle){
+    const id=courseToggle.dataset.group;
+    const open=courseToggle.getAttribute('aria-expanded')==='true';
+    courseToggle.setAttribute('aria-expanded',String(!open));
+    courseToggle.textContent=open?'+':'−';
     document.querySelectorAll(`tr[data-parent="${CSS.escape(id)}"]`).forEach(r=>r.hidden=open);
     return;
   }
