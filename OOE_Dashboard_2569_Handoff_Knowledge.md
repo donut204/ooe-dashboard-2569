@@ -41,6 +41,7 @@
 - แถวคณะ/วิทยาลัยใช้โทนฟ้าอ่อน / Blue-gray และปุ่ม `− / +`
 - แถวรายวิชาแสดง `courseCode` + จำนวน Profile และมีปุ่ม `− / +`
 - Profile ย่อยแสดงเป็นกิ่ง Tree ใต้รายวิชา และแสดง `courseProfile`, Course Type, ผู้สอน, ProfileScore, status, คำแนะนำ และลิงก์รายวิชา
+- **Tree alignment ล่าสุด:** เพิ่มระยะระหว่างปุ่ม Expand กับชื่อรายวิชาเล็กน้อย และให้เส้นกิ่งของ Course Profile เริ่มใต้แนวชื่อรายวิชาแล้วลากต่อเนื่องข้ามคอลัมน์ไปถึง Course Profile เพื่อให้ความสัมพันธ์ parent → child ชัดเจน
 - ค่าเริ่มต้น: **คณะเปิดอยู่ แต่รายวิชาแต่ละตัวไม่ Expand Profile**; กด `+` จึงแสดง Profile ย่อย
 - Profile ย่อยแสดงค่า AI Tutor / Podcast พร้อม `ProfileScore`
 - Podcast ไม่คำนวณคะแนนจาก `podcastCount` ซ้ำใน Dashboard อีกต่อไป แต่ใช้ `ProfileScore` upstream โดยตรง
@@ -363,6 +364,8 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - GR/GS KPI card filters: `a60df8648fd484f9ef81e62ee2c7e798a5515ad9`
 - AI Tutor KPI card filters: `a011d2edc92118ebb19477214d456d1361dc9850`
 - Podcast KPI card filters: `5982912492a36c42f13f6ac1add34ca03f615ba3`
+- AI Tutor tree alignment: `b6654802e8a3281477ebb45fe559192701a5b7c8`
+- Podcast tree alignment: `1fb1da0f80b0d00ea29233de5b4b3a5d94067273`
 
 ---
 
@@ -799,6 +802,8 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ปรับ Tree connector ของ Course Profile ทั้ง AI Tutor และ Podcast ให้เส้นเริ่มใต้แนวชื่อรายวิชาและลากต่อเนื่องถึง Course Profile
+- ขยับชื่อรายวิชาไปทางขวาเล็กน้อยโดยเพิ่ม gap ระหว่างปุ่ม `+ / −` กับชื่อรายวิชา
 - เพิ่ม Click-to-filter ให้ Main KPI Card ทุกหน้า: GR, GS, AI Tutor และ Podcast
 - GR/GS Card sync กับ `reviewFilter`; AI Tutor/Podcast Card sync กับ `statusFilter`
 - กดสถานะเดิมซ้ำเพื่อกลับ `ทั้งหมด`; Card คะแนน KPI รวมใช้เป็น reset status บน AI Tutor/Podcast
