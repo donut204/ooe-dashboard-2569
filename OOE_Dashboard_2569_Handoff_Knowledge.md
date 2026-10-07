@@ -315,6 +315,8 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
   4. `ไม่ทำ`
 - `คะแนน KPI รวม` ถูกย้ายออกจากแถว Card ด้านบน ไปวางใน **คอลัมน์ขวาเหนือกราฟวงกลม (Donut)** และอยู่ใน section เดียวกับกราฟความคืบหน้าแยกตามคณะ
 - Card คะแนน KPI รวมแสดง TotalPoints / TotalCourses + Progress % + horizontal progress bar
+- **การแสดง TotalPoints ใน Card ใช้การปัดขึ้นด้วย `Math.ceil()`** ทั้ง AI Tutor และ Podcast เช่น 410.67 → 411, 264.87 → 265
+- การปัดขึ้นเป็น **presentation เท่านั้น**; ค่า Progress % และ logic คำนวณ KPI ยังคงใช้คะแนนจริงก่อนปัด
 - Card ผลลัพธ์หลักใช้ icon ขนาดใหญ่ขึ้น และวาง **icon ทางซ้าย / label + จำนวนทางขวา** แทนการวางจำนวนใต้ icon
 - Secondary Profile Summary:
   - AI Tutor: Profile ทั้งหมด / Profile ที่ทำ / Profile ที่ไม่ทำ
@@ -348,6 +350,8 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - Podcast warning icon / wording: `57214c0891d0153080952d0d6d5d74447240ca06`
 - AI Tutor minimal warning icon: `bcdd69e3ff02f7c2428043b0a2ea83037f265032`
 - Podcast minimal warning icon: `30c549a98f73090aafdc134a8baedda475da7b45`
+- AI Tutor KPI round-up display: `7da3a459dea72318ccebbeec82f361f16ab92d18`
+- Podcast KPI round-up display: `dc033233305e9faecc4cfeba8bdfb08d6d65b845`
 
 ---
 
@@ -784,6 +788,7 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ปรับการแสดง `คะแนน KPI รวม` ให้ปัดขึ้นด้วย `Math.ceil()` ทั้ง AI Tutor และ Podcast; ค่าเปอร์เซ็นต์ยังคำนวณจากคะแนนจริงก่อนปัด
 - ปรับ Warning icon ของ Card `จัดทำไม่ครบ` ให้เบาลงทั้ง AI Tutor และ Podcast: ใช้เครื่องหมาย `!` แบบเส้นบาง ไม่มีกรอบสามเหลี่ยม
 - เปลี่ยน icon Card `จัดทำไม่ครบ` เป็น Warning / เครื่องหมายตกใจสี Amber ทั้ง AI Tutor และ Podcast
 - Podcast criteria ปรับข้อความเป็น `หนึ่งรายวิชาต้องมี 15 Podcast` ให้รูปแบบสอดคล้องกับ AI Tutor
