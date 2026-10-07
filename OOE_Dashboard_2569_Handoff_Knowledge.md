@@ -42,6 +42,7 @@
 - แถวรายวิชาแสดง `courseCode` + จำนวน Profile และมีปุ่ม `− / +`
 - Profile ย่อยแสดงเป็นกิ่ง Tree ใต้รายวิชา และแสดง `courseProfile`, Course Type, ผู้สอน, ProfileScore, status, คำแนะนำ และลิงก์รายวิชา
 - **Tree alignment ล่าสุด:** เพิ่มระยะระหว่างปุ่ม Expand กับชื่อรายวิชาเล็กน้อย และให้เส้นกิ่งของ Course Profile เริ่มใต้แนวชื่อรายวิชาแล้วลากต่อเนื่องข้ามคอลัมน์ไปถึง Course Profile เพื่อให้ความสัมพันธ์ parent → child ชัดเจน
+- **Faculty group count ล่าสุด:** ตัวเลขหลังชื่อคณะ/วิทยาลัยต้องเป็นจำนวนรายวิชาทั้งหมดของคณะนั้นในชุดผลลัพธ์ที่ผ่าน Filter ปัจจุบัน ไม่ใช่จำนวนเฉพาะในหน้าปัจจุบันของ Pagination
 - ค่าเริ่มต้น: **คณะเปิดอยู่ แต่รายวิชาแต่ละตัวไม่ Expand Profile**; กด `+` จึงแสดง Profile ย่อย
 - Profile ย่อยแสดงค่า AI Tutor / Podcast พร้อม `ProfileScore`
 - Podcast ไม่คำนวณคะแนนจาก `podcastCount` ซ้ำใน Dashboard อีกต่อไป แต่ใช้ `ProfileScore` upstream โดยตรง
@@ -315,6 +316,7 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
   3. `จัดทำไม่ครบ`
   4. `ไม่ทำ`
 - `คะแนน KPI รวม` ถูกย้ายออกจากแถว Card ด้านบน ไปวางใน **คอลัมน์ขวาเหนือกราฟวงกลม (Donut)** และอยู่ใน section เดียวกับกราฟความคืบหน้าแยกตามคณะ
+- **Chart layout ล่าสุด:** คอลัมน์ขวา (`คะแนน KPI รวม + Donut`) ต้อง stretch ให้สูงสมดุลกับกราฟความคืบหน้าแยกตามคณะ เพื่อลดช่องว่างมุมขวาล่างบน Desktop; Mobile/Tablet กลับเป็นความสูงตามเนื้อหา
 - Card คะแนน KPI รวมแสดง TotalPoints / TotalCourses + Progress % + horizontal progress bar
 - **การแสดง TotalPoints ใน Card ใช้การปัดขึ้นด้วย `Math.ceil()`** ทั้ง AI Tutor และ Podcast เช่น 410.67 → 411, 264.87 → 265
 - การปัดขึ้นเป็น **presentation เท่านั้น**; ค่า Progress % และ logic คำนวณ KPI ยังคงใช้คะแนนจริงก่อนปัด
@@ -327,12 +329,18 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
   - การกด Card **ไม่ล้าง filter อื่น** เช่น คณะ, ประเภทรายวิชา, ความคืบหน้า หรือ Search
   - Card ที่เป็น filter ปัจจุบันมี Active state; รองรับเมาส์และ keyboard Enter / Space
   - Profile Summary / Mini Card **ไม่ใช้เป็นตัวกรอง** เพราะรายการหลักเป็นหน่วยรายวิชา
+- AI Tutor / Podcast มี Filter ใหม่ `จำนวน Profile`:
+  - `ทั้งหมด`
+  - `1 Profile`
+  - `มากกว่า 1 Profile`
+- Profile-count filter ทำงานหลัง Group เป็นรายวิชาแล้ว จึงกรองจาก `g.profileCount` โดยไม่กระทบสูตร CourseScore
 - Secondary Profile Summary:
   - AI Tutor: Profile ทั้งหมด / Profile ที่ทำ / Profile ที่ไม่ทำ
   - Podcast: Profile ทั้งหมด / Profile ที่ทำครบ / Profile ที่จัดทำไม่ครบ / Profile ที่ไม่ทำ
 - **มาตรฐานคำใน UI ใช้ `Profile` โดยไม่เติม s เสมอ** แม้จำนวนมากกว่า 1 เพื่อให้ศัพท์ในระบบคงที่ เช่น `921 Profile`, `2 Profile`
 - AI Tutor เปลี่ยน wording สถานะระดับรายวิชา `ทำบางส่วน` → `จัดทำไม่ครบ` ใน Filter, KPI และ Badge
 - Card `จัดทำไม่ครบ` ใช้ **ไอคอนเครื่องหมายตกใจแบบ Minimal / เส้นบาง** สี Amber ทั้ง AI Tutor และ Podcast; ไม่มีกรอบสามเหลี่ยม Warning เพื่อให้ภาพเบาลง
+- **Active state ของ KPI Card ต้องอิงสีสถานะของ Card เอง**: ทั้งหมด = Blue, ครบ = Green, จัดทำไม่ครบ = Amber, ไม่ทำ = Red; ไม่ใช้ขอบ Blue เหมือนกันทุก Card
 - Modal เกณฑ์ AI Tutor ใช้ข้อความ exact: `หนึ่งรายวิชาต้องมี 1 AI Tutor`
 - Modal เกณฑ์ Podcast ใช้ข้อความ exact: `หนึ่งรายวิชาต้องมี 15 Podcast`
 - ใช้สี Navy / Blue / Slate / White เป็นฐาน และ Green / Amber / Red เฉพาะสถานะ
@@ -366,6 +374,8 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - Podcast KPI card filters: `5982912492a36c42f13f6ac1add34ca03f615ba3`
 - AI Tutor tree alignment: `b6654802e8a3281477ebb45fe559192701a5b7c8`
 - Podcast tree alignment: `1fb1da0f80b0d00ea29233de5b4b3a5d94067273`
+- AI Tutor faculty/filter/chart refinement: `116596da658afbf7804aa51b6f6fde927e673087`
+- Podcast faculty/filter/chart refinement: `235fa6424b67c881fddb7b1f8b51a18563ab90d6`
 
 ---
 
@@ -802,6 +812,12 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- แก้ Faculty group count ให้แสดงจำนวนรายวิชาทั้งหมดของคณะในผลลัพธ์ Filter ปัจจุบัน ไม่ใช่จำนวนเฉพาะหน้า Pagination
+- ปรับสี Active ของ KPI Card ให้ตรงกับสีสถานะของ Card
+- ปรับสัดส่วนคอลัมน์ขวาของส่วนกราฟให้ยืดเติมความสูง ลดช่องว่างมุมขวาล่าง
+- เพิ่ม Filter `จำนวน Profile` บน AI Tutor / Podcast: ทั้งหมด / 1 Profile / มากกว่า 1 Profile
+- Commit AI Tutor refinement: `116596da658afbf7804aa51b6f6fde927e673087`
+- Commit Podcast refinement: `235fa6424b67c881fddb7b1f8b51a18563ab90d6`
 - ปรับ Tree connector ของ Course Profile ทั้ง AI Tutor และ Podcast ให้เส้นเริ่มใต้แนวชื่อรายวิชาและลากต่อเนื่องถึง Course Profile
 - ขยับชื่อรายวิชาไปทางขวาเล็กน้อยโดยเพิ่ม gap ระหว่างปุ่ม `+ / −` กับชื่อรายวิชา
 - เพิ่ม Click-to-filter ให้ Main KPI Card ทุกหน้า: GR, GS, AI Tutor และ Podcast
