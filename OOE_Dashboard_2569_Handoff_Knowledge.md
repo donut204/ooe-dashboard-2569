@@ -36,7 +36,12 @@
 - CourseScore = AVERAGE(ProfileScore ของทุก Profile ในรายวิชาเดียวกัน)
 - Filter, KPI, Faculty summary, Donut และ Course list ทำงานที่ระดับ “รายวิชา”
 - การเลือก `courseType` / คณะ / สถานะ / Search จะกรองหลัง Group แล้ว จึงไม่ทำให้ CourseScore ถูกคำนวณใหม่จาก Profile บางส่วน
-- รายการหลักเป็นรายวิชา และกด `+` เพื่อ Expand ดู Profile ย่อยได้
+- รายการหลักเป็นรายวิชา และรองรับ Expand/Collapse เพื่อดู Profile ย่อย
+- **UI ตารางล่าสุด (07/10/2569): แสดงแบบลำดับชั้น `คณะ / วิทยาลัย → รหัสวิชา → Course Profile` ตามภาพอ้างอิงของผู้ใช้**
+- แถวคณะ/วิทยาลัยใช้พื้นชมพูอ่อนและปุ่ม `− / +`
+- แถวรายวิชาแสดง `courseCode` + จำนวน Profile และมีปุ่ม `− / +`
+- Profile ย่อยแสดงเป็นกิ่ง Tree ใต้รายวิชา และแสดง `courseProfile`, Course Type, ผู้สอน, ProfileScore, status, คำแนะนำ และลิงก์รายวิชา
+- ค่าเริ่มต้นของตารางเป็น **ขยาย (expanded)** เพื่อให้เห็น Profile ย่อยทันที
 - Profile ย่อยแสดงค่า AI Tutor / Podcast พร้อม `ProfileScore`
 - Podcast ไม่คำนวณคะแนนจาก `podcastCount` ซ้ำใน Dashboard อีกต่อไป แต่ใช้ `ProfileScore` upstream โดยตรง
 - Source ยังคงเป็น Public CSV เดิม ไม่ได้เปลี่ยนไปใช้ Pivot
@@ -706,6 +711,14 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ปรับ UI ตาราง AI Tutor / Podcast ตามภาพอ้างอิงให้เป็น Tree Hierarchy: **คณะ/วิทยาลัย → รายวิชา → Course Profile**
+- เพิ่มแถวกลุ่มคณะ/วิทยาลัยพื้นชมพูอ่อน พร้อมปุ่ม Collapse/Expand
+- เพิ่มแถวรายวิชาแบบ Nested พร้อมจำนวน Profile และปุ่ม Collapse/Expand
+- Profile ย่อยแสดง Tree connector และรายละเอียดเดิมครบ
+- ค่าเริ่มต้นแสดงแบบ expanded
+- การเปลี่ยนครั้งนี้เป็น **presentation layer เท่านั้น** ไม่เปลี่ยน Section 1A scoring / KPI / source
+- Commit AI Tutor UI: `8b6f2637d1e7404fe3cca9c2abc0542b6eb0d8f8`
+- Commit Podcast UI: `37a482f39724fef415ba02dae2b61c6d293654c8`
 - **ดำเนินการ section 1A บน `main` แล้ว**
 - ปรับ AI Tutor และ Podcast จากการนับ Profile เป็นการให้คะแนนระดับรายวิชา
 - ใช้ `ProfileScore` จาก Public CSV เป็น source ของคะแนนจริง
