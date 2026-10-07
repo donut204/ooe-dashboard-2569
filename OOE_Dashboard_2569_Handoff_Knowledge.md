@@ -553,6 +553,38 @@ Course score = AVERAGE(Profile scores)
 
 ---
 
+### Public CSV schema update — 07/10/2569
+
+ผู้ใช้เพิ่ม `ProfileScore` เข้า Public sheets เดิมแล้ว ไม่สร้าง Public_V2:
+- `AI_Tutor_Public`
+- `Podcast_Public`
+
+Schema ปัจจุบันทั้งสองชุดมี `ProfileScore` ก่อน `courseLink`
+
+`AI_Tutor_Public`:
+- `aiTutor`
+- `aiStatus`
+- `ProfileScore`
+- `courseLink`
+
+`Podcast_Public`:
+- `podcastCount`
+- `podcastStatus`
+- `ProfileScore`
+- `courseLink`
+
+สถานะ source ล่าสุดที่ตรวจ:
+- AI Tutor Public = 921 Profile / 767 รายวิชา unique `faculty + courseCode`
+- Podcast Public = 921 Profile / 767 รายวิชา unique `faculty + courseCode`
+- ไม่มีค่าว่างใน faculty, courseCode, courseProfile, ProfileScore
+- AI Tutor ProfileScore ออกเป็นเลข 0/1
+- Podcast ProfileScore ออกเป็นเปอร์เซ็นต์ เช่น 53.33%, 100.00%
+- Dashboard parser ต้องรองรับ ProfileScore ทั้ง numeric 0–1 และข้อความเปอร์เซ็นต์
+
+ค่าตรวจสอบปัจจุบันจาก Public source:
+- AI Tutor course-weighted score ≈ 410.6667 / 767 = 53.54%
+- Podcast course-weighted score ≈ 264.8668 / 767 = 34.53%
+
 ## 16. Change Log
 
 ### 07/10/2569
