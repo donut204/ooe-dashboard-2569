@@ -896,7 +896,7 @@ function setKpis(rows){
   const fmt2=n=>n.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
   $('totalKpi').textContent=total.toLocaleString('th-TH');
   $('totalNote').textContent=`จาก ${profileTotal.toLocaleString('th-TH')} Profile`;
-  $('pointsKpi').textContent=fmt2(points);
+  $('pointsKpi').textContent=Math.ceil(points).toLocaleString('th-TH');
   $('pointsTotalKpi').textContent=`/ ${total.toLocaleString('th-TH')}`;
   $('progressKpi').textContent=fmt2(pct)+'%';
   $('kpiProgressBar').style.width=Math.max(0,Math.min(100,pct))+'%';
