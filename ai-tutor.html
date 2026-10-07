@@ -622,7 +622,7 @@ html.auth-check body{visibility:hidden}
 </article>
 </section>
 <section class="charts-grid">
-<article class="panel chart-panel"><div class="section-head"><div><h2>ความคืบหน้า AI Tutor แยกตามคณะ</h2><p>คิดคะแนนระดับรายวิชาโดยเฉลี่ยความครบถ้วนของทุก Profile</p></div></div><div class="chart" id="facultyChart"></div></article>
+<article class="panel chart-panel"><div class="section-head"><div><h2>สัดส่วนรายวิชา AI Tutor แยกตามคณะ</h2><p>แสดงสัดส่วนสถานะรายวิชาในแต่ละคณะจากผลตามตัวกรองปัจจุบัน</p></div><div class="legend"><span><i class="dot green"></i>ครบทุก Profile</span><span><i class="dot amber"></i>จัดทำไม่ครบ</span><span><i class="dot red"></i>ไม่ทำ</span></div></div><div class="chart" id="facultyChart"></div></article>
 <div class="right-summary-stack">
 <article class="panel kpi-card-v2 kpi-score-card kpi-filter-card" data-status-filter="" data-kpi-reset="true" role="button" tabindex="0" title="แสดงทุกสถานะ">
   <div class="kpi-card-mainline">
@@ -929,9 +929,19 @@ function setKpis(rows){
 }
 function renderChart(rows){
   const groups={};
-  rows.forEach(g=>{const f=g.faculty||'ไม่ระบุคณะ';groups[f]??={points:0,total:0};groups[f].points+=g.score;groups[f].total++;});
+  rows.forEach(g=>{
+    const f=g.faculty||'ไม่ระบุคณะ';
+    groups[f]??={complete:0,partial:0,notdone:0,total:0};
+    const key=courseStatus(g.score);
+    groups[f][key]++;
+    groups[f].total++;
+  });
   const list=Object.entries(groups).sort((a,b)=>b[1].total-a[1].total||natural(a[0],b[0]));
-  $('facultyChart').innerHTML=list.length?list.map(([f,v])=>{const pct=v.total?v.points/v.total*100:0;return `<div class="chart-row" data-faculty="${esc(f)}" role="button" tabindex="0" title="คลิกเพื่อกรองตามคณะนี้"><div class="faculty">${esc(f)} (${v.total})</div><div class="track"><div class="seg green" style="width:${pct}%"><span>${pct>=12?pct.toFixed(1)+'%':''}</span></div><div class="seg gray" style="width:${100-pct}%"></div></div><div class="total">${pct.toFixed(1)}%</div></div>`}).join(''):'<div class="empty">ไม่พบข้อมูลตามตัวกรอง</div>';
+  const seg=(count,total,cls)=>{
+    const pct=total?count/total*100:0;
+    return count?`<div class="seg ${cls}" style="width:${pct}%"><span>${pct>=8?pct.toFixed(1)+'%':''}</span></div>`:'';
+  };
+  $('facultyChart').innerHTML=list.length?list.map(([f,v])=>`<div class="chart-row" data-faculty="${esc(f)}" role="button" tabindex="0" title="คลิกเพื่อกรองตามคณะนี้"><div class="faculty">${esc(f)} (${v.total})</div><div class="track">${seg(v.complete,v.total,'green')}${seg(v.partial,v.total,'amber')}${seg(v.notdone,v.total,'red')}</div><div class="total">${v.total.toLocaleString('th-TH')} วิชา</div></div>`).join(''):'<div class="empty">ไม่พบข้อมูลตามตัวกรอง</div>';
 }
 function renderDonut(rows){
   const total=rows.length,points=rows.reduce((a,g)=>a+g.score,0),pct=total?points/total*100:0,remain=100-pct;
