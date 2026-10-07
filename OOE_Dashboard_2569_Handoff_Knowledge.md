@@ -46,6 +46,13 @@
 - ระยะระหว่างชื่อรายวิชากับ `(n Profile)` ถูกปรับให้กลับมากระชับขึ้นด้วย `margin-left:-6px` (Mobile -5px) โดยยังคงระยะปุ่ม Expand → ชื่อรายวิชาเดิม
 - ค่า `Course Profile` ย่อยต้องเริ่มตรงแนวเดียวกับหัวคอลัมน์ `Course Profile`; ใช้ padding ซ้าย 14px เท่ากับ cell/header ปกติ และย่อเส้น connector ในคอลัมน์ Profile ให้จบก่อนข้อความ
 - **Faculty group count ล่าสุด:** ตัวเลขหลังชื่อคณะ/วิทยาลัยต้องเป็นจำนวนรายวิชาทั้งหมดของคณะนั้นในชุดผลลัพธ์ที่ผ่าน Filter ปัจจุบัน ไม่ใช่จำนวนเฉพาะในหน้าปัจจุบันของ Pagination
+- **Pagination ล่าสุด (07/10/2569):** AI Tutor / Podcast ต้อง `Filter/Search → Group รายวิชาตามคณะ → Paginate ตามคณะ` ไม่ใช่แบ่ง 20 รายวิชาก่อนแล้วค่อย Group
+  - ใช้ `FACULTY_PAGE_SIZE=4` แสดงสูงสุด 4 คณะต่อหน้า
+  - เมื่อหุบคณะ คณะอื่นที่อยู่ในหน้าเดียวกันต้องยังแสดงและเลื่อนขึ้นทันที ไม่เกิดหน้าว่าง
+  - ทุก Filter (คณะ / Course Type / Status / จำนวน Profile / Search / KPI Card) ถูกใช้ก่อนการ Group/Pagination
+  - เมื่อ Filter เปลี่ยน `currentPage` ต้องกลับหน้า 1
+  - Page info แสดงรูปแบบ `แสดงคณะ x–y จาก n คณะ · m รายวิชา`
+  - ถ้า Filter เหลือเพียง 1 คณะ ให้แสดงรายวิชาทั้งหมดของคณะนั้นในหน้าเดียว (ตารางมี internal scroll อยู่แล้ว)
 - ค่าเริ่มต้น: **คณะเปิดอยู่ แต่รายวิชาแต่ละตัวไม่ Expand Profile**; กด `+` จึงแสดง Profile ย่อย
 - Profile ย่อยแสดงค่า AI Tutor / Podcast พร้อม `ProfileScore`
 - Podcast ไม่คำนวณคะแนนจาก `podcastCount` ซ้ำใน Dashboard อีกต่อไป แต่ใช้ `ProfileScore` upstream โดยตรง
@@ -893,6 +900,10 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- เปลี่ยน Pagination AI Tutor / Podcast เป็น paginate ตามกลุ่มคณะหลัง Filter/Search แล้ว เพื่อแก้ปัญหาหุบคณะแล้วหน้าโล่ง
+- ใช้ 4 คณะต่อหน้า; Filter ทุกชนิดทำงานก่อน Group/Pagination และ reset กลับหน้า 1 เมื่อค่า Filter เปลี่ยน
+- Commit AI Tutor faculty pagination: `b94ad258053a55b3905de87b3768ea0c2309af67`
+- Commit Podcast faculty pagination: `898e9f5b7ea85126c5e2fce34e6a38f8dac2acdf`
 - ปรับตำแหน่งปุ่ม Expand + ชื่อรายวิชาไปทางขวาอีกทั้ง AI Tutor และ Podcast
 - ทำ `(n Profile)` ให้ชิดชื่อรายวิชามากขึ้น โดยไม่ดึงทั้งกลุ่มกลับไปทางซ้าย
 - Commit AI Tutor row spacing: `ac3258651a600a342d2edf6aff7f1f356bd15520`
