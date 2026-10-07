@@ -41,7 +41,9 @@
 - แถวคณะ/วิทยาลัยใช้โทนฟ้าอ่อน / Blue-gray และปุ่ม `− / +`
 - แถวรายวิชาแสดง `courseCode` + จำนวน Profile และมีปุ่ม `− / +`
 - Profile ย่อยแสดงเป็นกิ่ง Tree ใต้รายวิชา และแสดง `courseProfile`, Course Type, ผู้สอน, ProfileScore, status, คำแนะนำ และลิงก์รายวิชา
-- **Tree alignment ล่าสุด:** เพิ่มระยะระหว่างปุ่ม Expand กับชื่อรายวิชาเล็กน้อย และให้เส้นกิ่งของ Course Profile เริ่มใต้แนวชื่อรายวิชาแล้วลากต่อเนื่องข้ามคอลัมน์ไปถึง Course Profile เพื่อให้ความสัมพันธ์ parent → child ชัดเจน
+- **Tree alignment ล่าสุด:** เพิ่มระยะระหว่างปุ่ม Expand กับชื่อรายวิชา และให้เส้นกิ่งของ Course Profile เชื่อมจาก parent มาถึงคอลัมน์ Course Profile อย่างต่อเนื่อง
+- **Alignment refinement 07/10/2569:** ขยับชื่อรายวิชาไปทางขวาเพิ่มอีกโดยเพิ่ม gap ระหว่างปุ่ม `+ / −` กับชื่อรายวิชาเป็น 18px (Mobile 16px)
+- ค่า `Course Profile` ย่อยต้องเริ่มตรงแนวเดียวกับหัวคอลัมน์ `Course Profile`; ใช้ padding ซ้าย 14px เท่ากับ cell/header ปกติ และย่อเส้น connector ในคอลัมน์ Profile ให้จบก่อนข้อความ
 - **Faculty group count ล่าสุด:** ตัวเลขหลังชื่อคณะ/วิทยาลัยต้องเป็นจำนวนรายวิชาทั้งหมดของคณะนั้นในชุดผลลัพธ์ที่ผ่าน Filter ปัจจุบัน ไม่ใช่จำนวนเฉพาะในหน้าปัจจุบันของ Pagination
 - ค่าเริ่มต้น: **คณะเปิดอยู่ แต่รายวิชาแต่ละตัวไม่ Expand Profile**; กด `+` จึงแสดง Profile ย่อย
 - Profile ย่อยแสดงค่า AI Tutor / Podcast พร้อม `ProfileScore`
