@@ -577,9 +577,10 @@ Schema ปัจจุบันทั้งสองชุดมี `ProfileScor
 - AI Tutor Public = 921 Profile / 767 รายวิชา unique `faculty + courseCode`
 - Podcast Public = 921 Profile / 767 รายวิชา unique `faculty + courseCode`
 - ไม่มีค่าว่างใน faculty, courseCode, courseProfile, ProfileScore
-- AI Tutor ProfileScore ออกเป็นเลข 0/1
-- Podcast ProfileScore ออกเป็นเปอร์เซ็นต์ เช่น 53.33%, 100.00%
-- Dashboard parser ต้องรองรับ ProfileScore ทั้ง numeric 0–1 และข้อความเปอร์เซ็นต์
+- AI Tutor ProfileScore แสดงเป็นเปอร์เซ็นต์ เช่น 0.00%, 100.00%
+- Podcast ProfileScore แสดงเป็นเปอร์เซ็นต์ เช่น 53.33%, 100.00%
+- ค่าภายในยังคงเป็นสเกล 0–1; การเปลี่ยนเป็น Percent เป็นเพียง number format
+- Dashboard parser ควรรองรับข้อความเปอร์เซ็นต์จาก CSV และแปลงกลับเป็นค่า 0–1 ก่อนเฉลี่ยระดับรายวิชา
 
 ค่าตรวจสอบปัจจุบันจาก Public source:
 - AI Tutor course-weighted score ≈ 410.6667 / 767 = 53.54%
