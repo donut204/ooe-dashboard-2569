@@ -277,40 +277,45 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 11. หากพบว่า requirement ใน code/branch เก่าขัดกับ section 1A ให้ถือ **section 1A เป็น requirement ปัจจุบัน** จนกว่าผู้ใช้จะสั่งเปลี่ยน
 
 
-## 1B. UI Proposal — AI Tutor / Podcast (รอผู้ใช้อนุมัติ 07/10/2569)
+## 1B. UI Implementation — AI Tutor / Podcast (อนุมัติและดำเนินการ 07/10/2569)
 
-> **ยังไม่ implement ลง `ai-tutor.html` / `podcast.html`** ส่วนนี้เป็นร่างแนวทางตามภาพอ้างอิงล่าสุดของผู้ใช้
+> ดำเนินการตามร่างเดิมแล้ว **ยกเว้น KPI Card** ตามคำสั่งผู้ใช้ล่าสุด
 
 ### ตารางรายวิชา
-- ใช้โครงสร้าง Tree เดิม: `คณะ / วิทยาลัย → รายวิชา → Course Profile`
+- ใช้โครงสร้าง Tree: `คณะ / วิทยาลัย → รายวิชา → Course Profile`
 - ค่าเริ่มต้น: **คณะเปิดอยู่ แต่รายวิชาแต่ละตัวยังไม่ Expand Profile**
 - แถวคณะแสดงชื่อคณะ + จำนวนรายวิชา
 - แถวรายวิชาแสดง `courseCode` + จำนวน Profile, Course Type, CourseScore, status
-- กดปุ่ม `+` ที่รายวิชาจึงค่อยแสดง Profile ย่อย
+- ปุ่มรายวิชาเริ่มต้นเป็น `+`; กดแล้วจึงแสดง Profile ย่อย
 - Profile ย่อยแสดง Course Profile, ผู้สอน, ProfileScore, status, คำแนะนำ และลิงก์
-- รักษา Section 1A scoring / KPI / source เดิมทั้งหมด
+- การ Collapse/Expand เป็น presentation layer เท่านั้น ไม่เปลี่ยน Section 1A scoring / KPI / source
 
 ### สี
-- **ตัดโทนชมพูออกจากตาราง**
+- ตัดโทนชมพูออกจาก Tree table แล้ว
 - ใช้ Navy / Blue / Slate / White เป็นฐาน
-- Faculty group row ใช้ฟ้าอ่อนหรือ Blue-gray
-- Course row ใช้ขาว/เทาอ่อน
-- ปุ่ม Expand/Collapse ใช้สีน้ำเงิน
-- Status ใช้ Green / Amber / Red ตามความหมายเดิม
-
-### Card direction
-- ปรับ KPI cards ให้เป็น white card + thin border + accent color/icon
-- ใช้สีแบบเดียวกันทั้ง AI Tutor และ Podcast
-- เน้น 4 กลุ่มข้อมูล: รายวิชาทั้งหมด / คะแนนความครบถ้วน / ความคืบหน้าเฉลี่ย / รายวิชาครบทุก Profile
-- ใช้ตัวเลขใหญ่, label ชัด, note สั้น และ progress bar เฉพาะความคืบหน้า
-- หลีกเลี่ยง card ที่มีพื้นสีสดเต็มใบ
+- Faculty group row = ฟ้าอ่อน / Blue-gray
+- Course row = ขาว/เทาอ่อน
+- ปุ่ม Expand/Collapse = น้ำเงิน
+- Status ยังใช้ Green / Amber / Red ตามความหมายเดิม
 
 ### Font
-- ปัจจุบัน code ใช้ `"Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif` แต่ไม่ได้ bundle font จึงอาจ fallback ต่างกันแต่ละเครื่อง
-- แนวทางที่เสนอ: self-host ฟอนต์ open-source ภายใน repo ด้วย `@font-face` และไฟล์ `.woff2` ใน `assets/fonts/`
-- ต้องใช้ฟอนต์ที่ license อนุญาต เช่น Noto Sans Thai หรือ IBM Plex Sans Thai
-- หลัง bundle แล้ว browser ของผู้ใช้จะใช้ font จาก project แทนการพึ่ง font ที่ติดตั้งในเครื่อง
+- เพิ่ม shared stylesheet: `assets/ooe-font.css`
+- ทุกหน้าหลัก (`index.html`, `login.html`, `ai-tutor.html`, `podcast.html`) โหลด stylesheet นี้
+- ใช้ Noto Sans Thai ผ่าน Google Fonts Web Font เพื่อให้เครื่องผู้ใช้ต่างกันไม่ fallback ไปคนละฟอนต์ในภาวะปกติ
+- มี fallback `Leelawadee UI, Tahoma, Arial, sans-serif` หากโหลด Web Font ไม่สำเร็จ
+- **หมายเหตุ:** ปัจจุบันยังไม่ได้ bundle binary font file ลง repo; ใช้ stylesheet กลางใน project + remote web font
 
+### KPI Card
+- **ยังไม่ปรับ**
+- รักษา HTML / KPI Card เดิมของ AI Tutor และ Podcast ไว้ตามคำสั่งผู้ใช้
+- การเปลี่ยนรอบนี้ตรวจแล้วว่า KPI section ก่อน/หลังเหมือนเดิม
+
+### Commits
+- Shared font stylesheet: `895edf283ab08acdf81fc308a6c211aee7c9091b`
+- index.html font: `a52294759e588c63e6390400d621d397629e02aa`
+- login.html font: `c44ced282fde5f962a0d4ba770a958ad408f4ecf`
+- AI Tutor UI: `09686cd983f96410959f21ebe22614ee831ee308`
+- Podcast UI: `1888705cb3d13a9c11c62cb055e9e629eaa286d6`
 
 ---
 
@@ -747,6 +752,10 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ปรับ Tree table รอบล่าสุดให้รายวิชาเริ่มต้นแบบ collapsed; คณะยังเปิดให้เห็นรายการรายวิชา
+- ตัดสีชมพูจาก Tree table และเปลี่ยนเป็น Navy / Blue / Slate / White
+- เพิ่ม `assets/ooe-font.css` และใช้ Noto Sans Thai Web Font ร่วมกันในทุกหน้าหลัก
+- **ไม่ปรับ KPI Card** ตามคำสั่งผู้ใช้ และตรวจว่า KPI HTML เดิมไม่เปลี่ยน
 - ปิด PR #2 (`course-profile-scoring` → `main`) โดย **ไม่ merge** เพื่อเคลียร์ Pull Request ที่ค้างอยู่
 - ปรับ UI ตาราง AI Tutor / Podcast ตามภาพอ้างอิงให้เป็น Tree Hierarchy: **คณะ/วิทยาลัย → รายวิชา → Course Profile**
 - เพิ่มแถวกลุ่มคณะ/วิทยาลัยพื้นชมพูอ่อน พร้อมปุ่ม Collapse/Expand
