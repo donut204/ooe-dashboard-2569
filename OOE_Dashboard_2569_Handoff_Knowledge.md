@@ -518,6 +518,24 @@ Course score = AVERAGE(Profile scores)
 
 ยังไม่ขึ้น `main` จนกว่าจะตรวจ UI/logic และผู้ใช้อนุมัติ
 
+### Workflow validation ก่อนขึ้น Dashboard
+
+ก่อน merge logic ใหม่เข้า `main` ให้สร้าง Pivot ตรวจสอบจากชีทต้นทางที่คัดเกณฑ์แล้วแยกกัน:
+- `691 AI Tutor`
+- `691 Podcast`
+
+วัตถุประสงค์ของ Pivot:
+- ตรวจว่า 1 `faculty + courseCode` ถูกนับเป็น 1 รายวิชา
+- Expand ดูทุก `courseProfile/coursename` ภายในรายวิชาได้
+- ตรวจคะแนน Profile และคะแนนเฉลี่ยระดับรายวิชาก่อนใช้ใน Dashboard
+- Pivot เป็นชั้นตรวจสอบ/ต้นแบบ ไม่ใช่ data source หลักของ Dashboard
+
+แนวทางคะแนน:
+- AI Tutor ProfileScore = 1 หรือ 0 จากค่า AI Tutor
+- Podcast ProfileScore = MIN(PodcastCount,15)/15
+- Pivot ระดับ courseCode ใช้ Average of ProfileScore
+
+
 ---
 
 ## 16. Change Log
