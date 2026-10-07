@@ -38,10 +38,10 @@
 - การเลือก `courseType` / คณะ / สถานะ / Search จะกรองหลัง Group แล้ว จึงไม่ทำให้ CourseScore ถูกคำนวณใหม่จาก Profile บางส่วน
 - รายการหลักเป็นรายวิชา และรองรับ Expand/Collapse เพื่อดู Profile ย่อย
 - **UI ตารางล่าสุด (07/10/2569): แสดงแบบลำดับชั้น `คณะ / วิทยาลัย → รหัสวิชา → Course Profile` ตามภาพอ้างอิงของผู้ใช้**
-- แถวคณะ/วิทยาลัยใช้พื้นชมพูอ่อนและปุ่ม `− / +`
+- แถวคณะ/วิทยาลัยใช้โทนฟ้าอ่อน / Blue-gray และปุ่ม `− / +`
 - แถวรายวิชาแสดง `courseCode` + จำนวน Profile และมีปุ่ม `− / +`
 - Profile ย่อยแสดงเป็นกิ่ง Tree ใต้รายวิชา และแสดง `courseProfile`, Course Type, ผู้สอน, ProfileScore, status, คำแนะนำ และลิงก์รายวิชา
-- ค่าเริ่มต้นของตารางเป็น **ขยาย (expanded)** เพื่อให้เห็น Profile ย่อยทันที
+- ค่าเริ่มต้น: **คณะเปิดอยู่ แต่รายวิชาแต่ละตัวไม่ Expand Profile**; กด `+` จึงแสดง Profile ย่อย
 - Profile ย่อยแสดงค่า AI Tutor / Podcast พร้อม `ProfileScore`
 - Podcast ไม่คำนวณคะแนนจาก `podcastCount` ซ้ำใน Dashboard อีกต่อไป แต่ใช้ `ProfileScore` upstream โดยตรง
 - Source ยังคงเป็น Public CSV เดิม ไม่ได้เปลี่ยนไปใช้ Pivot
@@ -306,18 +306,23 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - **หมายเหตุ:** ปัจจุบันยังไม่ได้ bundle binary font file ลง repo; ใช้ stylesheet กลางใน project + remote web font
 
 ### KPI Card
-- **ปรับใหม่แล้ว 07/10/2569** สำหรับทั้ง AI Tutor และ Podcast
+- **ปรับล่าสุด 07/10/2569** สำหรับทั้ง AI Tutor และ Podcast
 - ใช้โครงสร้าง 2 ระดับ: **ระดับรายวิชา (หลัก)** + **ระดับ Profile (รอง)**
-- Main cards มี 5 ใบ:
+- Card ด้านบนมี 4 ใบ:
   1. `รายวิชาทั้งหมด`
-  2. `คะแนน KPI รวม` — แสดง TotalPoints / TotalCourses + Progress % + horizontal progress bar
-  3. `ครบทุก Profile`
-  4. AI Tutor = `ทำบางส่วน` / Podcast = `จัดทำไม่ครบ`
-  5. `ไม่ทำ`
+  2. `ครบทุก Profile`
+  3. `จัดทำไม่ครบ`
+  4. `ไม่ทำ`
+- `คะแนน KPI รวม` ถูกย้ายออกจากแถว Card ด้านบน ไปวางใน **คอลัมน์ขวาเหนือกราฟวงกลม (Donut)** และอยู่ใน section เดียวกับกราฟความคืบหน้าแยกตามคณะ
+- Card คะแนน KPI รวมแสดง TotalPoints / TotalCourses + Progress % + horizontal progress bar
+- Card ผลลัพธ์หลักใช้ icon ขนาดใหญ่ขึ้น และวาง **icon ทางซ้าย / label + จำนวนทางขวา** แทนการวางจำนวนใต้ icon
 - Secondary Profile Summary:
-  - AI Tutor: Profiles ทั้งหมด / Profile ที่ทำ / Profile ที่ไม่ทำ
-  - Podcast: Profiles ทั้งหมด / Profile ที่ทำครบ / Profile ที่จัดทำไม่ครบ / Profile ที่ไม่ทำ
-- ใช้สี Navy / Blue / Slate / White เป็นฐาน และใช้ Green / Amber / Red เฉพาะสถานะ
+  - AI Tutor: Profile ทั้งหมด / Profile ที่ทำ / Profile ที่ไม่ทำ
+  - Podcast: Profile ทั้งหมด / Profile ที่ทำครบ / Profile ที่จัดทำไม่ครบ / Profile ที่ไม่ทำ
+- **มาตรฐานคำใน UI ใช้ `Profile` โดยไม่เติม s เสมอ** แม้จำนวนมากกว่า 1 เพื่อให้ศัพท์ในระบบคงที่ เช่น `921 Profile`, `2 Profile`
+- AI Tutor เปลี่ยน wording สถานะระดับรายวิชา `ทำบางส่วน` → `จัดทำไม่ครบ` ใน Filter, KPI และ Badge
+- Modal เกณฑ์ AI Tutor ใช้ข้อความ exact: `หนึ่งรายวิชาต้องมี 1 AI Tutor`
+- ใช้สี Navy / Blue / Slate / White เป็นฐาน และ Green / Amber / Red เฉพาะสถานะ
 - ห้าม hard-code ตัวเลขควบคุม เช่น 767, 921, 410.67, 53.54%, 264.87, 34.53%
 - ตัวเลข KPI ทุกตัวอัปเดตจาก Public CSV ของ Google Sheet ผ่าน `DATA` ปัจจุบัน และเปลี่ยนตาม filter/search
 - Course KPI ใช้ CourseScore ตาม Section 1A; Profile KPI ใช้ `ProfileScore` จาก source
@@ -335,6 +340,8 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - Podcast UI: `1888705cb3d13a9c11c62cb055e9e629eaa286d6`
 - AI Tutor KPI v2: `ab94f9283390976e641a4e670a2264a3a51a2fee`
 - Podcast KPI v2: `2da36a9e86bd4732457c59c9f46f156341925de1`
+- AI Tutor KPI refinement: `c3f6524175052eb54a00f9d3520081c60a131b60`
+- Podcast KPI refinement: `42e4a17abfce07c1f501075c2592bb7319e30561`
 
 ---
 
@@ -771,6 +778,13 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ย้าย Card `คะแนน KPI รวม` ไปไว้เหนือ Donut ในคอลัมน์ขวา ระดับเดียวกับกราฟความคืบหน้า
+- ปรับ Main KPI Card ให้ icon ใหญ่ขึ้น และวางจำนวนผลทางขวาของ icon
+- AI Tutor เปลี่ยนสถานะ `ทำบางส่วน` เป็น `จัดทำไม่ครบ` ทุกจุดที่เป็นสถานะระดับรายวิชา
+- AI Tutor criteria เปลี่ยนเป็น `หนึ่งรายวิชาต้องมี 1 AI Tutor`
+- กำหนดมาตรฐาน UI ให้ใช้คำ `Profile` ไม่เติม s ทั้ง AI Tutor และ Podcast
+- Commit AI Tutor refinement: `c3f6524175052eb54a00f9d3520081c60a131b60`
+- Commit Podcast refinement: `42e4a17abfce07c1f501075c2592bb7319e30561`
 - ปรับ KPI Card AI Tutor / Podcast เป็น 5 Main Cards ระดับรายวิชา + Secondary Profile Summary
 - เพิ่ม Card `คะแนน KPI รวม` พร้อม TotalPoints / TotalCourses, Progress % และ Progress Bar
 - เพิ่มสถานะรายวิชา complete / partial / notdone พร้อมจำนวนและเปอร์เซ็นต์
