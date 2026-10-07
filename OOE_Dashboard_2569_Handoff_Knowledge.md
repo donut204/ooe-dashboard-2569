@@ -321,7 +321,7 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
   - Podcast: Profile ทั้งหมด / Profile ที่ทำครบ / Profile ที่จัดทำไม่ครบ / Profile ที่ไม่ทำ
 - **มาตรฐานคำใน UI ใช้ `Profile` โดยไม่เติม s เสมอ** แม้จำนวนมากกว่า 1 เพื่อให้ศัพท์ในระบบคงที่ เช่น `921 Profile`, `2 Profile`
 - AI Tutor เปลี่ยน wording สถานะระดับรายวิชา `ทำบางส่วน` → `จัดทำไม่ครบ` ใน Filter, KPI และ Badge
-- Card `จัดทำไม่ครบ` ใช้ **ไอคอนเครื่องหมายตกใจ / Warning** สี Amber ทั้ง AI Tutor และ Podcast
+- Card `จัดทำไม่ครบ` ใช้ **ไอคอนเครื่องหมายตกใจแบบ Minimal / เส้นบาง** สี Amber ทั้ง AI Tutor และ Podcast; ไม่มีกรอบสามเหลี่ยม Warning เพื่อให้ภาพเบาลง
 - Modal เกณฑ์ AI Tutor ใช้ข้อความ exact: `หนึ่งรายวิชาต้องมี 1 AI Tutor`
 - Modal เกณฑ์ Podcast ใช้ข้อความ exact: `หนึ่งรายวิชาต้องมี 15 Podcast`
 - ใช้สี Navy / Blue / Slate / White เป็นฐาน และ Green / Amber / Red เฉพาะสถานะ
@@ -346,6 +346,8 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - Podcast KPI refinement: `42e4a17abfce07c1f501075c2592bb7319e30561`
 - AI Tutor warning icon: `403040b73cee962d0bc4cab4ec4596e979b08941`
 - Podcast warning icon / wording: `57214c0891d0153080952d0d6d5d74447240ca06`
+- AI Tutor minimal warning icon: `bcdd69e3ff02f7c2428043b0a2ea83037f265032`
+- Podcast minimal warning icon: `30c549a98f73090aafdc134a8baedda475da7b45`
 
 ---
 
@@ -782,6 +784,7 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ปรับ Warning icon ของ Card `จัดทำไม่ครบ` ให้เบาลงทั้ง AI Tutor และ Podcast: ใช้เครื่องหมาย `!` แบบเส้นบาง ไม่มีกรอบสามเหลี่ยม
 - เปลี่ยน icon Card `จัดทำไม่ครบ` เป็น Warning / เครื่องหมายตกใจสี Amber ทั้ง AI Tutor และ Podcast
 - Podcast criteria ปรับข้อความเป็น `หนึ่งรายวิชาต้องมี 15 Podcast` ให้รูปแบบสอดคล้องกับ AI Tutor
 - ยืนยันหน้า Podcast ใช้ layout ล่าสุดเหมือน AI Tutor: KPI score card อยู่เหนือ Donut, ใช้คำ `Profile` ไม่เติม s
