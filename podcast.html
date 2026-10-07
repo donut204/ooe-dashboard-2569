@@ -569,17 +569,25 @@ html.auth-check body{visibility:hidden}
 .kpi-status-value{display:flex;align-items:baseline;gap:7px}
 .kpi-status-value .kpi-unit{font-size:14px;font-weight:700;color:#627d98}
 .right-summary-stack{display:grid;grid-template-rows:auto minmax(0,1fr);gap:16px;min-width:0;height:100%}
-.kpi-score-card{background:linear-gradient(145deg,#fff,#f8fbff);min-height:166px}
+.kpi-score-card{background:linear-gradient(145deg,#fff,#f8fbff);min-height:166px;padding:18px 20px}
 .charts-grid{align-items:stretch}
 .right-summary-stack>.chart-panel{height:100%;display:flex;flex-direction:column}
 .right-summary-stack>.chart-panel .donut-body{flex:1;align-content:center}
-.kpi-score-card .kpi-card-mainline{min-height:auto;align-items:flex-start}
-.kpi-score-main{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:4px}
-.kpi-score-main .kpi-value{font-size:31px;margin:0}
-.kpi-score-total{font-size:15px;font-weight:700;color:#627d98}
-.kpi-progress-value{margin-top:7px;font-size:34px;font-weight:800;line-height:1;color:#245dcc}
-.kpi-progress-track{height:10px;margin-top:15px;border-radius:999px;background:#e7edf5;overflow:hidden}
+.kpi-score-head{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.kpi-score-head .kpi-icon-v2{width:44px;height:44px;flex-basis:44px;border-radius:12px}
+.kpi-score-head .kpi-icon-v2 svg{width:23px;height:23px}
+.kpi-score-head .kpi-label{font-size:15px}
+.kpi-score-metrics{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:end}
+.kpi-score-block{min-width:0}
+.kpi-score-caption{display:block;margin-bottom:4px;font-size:11px;font-weight:600;color:#829ab1}
+.kpi-score-main{display:flex;align-items:baseline;gap:7px;flex-wrap:nowrap}
+.kpi-score-main .kpi-value{font-size:32px;margin:0}
+.kpi-score-total{font-size:15px;font-weight:700;color:#627d98;white-space:nowrap}
+.kpi-progress-box{text-align:right}
+.kpi-progress-value{font-size:34px;font-weight:800;line-height:1;color:#245dcc;white-space:nowrap}
+.kpi-progress-track{height:9px;margin-top:14px;border-radius:999px;background:#e7edf5;overflow:hidden}
 .kpi-progress-bar{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#245dcc,#3b82f6);transition:width .35s ease}
+@media(max-width:520px){.kpi-score-metrics{grid-template-columns:1fr}.kpi-progress-box{text-align:left}}
 .profile-summary-v2{margin-top:10px;padding:14px 18px;box-shadow:0 5px 16px rgba(16,42,67,.045)}
 .profile-summary-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
 .profile-summary-head strong{font-size:13px;color:#334e68}
@@ -650,14 +658,20 @@ html.auth-check body{visibility:hidden}
 </article>
 </section>
 <section class="charts-grid">
-<article class="panel chart-panel"><div class="section-head"><div><h2>สัดส่วนรายวิชา Podcast แยกตามคณะ</h2><p>แสดงสัดส่วนสถานะรายวิชาในแต่ละคณะจากผลตามตัวกรองปัจจุบัน</p></div><div class="legend"><span><i class="dot green"></i>ครบทุก Profile</span><span><i class="dot amber"></i>จัดทำไม่ครบ</span><span><i class="dot red"></i>ไม่ทำ</span></div></div><div class="chart" id="facultyChart"></div></article>
+<article class="panel chart-panel"><div class="section-head"><div><h2>จำนวนรายวิชา Podcast แยกตามคณะ</h2><p>แสดงจำนวนรายวิชาในแต่ละสถานะตามคณะจากผลตามตัวกรองปัจจุบัน</p></div><div class="legend"><span><i class="dot green"></i>ครบทุก Profile</span><span><i class="dot amber"></i>จัดทำไม่ครบ</span><span><i class="dot red"></i>ไม่ทำ</span></div></div><div class="chart" id="facultyChart"></div></article>
 <div class="right-summary-stack">
 <article class="panel kpi-card-v2 kpi-score-card kpi-filter-card" data-status-filter="" data-kpi-reset="true" role="button" tabindex="0" title="แสดงทุกสถานะ">
-  <div class="kpi-card-mainline">
+  <div class="kpi-score-head">
     <span class="kpi-icon-v2"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 19V9M12 19V5M19 19v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3.5 19.5h17" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></span>
-    <div class="kpi-card-copy">
-      <div class="kpi-label">คะแนน KPI รวม</div>
+    <div class="kpi-label">คะแนน KPI รวม</div>
+  </div>
+  <div class="kpi-score-metrics">
+    <div class="kpi-score-block">
+      <span class="kpi-score-caption">คะแนนที่ได้ / คะแนนเต็ม</span>
       <div class="kpi-score-main"><span class="kpi-value" id="pointsKpi">0.00</span><span class="kpi-score-total" id="pointsTotalKpi">/ 0</span></div>
+    </div>
+    <div class="kpi-progress-box">
+      <span class="kpi-score-caption">ความคืบหน้า</span>
       <div class="kpi-progress-value" id="progressKpi">0.00%</div>
     </div>
   </div>
@@ -1025,18 +1039,19 @@ function renderChart(rows){
     groups[f].total++;
   });
   const list=Object.entries(groups).sort((a,b)=>b[1].total-a[1].total||natural(a[0],b[0]));
-  const seg=(count,total,cls)=>{
-    const pct=total?count/total*100:0;
-    return count?`<div class="seg ${cls}" style="width:${pct}%"><span>${pct>=8?pct.toFixed(1)+'%':''}</span></div>`:'';
+  const maxTotal=Math.max(1,...list.map(([,v])=>v.total));
+  const seg=(count,cls)=>{
+    const pct=count/maxTotal*100;
+    return count?`<div class="seg ${cls}" style="width:${pct}%"><span>${pct>=5?count.toLocaleString('th-TH'):''}</span></div>`:'';
   };
-  $('facultyChart').innerHTML=list.length?list.map(([f,v])=>`<div class="chart-row" data-faculty="${esc(f)}" role="button" tabindex="0" title="คลิกเพื่อกรองตามคณะนี้"><div class="faculty">${esc(f)} (${v.total})</div><div class="track">${seg(v.complete,v.total,'green')}${seg(v.partial,v.total,'amber')}${seg(v.notdone,v.total,'red')}</div><div class="total">${v.total.toLocaleString('th-TH')} วิชา</div></div>`).join(''):'<div class="empty">ไม่พบข้อมูลตามตัวกรอง</div>';
+  $('facultyChart').innerHTML=list.length?list.map(([f,v])=>`<div class="chart-row" data-faculty="${esc(f)}" role="button" tabindex="0" title="คลิกเพื่อกรองตามคณะนี้"><div class="faculty">${esc(f)}</div><div class="track">${seg(v.complete,'green')}${seg(v.partial,'amber')}${seg(v.notdone,'red')}</div><div class="total">${v.total.toLocaleString('th-TH')} วิชา</div></div>`).join(''):'<div class="empty">ไม่พบข้อมูลตามตัวกรอง</div>';
 }
 function renderDonut(rows){
   const total=rows.length,points=rows.reduce((a,g)=>a+g.score,0),pct=total?points/total*100:0,remain=100-pct;
   const item=(label,n,p,cls)=>`<div class="donut-item"><i class="dot ${cls}"></i><span>${label}</span><strong>${n} (${p.toFixed(1)}%)</strong></div>`;
-  $('donutChart').style.background=total?`conic-gradient(var(--green) 0 ${pct}%,var(--gray) ${pct}% 100%)`:'#e8eef5';
+  $('donutChart').style.background=total?`conic-gradient(var(--green) 0 ${pct}%,var(--amber) ${pct}% 100%)`:'#e8eef5';
   $('donutTotal').textContent=pct.toFixed(1)+'%';
-  $('donutLegend').innerHTML=item('คะแนนที่ได้',points.toFixed(2),pct,'green')+item('คะแนนที่ยังขาด',(total-points).toFixed(2),remain,'gray');
+  $('donutLegend').innerHTML=item('คะแนนที่ได้',points.toFixed(2),pct,'green')+item('คะแนนที่ยังขาด',(total-points).toFixed(2),remain,'amber');
 }
 const td=(v,c='')=>`<td class="${c}">${esc(v)}</td>`;
 function courseBadge(score){
