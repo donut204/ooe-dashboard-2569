@@ -329,11 +329,10 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
   - การกด Card **ไม่ล้าง filter อื่น** เช่น คณะ, ประเภทรายวิชา, ความคืบหน้า หรือ Search
   - Card ที่เป็น filter ปัจจุบันมี Active state; รองรับเมาส์และ keyboard Enter / Space
   - Profile Summary / Mini Card **ไม่ใช้เป็นตัวกรอง** เพราะรายการหลักเป็นหน่วยรายวิชา
-- AI Tutor / Podcast มี Filter ใหม่ `จำนวน Profile`:
-  - `ทั้งหมด`
-  - `1 Profile`
-  - `มากกว่า 1 Profile`
-- Profile-count filter ทำงานหลัง Group เป็นรายวิชาแล้ว จึงกรองจาก `g.profileCount` โดยไม่กระทบสูตร CourseScore
+- AI Tutor / Podcast มี Filter `จำนวน Profile` แบบ **dynamic ตามค่าที่พบจริงในข้อมูล**
+- Dropdown เริ่มด้วย `ทั้งหมด` แล้วสร้าง option จากจำนวน Profile ของแต่ละรายวิชา เช่น ปัจจุบัน source พบ `1 Profile`, `2 Profile`, `3 Profile`, `4 Profile`
+- ถ้าในอนาคต source มี 5 หรือมากกว่านั้น ระบบจะเพิ่ม option ให้อัตโนมัติ ไม่ hard-code จำนวน
+- Profile-count filter ทำงานหลัง Group เป็นรายวิชาแล้ว จึงกรองจาก `g.profileCount` แบบ exact match และไม่กระทบสูตร CourseScore
 - Secondary Profile Summary:
   - AI Tutor: Profile ทั้งหมด / Profile ที่ทำ / Profile ที่ไม่ทำ
   - Podcast: Profile ทั้งหมด / Profile ที่ทำครบ / Profile ที่จัดทำไม่ครบ / Profile ที่ไม่ทำ
@@ -376,6 +375,8 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - Podcast tree alignment: `1fb1da0f80b0d00ea29233de5b4b3a5d94067273`
 - AI Tutor faculty/filter/chart refinement: `116596da658afbf7804aa51b6f6fde927e673087`
 - Podcast faculty/filter/chart refinement: `235fa6424b67c881fddb7b1f8b51a18563ab90d6`
+- AI Tutor dynamic Profile-count filter: `34c6fcb2fd3392ab7f2eb7bf6dc5078b242a1348`
+- Podcast dynamic Profile-count filter: `e52eb1ced14f155aa5f6c01397bd2b79eec0acd7`
 
 ---
 
@@ -812,6 +813,9 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ปรับ Filter `จำนวน Profile` ให้สร้าง option ตามจำนวนที่พบจริงใน source แบบ dynamic และกรองแบบ exact match
+- Source ปัจจุบันทั้ง AI Tutor และ Podcast พบจำนวน Profile ต่อรายวิชา = 1, 2, 3, 4
+- หากอนาคตมีจำนวนอื่น ระบบเพิ่ม option อัตโนมัติโดยไม่ต้องแก้ HTML
 - แก้ Faculty group count ให้แสดงจำนวนรายวิชาทั้งหมดของคณะในผลลัพธ์ Filter ปัจจุบัน ไม่ใช่จำนวนเฉพาะหน้า Pagination
 - ปรับสี Active ของ KPI Card ให้ตรงกับสีสถานะของ Card
 - ปรับสัดส่วนคอลัมน์ขวาของส่วนกราฟให้ยืดเติมความสูง ลดช่องว่างมุมขวาล่าง
