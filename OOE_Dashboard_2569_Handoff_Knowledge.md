@@ -42,7 +42,8 @@
 - แถวรายวิชาแสดง `courseCode` + จำนวน Profile และมีปุ่ม `− / +`
 - Profile ย่อยแสดงเป็นกิ่ง Tree ใต้รายวิชา และแสดง `courseProfile`, Course Type, ผู้สอน, ProfileScore, status, คำแนะนำ และลิงก์รายวิชา
 - **Tree alignment ล่าสุด:** เพิ่มระยะระหว่างปุ่ม Expand กับชื่อรายวิชา และให้เส้นกิ่งของ Course Profile เชื่อมจาก parent มาถึงคอลัมน์ Course Profile อย่างต่อเนื่อง
-- **Alignment refinement 07/10/2569:** ขยับชื่อรายวิชาไปทางขวาเพิ่มอีกโดยเพิ่ม gap ระหว่างปุ่ม `+ / −` กับชื่อรายวิชาเป็น 18px (Mobile 16px)
+- **Alignment refinement 07/10/2569:** ขยับทั้งปุ่ม Expand และข้อความรายวิชาไปทางขวาเพิ่ม โดยเพิ่ม `tree-course-cell` padding-left เป็น 42px (Mobile 38px) และเลื่อน Tree connector ตามไปด้วย
+- ระยะระหว่างชื่อรายวิชากับ `(n Profile)` ถูกปรับให้กลับมากระชับขึ้นด้วย `margin-left:-6px` (Mobile -5px) โดยยังคงระยะปุ่ม Expand → ชื่อรายวิชาเดิม
 - ค่า `Course Profile` ย่อยต้องเริ่มตรงแนวเดียวกับหัวคอลัมน์ `Course Profile`; ใช้ padding ซ้าย 14px เท่ากับ cell/header ปกติ และย่อเส้น connector ในคอลัมน์ Profile ให้จบก่อนข้อความ
 - **Faculty group count ล่าสุด:** ตัวเลขหลังชื่อคณะ/วิทยาลัยต้องเป็นจำนวนรายวิชาทั้งหมดของคณะนั้นในชุดผลลัพธ์ที่ผ่าน Filter ปัจจุบัน ไม่ใช่จำนวนเฉพาะในหน้าปัจจุบันของ Pagination
 - ค่าเริ่มต้น: **คณะเปิดอยู่ แต่รายวิชาแต่ละตัวไม่ Expand Profile**; กด `+` จึงแสดง Profile ย่อย
@@ -892,6 +893,10 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ปรับตำแหน่งปุ่ม Expand + ชื่อรายวิชาไปทางขวาอีกทั้ง AI Tutor และ Podcast
+- ทำ `(n Profile)` ให้ชิดชื่อรายวิชามากขึ้น โดยไม่ดึงทั้งกลุ่มกลับไปทางซ้าย
+- Commit AI Tutor row spacing: `ac3258651a600a342d2edf6aff7f1f356bd15520`
+- Commit Podcast row spacing: `b60b71cd0e5668de44b8a5db481acc2ce1f4f064`
 - ปรับ Donut legend ทุกหน้าให้อยู่ใต้กราฟวงกลม: GR/GS, AI Tutor, Podcast
 - Donut จัดกึ่งกลาง Card และ Legend แสดงแนวตั้งด้านล่าง เพื่อให้อ่านง่ายและสม่ำเสมอ
 - ปรับ GR/GS Active KPI Card ให้ใช้สีตามสถานะ ไม่ใช้ Blue เหมือนกันทุก Card
