@@ -393,6 +393,14 @@ git push origin main
   4. `ไม่ทำ`
 - `คะแนน KPI รวม` ถูกย้ายออกจากแถว Card ด้านบน ไปวางใน **คอลัมน์ขวาเหนือกราฟวงกลม (Donut)** และอยู่ใน section เดียวกับกราฟความคืบหน้าแยกตามคณะ
 - **Chart layout ล่าสุด:** คอลัมน์ขวา (`คะแนน KPI รวม + Donut`) ต้อง stretch ให้สูงสมดุลกับกราฟความคืบหน้าแยกตามคณะ เพื่อลดช่องว่างมุมขวาล่างบน Desktop; Mobile/Tablet กลับเป็นความสูงตามเนื้อหา
+- **AI Tutor / Podcast Faculty chart ล่าสุด:** เปลี่ยนจากกราฟค่าเฉลี่ยความคืบหน้าเป็น **สัดส่วนสถานะรายวิชาแยกตามคณะ**
+  - 100% stacked bar ต่อคณะ
+  - Green = ครบทุก Profile
+  - Amber = จัดทำไม่ครบ
+  - Red = ไม่ทำ
+  - ข้อมูลอิง CourseScore / courseStatus หลัง Filter ปัจจุบัน
+  - แสดงเปอร์เซ็นต์ใน segment เมื่อพื้นที่เพียงพอ และจำนวนรายวิชาของคณะทางขวา
+  - คลิกแถวยังคงกรองตามคณะได้
 - **Donut layout ล่าสุด (07/10/2569):** ทุกหน้าที่มีกราฟวงกลมให้วาง Legend/ข้อความอธิบาย **ใต้กราฟวงกลม** ไม่วางด้านข้าง
   - ใช้กับ GR/GS, AI Tutor และ Podcast
   - Donut อยู่กึ่งกลาง Card
@@ -402,6 +410,12 @@ git push origin main
 - การปัดขึ้นเป็น **presentation เท่านั้น**; ค่า Progress % และ logic คำนวณ KPI ยังคงใช้คะแนนจริงก่อนปัด
 - Card ผลลัพธ์หลักใช้ icon ขนาดใหญ่ขึ้น และวาง **icon ทางซ้าย / label + จำนวนทางขวา** แทนการวางจำนวนใต้ icon
 - **GR/GS Active state ใช้สีตามสถานะของ Card**: รายวิชาทั้งหมด = Blue, ผ่าน = Green, อยู่ระหว่างการตรวจสอบ = Amber, ไม่ผ่าน = Red
+- **GR/GS KPI visual system ล่าสุด:** รูปแบบ Card ใช้แนวเดียวกับ AI Tutor / Podcast โดยคงข้อความเดิมทั้งหมด แต่ปรับขนาด Card, typography และเพิ่ม icon:
+  - รายวิชาทั้งหมด = Book / Blue
+  - ผ่าน = Check / Green
+  - อยู่ระหว่างการตรวจสอบ = Minimal ! / Amber
+  - ไม่ผ่าน = X / Red
+  - icon 52px (Mobile 48px), ตัวเลขใหญ่ 39px (Mobile 34px), card min-height 146px
 - **Main KPI Card กดเพื่อกรองข้อมูลได้ทุกหน้า**
   - GR / GS: `รายวิชาทั้งหมด` = ทุกสถานะการตรวจสอบ, `ผ่าน`, `อยู่ระหว่างการตรวจสอบ`, `ไม่ผ่าน` → sync กับ `reviewFilter`
   - AI Tutor / Podcast: `รายวิชาทั้งหมด` = ทุกสถานะ, `ครบทุก Profile`, `จัดทำไม่ครบ`, `ไม่ทำ` → sync กับ `statusFilter`
@@ -900,6 +914,12 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ปรับ GR/GS KPI Card ให้ใช้ visual system แบบ AI Tutor / Podcast โดยคงข้อความเดิมทั้งหมด และเพิ่ม icon/ขนาดตัวอักษร/ขนาด card ให้สอดคล้องกัน
+- เปลี่ยนกราฟคณะของ AI Tutor / Podcast เป็น 100% stacked status proportion: ครบทุก Profile / จัดทำไม่ครบ / ไม่ทำ
+- Donut ของ AI Tutor / Podcast **ยังไม่เปลี่ยนในรอบนี้**; คงแสดงคะแนน KPI ที่ได้ vs คะแนนที่ยังขาด เพื่อไม่ซ้ำกับกราฟสถานะรายวิชา
+- Commit GR/GS KPI visual: `1b61b37babec9eb719270a9e13c19085976e866d`
+- Commit AI Tutor faculty status chart: `3da991e46f2df9c06a8cfeaade3fd7715c3eae36`
+- Commit Podcast faculty status chart: `56143b05a9e3d17de04575a4bb576a4067caedd0`
 - เปลี่ยน Pagination AI Tutor / Podcast เป็น paginate ตามกลุ่มคณะหลัง Filter/Search แล้ว เพื่อแก้ปัญหาหุบคณะแล้วหน้าโล่ง
 - ใช้ 4 คณะต่อหน้า; Filter ทุกชนิดทำงานก่อน Group/Pagination และ reset กลับหน้า 1 เมื่อค่า Filter เปลี่ยน
 - Commit AI Tutor faculty pagination: `b94ad258053a55b3905de87b3768ea0c2309af67`
