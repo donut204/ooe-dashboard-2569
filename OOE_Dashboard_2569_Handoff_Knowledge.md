@@ -296,6 +296,57 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
   - Header หลักยังคง Navy เดิม ไม่ย้ายข้อมูลอ้างอิง/สถานะออนไลน์เข้า Sidebar ในร่างแรก
 - **ยังไม่ implement Sidebar จนกว่าผู้ใช้จะอนุมัติภาพร่าง**
 
+## 1D. Local Development with VS Code
+
+ใช้ workflow นี้เมื่อย้ายงานจาก ChatGPT/GitHub ไปทำต่อใน Visual Studio Code บนเครื่องผู้ใช้
+
+### Clone ครั้งแรก
+
+```bash
+git clone https://github.com/donut204/ooe-dashboard-2569.git
+cd ooe-dashboard-2569
+code .
+```
+
+ก่อนเริ่มแก้ทุกครั้ง:
+1. เปิดอ่าน `OOE_Dashboard_2569_Handoff_Knowledge.md`
+2. อยู่ที่ branch `main`
+3. ดึงงานล่าสุดจาก GitHub
+
+```bash
+git checkout main
+git pull origin main
+```
+
+### Deploy ขึ้น main จาก VS Code / Terminal
+
+หลังแก้และทดสอบแล้ว:
+
+```bash
+git status
+git add .
+git commit -m "อธิบายสิ่งที่แก้"
+git pull --rebase origin main
+git push origin main
+```
+
+โปรเจกต์นี้ใช้ `main` เป็น branch สำหรับ GitHub Pages ดังนั้นเมื่อ push เข้า `main` แล้ว GitHub Pages จะ deploy เวอร์ชันใหม่ตาม workflow ปัจจุบัน
+
+ถ้า `git push` ถูกปฏิเสธเพราะ remote มี commit ใหม่:
+```bash
+git pull --rebase origin main
+# แก้ conflict ถ้ามี
+git add .
+git rebase --continue
+git push origin main
+```
+
+ข้อควรระวัง:
+- ก่อน push ต้อง `git pull --rebase origin main` เพราะ ChatGPT หรือผู้ร่วมงานอาจแก้ repo ระหว่างที่ผู้ใช้กำลังทำ local
+- ทุกการเปลี่ยน logic/UI/source/workflow ต้องอัปเดต Handoff MD ใน commit เดียวกัน
+- อย่า force push `main` โดยไม่จำเป็น
+- หากต้องการ workflow ปลอดภัยกว่า ให้ทำ branch แยกแล้วเปิด Pull Request แทนการแก้ `main` โดยตรง
+
 ## 1B. UI Implementation — AI Tutor / Podcast (อนุมัติและดำเนินการ 07/10/2569)
 
 > ดำเนินการตามร่างเดิมแล้ว **ยกเว้น KPI Card** ตามคำสั่งผู้ใช้ล่าสุด
