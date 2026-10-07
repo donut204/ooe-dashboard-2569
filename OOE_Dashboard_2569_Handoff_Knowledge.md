@@ -332,6 +332,10 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
   4. `ไม่ทำ`
 - `คะแนน KPI รวม` ถูกย้ายออกจากแถว Card ด้านบน ไปวางใน **คอลัมน์ขวาเหนือกราฟวงกลม (Donut)** และอยู่ใน section เดียวกับกราฟความคืบหน้าแยกตามคณะ
 - **Chart layout ล่าสุด:** คอลัมน์ขวา (`คะแนน KPI รวม + Donut`) ต้อง stretch ให้สูงสมดุลกับกราฟความคืบหน้าแยกตามคณะ เพื่อลดช่องว่างมุมขวาล่างบน Desktop; Mobile/Tablet กลับเป็นความสูงตามเนื้อหา
+- **Donut layout ล่าสุด (07/10/2569):** ทุกหน้าที่มีกราฟวงกลมให้วาง Legend/ข้อความอธิบาย **ใต้กราฟวงกลม** ไม่วางด้านข้าง
+  - ใช้กับ GR/GS, AI Tutor และ Podcast
+  - Donut อยู่กึ่งกลาง Card
+  - Legend เรียงแนวตั้งด้านล่าง พร้อมจุดสี + label + ค่าทางขวา
 - Card คะแนน KPI รวมแสดง TotalPoints / TotalCourses + Progress % + horizontal progress bar
 - **การแสดง TotalPoints ใน Card ใช้การปัดขึ้นด้วย `Math.ceil()`** ทั้ง AI Tutor และ Podcast เช่น 410.67 → 411, 264.87 → 265
 - การปัดขึ้นเป็น **presentation เท่านั้น**; ค่า Progress % และ logic คำนวณ KPI ยังคงใช้คะแนนจริงก่อนปัด
@@ -396,6 +400,9 @@ Branch นี้ใช้เป็น **prototype/reference เท่านั�
 - GR/GS active colors + GS-first nav: `41dd555f22c5d58d613b9050d3e9a2690ec38d81`
 - AI Tutor GS-first nav: `45d05e2fb2d1793f847b633e6fa1423f120d4c67`
 - Podcast GS-first nav: `9117a75e5b2800d60fe13de6f4bf9b236be533bf`
+- GR/GS donut legend-below: `dbccec16cee52ac9ca48081360965ee38ac4ed0f`
+- AI Tutor donut legend-below: `fcd9b8cb6c36bd6adfd160847e6e273ded44281c`
+- Podcast donut legend-below: `57d7090df47e1cf4410e9d9ea2e9132327a75b00`
 
 ---
 
@@ -832,6 +839,8 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 ## 15. Change Log
 
 ### 07/10/2569
+- ปรับ Donut legend ทุกหน้าให้อยู่ใต้กราฟวงกลม: GR/GS, AI Tutor, Podcast
+- Donut จัดกึ่งกลาง Card และ Legend แสดงแนวตั้งด้านล่าง เพื่อให้อ่านง่ายและสม่ำเสมอ
 - ปรับ GR/GS Active KPI Card ให้ใช้สีตามสถานะ ไม่ใช้ Blue เหมือนกันทุก Card
 - เปลี่ยนลำดับ Navigation ทุกหน้าเป็น GS → GR → AI Tutor → Podcast
 - บันทึก Sidebar Navigation เป็น proposal รอผู้ใช้อนุมัติภาพก่อน implement
