@@ -1120,3 +1120,12 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 - Commit Podcast label guidance: `87548f63a939ccd55ffd80cb87f2a44229cbc18b`
 - Follow-up wording: ตัดตัวอย่าง `AI Tutor Week 1` ออกจากคำแนะนำหน้า AI Tutor เพื่อให้ข้อความสั้นลงตาม UX review
 - Commit AI Tutor wording cleanup: `1d6418dba05fb66398f7cffaf50d6a135b69f092`
+- **AI Tutor / Podcast Header source summary cleanup (08/10/2569):** ปรับข้อมูลมุมขวาบนของ Header ให้อ่านง่ายและเป็นลำดับ 3 บรรทัด
+  - บรรทัด 1: `สำนักการจัดการศึกษาออนไลน์ (OOE)`
+  - บรรทัด 2: `n รายวิชา (n Profile)` โดยคำนวณ Dynamic จากข้อมูลที่โหลดจริง
+  - บรรทัด 3: `ข้อมูลอ้างอิง ณ วันที่ 05/10/2569`
+  - ตัดข้อความ `ดึงข้อมูลเมื่อ <วันที่> <เวลา>` และจุดสถานะสีเขียวออกจาก Header เพื่อลด visual noise
+  - ระหว่างโหลด บรรทัดสรุปแสดง `กำลังโหลดข้อมูลออนไลน์...`; กรณีโหลดผิดพลาดยังแสดง error message ที่ตำแหน่งเดิม
+  - ไม่ hard-code จำนวนรายวิชา/Profile และไม่เปลี่ยน data/KPI logic
+- Commit AI Tutor header source summary: `55586b926d18487b8c470d60c3fc38a6d53cfc1a`
+- Commit Podcast header source summary: `201c21a91fd2e14ba3490ed9b0cdbcce9a84f6e4`
