@@ -53,6 +53,7 @@
       'chart.reviewing':'อยู่ระหว่างการตรวจสอบ',
       'chart.reviewed':'{count} ตรวจแล้ว',
       'chart.filterFaculty':'คลิกเพื่อกรองคณะนี้',
+      'faculty.unspecified':'ไม่ระบุคณะ',
       'chart.summary':'{faculty} · {total} รายวิชา · ผ่าน {pass} · ไม่ผ่าน {fail} · อยู่ระหว่างการตรวจสอบ {reviewing}',
       'chart.facultyTotal':'{faculty} · {total} รายวิชา',
       'chart.statusLine':'ผ่าน {pass} · ไม่ผ่าน {fail} · อยู่ระหว่างการตรวจสอบ {reviewing}',
@@ -67,6 +68,7 @@
       'progress.item':'{count} วิชา ({pct}%)',
       'sourceQr.title':'ข้อมูลออนไลน์จาก Google Sheets',
       'sourceQr.description':'สแกน QR Code เพื่อเปิดข้อมูลที่เผยแพร่สำหรับ Dashboard โดยตรง',
+      'sourceQr.alt':'QR Code สำหรับเปิดข้อมูลออนไลน์',
       'detail.title':'รายละเอียดรายวิชา {type}',
       'detail.description':'รายวิชาใน d-Learning / i-Learning · ดึงข้อมูลออนไลน์จาก Google Sheets',
       'table.order':'ลำดับ',
@@ -145,6 +147,7 @@
       'chart.reviewing':'Under Review',
       'chart.reviewed':'{count} reviewed',
       'chart.filterFaculty':'Click to filter this faculty',
+      'faculty.unspecified':'Unspecified Faculty',
       'chart.summary':'{faculty} · {total} courses · Passed {pass} · Not Passed {fail} · Under Review {reviewing}',
       'chart.facultyTotal':'{faculty} · {total} Courses',
       'chart.statusLine':'Passed {pass} · Not Passed {fail} · Under Review {reviewing}',
@@ -159,6 +162,7 @@
       'progress.item':'{count} Courses ({pct}%)',
       'sourceQr.title':'Online Data from Google Sheets',
       'sourceQr.description':'Scan the QR code to open the published dashboard data directly',
+      'sourceQr.alt':'QR code for opening the online dashboard data',
       'detail.title':'{type} Course Details',
       'detail.description':'Courses in d-Learning / i-Learning · Online data loaded from Google Sheets',
       'table.order':'No.',
@@ -265,6 +269,9 @@
     });
     root.querySelectorAll('[data-i18n-aria-label]').forEach(el=>{
       el.setAttribute('aria-label',t(el.dataset.i18nAriaLabel));
+    });
+    root.querySelectorAll('[data-i18n-alt]').forEach(el=>{
+      el.setAttribute('alt',t(el.dataset.i18nAlt));
     });
   }
 
