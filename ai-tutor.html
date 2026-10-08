@@ -8,7 +8,7 @@
 :root{--navy:#102a43;--blue:#245dcc;--ink:#243b53;--muted:#627d98;--line:#d9e2ec;--bg:#f3f6fb;--green:#199c6b;--amber:#eaa018;--red:#e64256;--gray:#7b8794;--shadow:0 8px 24px rgba(16,42,67,.08)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px "Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif}
 .topbar{background:#142b50;color:#fff}.topbar-inner{max-width:1500px;margin:auto;padding:23px 28px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
-h1{margin:0;font-size:clamp(23px,3vw,34px)}.subtitle{margin:5px 0 0;color:#d9e8f5}.source{text-align:right;color:#d9e8f5;font-size:13px;line-height:1.5}
+h1{margin:0;font-size:clamp(23px,3vw,34px)}.subtitle{margin:5px 0 0;color:#d9e8f5}.source{text-align:right;color:#d9e8f5;font-size:13px;line-height:1.55}.source span{display:block}.source-summary{color:#fff;font-weight:800}
 main{max-width:1500px;margin:auto;padding:22px 28px 40px}.panel{background:#fff;border:1px solid #e2e8f0;border-radius:14px;box-shadow:var(--shadow)}
 .page-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}.tab{min-width:112px;height:42px;background:#dfe8f4;color:var(--navy);border:1px solid #c8d5e5;border-radius:9px;padding:0 18px;font:inherit;font-weight:700;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
 .tab:hover{text-decoration:none;background:#cfdced}.tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
@@ -43,22 +43,6 @@ html.auth-check body{visibility:hidden}
 .kpi:hover{
   transform:translateY(-3px);
   box-shadow:0 14px 30px rgba(16,42,67,.13);
-}
-.live-indicator{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  margin-right:9px;
-  color:#d9fbe9;
-  font-weight:700;
-  white-space:nowrap;
-}
-.live-indicator i{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#32d583;
-  box-shadow:0 0 0 4px rgba(50,213,131,.14);
 }
 .dashboard-reveal .seg{
   transform-origin:left center;
@@ -670,7 +654,7 @@ html.auth-check body{visibility:hidden}
 </style>
 </head>
 <body>
-<header class="topbar"><div class="topbar-inner"><div><h1>Dashboard AI Tutor</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source">สำนักการจัดการศึกษาออนไลน์ (OOE)<br>ข้อมูลอ้างอิง ณ วันที่ 05/10/2569<br><span class="live-indicator" aria-label="สถานะออนไลน์"><i></i></span><span id="sourceDate"></span></div></div></header>
+<header class="topbar"><div class="topbar-inner"><div><h1>Dashboard AI Tutor</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source"><span>สำนักการจัดการศึกษาออนไลน์ (OOE)</span><span class="source-summary" id="sourceSummary">กำลังโหลดข้อมูลออนไลน์...</span><span>ข้อมูลอ้างอิง ณ วันที่ 05/10/2569</span></div></div></header>
 <main>
 <nav class="page-tabs"><a class="tab" href="index.html#GS">หน้า GS</a><a class="tab" href="index.html#GR">หน้า GR</a><a class="tab active" href="ai-tutor.html">AI Tutor</a><a class="tab " href="podcast.html">Podcast</a></nav>
 <section class="panel filters">
@@ -1167,9 +1151,9 @@ function closeAIAdvice(){
 function render(reset=true){if(reset)currentPage=1;const rows=filtered();setKpis(rows);renderChart(rows);renderDonut(rows);renderTable(rows);syncKpiCardState()}
 async function loadData(){
   showLoadingSkeleton();
-  $('sourceDate').textContent='กำลังโหลดข้อมูลออนไลน์...';$('refreshBtn').disabled=true;
-  try{const res=await fetch(CSV_URL+(CSV_URL.includes('?')?'&':'?')+'_='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);DATA=parseCSV(await res.text()).map(mapRow).filter(d=>d.courseProfile);refillFilters();const now=new Date();$('sourceDate').textContent=`ดึงข้อมูลเมื่อ ${now.toLocaleDateString('th-TH')} ${now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',second:'2-digit'})} · ${allCourseCount().toLocaleString('th-TH')} รายวิชา (${DATA.length.toLocaleString('th-TH')} Profile)`;clearLoadingSkeleton();render();revealDashboardOnce();}
-  catch(e){clearLoadingSkeleton();console.error(e);$('sourceDate').textContent='ยังไม่ได้เผยแพร่ชีทนี้เป็น CSV หรือโหลดข้อมูลไม่สำเร็จ';$('facultyChart').innerHTML='<div class="empty">กรุณา Publish ชีทสำหรับ Dashboard นี้เป็น CSV ก่อน</div>';}
+  $('sourceSummary').textContent='กำลังโหลดข้อมูลออนไลน์...';$('refreshBtn').disabled=true;
+  try{const res=await fetch(CSV_URL+(CSV_URL.includes('?')?'&':'?')+'_='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);DATA=parseCSV(await res.text()).map(mapRow).filter(d=>d.courseProfile);refillFilters();$('sourceSummary').textContent=`${allCourseCount().toLocaleString('th-TH')} รายวิชา (${DATA.length.toLocaleString('th-TH')} Profile)`;clearLoadingSkeleton();render();revealDashboardOnce();}
+  catch(e){clearLoadingSkeleton();console.error(e);$('sourceSummary').textContent='ยังไม่ได้เผยแพร่ชีทนี้เป็น CSV หรือโหลดข้อมูลไม่สำเร็จ';$('facultyChart').innerHTML='<div class="empty">กรุณา Publish ชีทสำหรับ Dashboard นี้เป็น CSV ก่อน</div>';}
   finally{$('refreshBtn').disabled=false;}
 }
 function syncKpiCardState(){
