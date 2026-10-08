@@ -1074,3 +1074,9 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 - Commit GR/GS Faculty tooltip: `a6d2dc18867d7f97860e786b65443f138c11e5bb`
 - Commit AI Tutor Faculty tooltip: `93b16537b87104d3145462a24c4a34700e1c5646`
 - Commit Podcast Faculty tooltip: `8ca53bef0da53001645878e2e4b0af6677e48782`
+- **GR/GS KPI Card overlap fix (08/10/2569):** แก้ข้อความคำอธิบายใต้ KPI Card ชนกับปุ่ม interaction
+  - ย่อข้อความ Card `รายวิชาทั้งหมด` จาก `จากทั้งหมด n รายวิชาในหน้า GR/GS` เป็น `จาก n รายวิชาทั้งหมด` เพราะชื่อหน้าระบุ GR/GS อยู่แล้ว
+  - Card สถานะ `ผ่าน / อยู่ระหว่างการตรวจสอบ / ไม่ผ่าน` ใช้คำอธิบาย `จาก n รายวิชาที่แสดง` เพื่อลดข้อความซ้ำ
+  - เปลี่ยน cue `กดเพื่อกรอง → / แสดงทั้งหมด ✓` จาก absolute overlay ให้เป็น element ใน normal flow ด้านล่างขวาของ Card เพื่อไม่ให้ทับข้อความเมื่อขนาด Card หรือจำนวนตัวเลขเปลี่ยน
+  - ไม่เปลี่ยน KPI/filter logic
+- Commit GR/GS KPI overlap fix: `96a1e63805d433f8ba5499f14922890365236fa3`
