@@ -1,0 +1,57 @@
+/* OOE Mobile UX layer. Only affects tablet and phone viewports.
+   Desktop > 950px and existing dashboard calculation/data code are untouched. */
+@media (max-width:950px){
+  .topbar-inner,.topbar-inner .header-meta{min-width:0}
+  .topbar-inner .header-meta{width:100%;max-width:100%;gap:12px}
+  .header-meta .source{flex:1 1 auto;min-width:0;overflow-wrap:anywhere}
+  .header-meta .source-reference{flex-wrap:wrap}
+  .page-tabs{display:flex;flex-wrap:wrap;gap:8px}
+  .page-tabs .tab,.page-tabs .nav-link{min-width:0;flex:1 1 calc(25% - 8px)}
+  .filters,.kpis,.charts-grid,.chart-panel,.table-panel{min-width:0}
+  .chart-row .faculty,.faculty-tooltip{overflow-wrap:anywhere}
+  .table-wrap{max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+}
+@media (max-width:650px){
+  html,body{max-width:100%;overflow-x:clip}
+  main{min-width:0}
+  .topbar-inner{align-items:stretch}
+  .topbar-inner .header-meta{display:flex;flex-direction:row;justify-content:space-between;align-items:center}
+  .header-meta .source{line-height:1.55}
+  .header-meta .lang-switch{height:44px;min-height:44px;flex:0 0 96px;align-self:center}
+  .header-meta .lang-switch::before{top:6px;height:30px}
+  .header-meta .lang-switch .lang-btn{height:36px;min-height:36px}
+  .page-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .page-tabs .tab,.page-tabs .nav-link{width:100%;min-width:0;min-height:44px;padding-inline:8px;text-align:center;white-space:normal;overflow-wrap:anywhere}
+  .field,.field select,.field input{min-width:0}
+  .filter-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .filter-actions button,.pager button,.reset,.refresh{min-height:44px}
+  .section-head,.table-tools{min-width:0;gap:10px}
+  .section-head h2,.table-tools h2{overflow-wrap:anywhere}
+  .chart-row,.chart-row .faculty{min-width:0}
+  .chart-row .faculty{overflow-wrap:anywhere}
+  .chart-row .faculty-tooltip{max-width:min(90vw,320px);white-space:normal;overflow-wrap:anywhere}
+  .donut-list,.donut-item{min-width:0}
+  .donut-item{overflow-wrap:anywhere}
+  .table-wrap{position:relative;overflow-x:auto;touch-action:pan-x pan-y}
+  .table-wrap table{width:max-content}
+  .table-tools,.table-tools>div{min-width:0}
+  .pager{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+  .pager-controls{display:flex;gap:8px}
+  .advice-modal,.criteria-modal{padding:12px}
+  .advice-dialog{max-width:100%;max-height:calc(100dvh - 24px);overscroll-behavior:contain}
+  .advice-head,.advice-body,.advice-footer{min-width:0}
+  .advice-dialog,.advice-dialog *{overflow-wrap:break-word}
+  .kpi,.kpi-card-v2,.profile-summary-v2{min-width:0}
+}
+@media(max-width:390px){
+  .topbar-inner .header-meta{gap:8px}
+  .header-meta .source{font-size:11px;line-height:1.5}
+  .header-meta .source-summary{overflow-wrap:anywhere}
+  .header-meta .lang-switch{transform:none;min-width:96px;flex:0 0 96px}
+  .page-tabs{gap:7px}
+  .page-tabs .tab,.page-tabs .nav-link{font-size:13px}
+  .chart-row .faculty{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){
+  .header-meta .lang-switch::before,.header-meta .lang-switch .lang-btn{transition:none}
+}
