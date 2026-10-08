@@ -1109,3 +1109,12 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
   - Card สถานะอื่นยังคง `กดเพื่อกรอง →` / active cue ตามเดิม
 - Commit AI Tutor KPI score cue cleanup: `96505c1add580cf8f8c1f85aacd919db6720c7c2`
 - Commit Podcast KPI score cue cleanup: `2d0f49f38456ed03f2ebaf2b441d4a76b0b958f7`
+- **Advice Modal — Label naming guidance (08/10/2569):** เพิ่มคำแนะนำการตั้งชื่อ Label เพื่อให้ง่ายต่อการตรวจสอบใน Modal `คำแนะนำการจัดทำ`
+  - AI Tutor: `ตั้งชื่อ Label โดยระบุคำว่า “AI Tutor” เพื่อให้ง่ายต่อตรวจสอบ เช่น “AI Tutor Week 1”`
+  - Podcast: `ตั้งชื่อ Label โดยระบุคำว่า “Podcast” เพื่อให้ง่ายต่อตรวจสอบ เช่น “Podcast Week 1”`
+  - AI Tutor เพิ่ม Section `แนวทางการจัดทำ` แบบสั้น 1 bullet
+  - Podcast เพิ่ม bullet ใน Section `แนวทางการจัดทำ` เดิม
+  - คง max-height และ `overflow:auto` ของ Modal เดิม เพื่อไม่ให้ Modal สูงเกิน viewport หลังเพิ่มข้อความ
+  - ไม่เปลี่ยน KPI, scoring, source หรือคำแนะนำส่วนอื่น
+- Commit AI Tutor label guidance: `ec7fb40a6113efc0efa0322203d6499464fada1c`
+- Commit Podcast label guidance: `87548f63a939ccd55ffd80cb87f2a44229cbc18b`
