@@ -1236,3 +1236,19 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Official faculty English names remain fallback-to-source until verified mapping. Course teacher names and raw course details remain unmodified.
 - Static JS syntax checks passed for the shared adapter and all inline scripts in the three dashboard pages. Browser visual/functional QA on deployed site still recommended.
 - Commits: CSS `08cb50e6b92dce26265cd2041cdf2ef94ac96c54`, adapter `ebdaf47333ef759407e7b9ec4d7faed39dac31cd`, GR/GS `305de9f3797b9f97871ddbf22bbab9c7be52fe50`, AI Tutor `368d7bf3536b6718d3c45b06769baa234f03bd03`, Podcast `2b3f1439c1dd3f0dea76cda56a796ed9bb36398f`.
+
+
+## 08/10/2569 — Mobile UX improvements (main)
+
+- User approved mobile-only adjustments with a strict requirement not to affect the main/desktop dashboard.
+- Added isolated stylesheet `assets/ooe-mobile.css` (commit `8e7c438762b355fdcb6b9ee1cda958b99e637756`) referenced **after** the existing styles on all dashboard pages:
+  - GR/GS `index.html`: `647296787c3857b1c8004978ed185b2e155cbe26`
+  - AI Tutor `ai-tutor.html`: `06e128922f12c7a95e9b014f410c242e09fddcc1`
+  - Podcast `podcast.html`: `a7717efa690fee4c60db655c6dae7bc48a2de26e`
+- Scoped to mobile/tablet media queries at `max-width:950px`, `650px` and `390px`; **no desktop CSS or JS/data calculation changes**.
+- GR/GS Navigation is now 2-column at <=650px to prevent the old 4-column 112px minimum overflow; shared styling also benefits AI Tutor and Podcast navigation.
+- Header source summary and language switch gain reliable width, wrapping and touch-target improvements; maintains TH/EN slider motion.
+- Filter actions and pager buttons use larger mobile tap targets; KPI/chart labels can wrap.
+- Tables retain original column structure, grouping and filter interactions, with contained horizontal touch scrolling; a dedicated card-view conversion was deliberately avoided to minimize regression risk.
+- Criteria/advice modals have safer viewport-constrained sizing and scrolling on mobile.
+- Static checks completed: all three HTML files reference new CSS once; all inline script syntax checks passed; course grouping and GR/GS data selector preserved. Actual interactive browser/device screenshot QA (320/375/390/768px, TH/EN) remains a follow-up and must not be claimed as tested.
