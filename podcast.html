@@ -517,25 +517,30 @@ html.auth-check body{visibility:hidden}
 .tree-toggle{width:22px;height:22px;border:0;border-radius:6px;background:#2f6fd6;color:#fff;font:inherit;font-size:16px;font-weight:900;line-height:1;display:inline-grid;place-items:center;padding:0;cursor:pointer;flex:0 0 22px;box-shadow:0 1px 2px rgba(16,42,67,.12)}
 .tree-toggle:hover{background:#245dcc}
 .tree-toggle:focus-visible{outline:3px solid rgba(47,111,214,.20);outline-offset:2px}
-.faculty-group-row td{padding:10px 14px;background:#eaf2fb;border-top:1px solid #d6e3f1;border-bottom:1px solid #d6e3f1;color:#17365d;font-weight:800}
+.faculty-group-row td{padding:12px 14px;background:linear-gradient(90deg,#e4eefb 0%,#eef5fc 100%);border-top:1px solid #cbdced;border-bottom:1px solid #cbdced;border-left:4px solid #2f6fd6;color:#17365d;font-weight:800}
 .faculty-group-content{display:flex;align-items:center;gap:10px;min-width:max-content}
-.faculty-group-content small{color:#627d98;font-size:12px;font-weight:700}
-.course-group-row{background:#f8fbff;font-weight:700}
-.course-group-row td{border-bottom:1px solid #e1eaf4}
+.faculty-group-name{font-size:14px;font-weight:800;color:#14345f;letter-spacing:.01em}
+.faculty-count-badge{display:inline-flex;align-items:center;padding:4px 9px;border:1px solid #c9dcef;border-radius:999px;background:#fff;color:#486581;font-size:11px;font-weight:800;line-height:1}
+.course-group-row{font-weight:700}
+.course-group-row td{background:#f8fbff;border-bottom:1px solid #e1eaf4}
+.course-group-row td:first-child{box-shadow:inset 3px 0 0 #bfd1e8}
 .tree-course-cell{position:relative;padding-left:42px!important;white-space:nowrap}
 .tree-course-cell::before{content:"";position:absolute;left:28px;top:-1px;bottom:50%;width:1px;background:#cbd8e6}
 .tree-course-cell::after{content:"";position:absolute;left:28px;top:50%;width:10px;height:1px;background:#cbd8e6}
 .course-group-main{display:inline-flex;align-items:center;gap:18px}
-.course-group-main small{color:#627d98;font-size:12px;font-weight:600;margin-left:-6px}
-.profile-row td{background:#fff}
+.course-title-cluster{display:inline-flex;align-items:center;gap:8px}
+.course-code{font-size:14px;font-weight:800;color:#153e68;letter-spacing:.01em}
+.profile-count-badge{display:inline-flex;align-items:center;padding:3px 8px;border:1px solid #d7e3f1;border-radius:999px;background:#eef4fb;color:#627d98;font-size:11px;font-weight:800;line-height:1}
+.profile-row td{background:#fff;color:#52667d;font-size:12.5px}
+.profile-row:hover td{background:#fbfdff}
 .profile-tree-cell{position:relative}
 .profile-tree-cell::before{content:"";position:absolute;left:68px;top:-1px;bottom:50%;width:1px;background:#cbd8e6}
 .profile-tree-cell::after{content:"";position:absolute;left:68px;right:-1px;top:50%;height:1px;background:#cbd8e6}
-.profile-code-cell{position:relative;padding-left:14px!important;color:#334e68;white-space:nowrap}
+.profile-code-cell{position:relative;padding-left:14px!important;color:#486581;font-weight:700;white-space:nowrap}
 .profile-code-cell::before{display:none}
 .profile-code-cell::after{content:"";position:absolute;left:-1px;top:50%;width:10px;height:1px;background:#cbd8e6}
 .score-pill{display:inline-flex;align-items:center;justify-content:center;min-width:72px;padding:5px 9px;border-radius:999px;background:#eaf2fb;color:#0b5cad;font-weight:800}
-@media(max-width:650px){.tree-course-cell{padding-left:38px!important}.tree-course-cell::before,.tree-course-cell::after{left:24px}.course-group-main{gap:16px}.course-group-main small{margin-left:-5px}.profile-tree-cell::before,.profile-tree-cell::after{left:64px}.profile-code-cell{padding-left:14px!important}.profile-code-cell::after{width:10px}}
+@media(max-width:650px){.tree-course-cell{padding-left:38px!important}.tree-course-cell::before,.tree-course-cell::after{left:24px}.course-group-main{gap:16px}.course-title-cluster{gap:6px}.profile-tree-cell::before,.profile-tree-cell::after{left:64px}.profile-code-cell{padding-left:14px!important}.profile-code-cell::after{width:10px}}
 </style>
 
 
@@ -545,12 +550,22 @@ html.auth-check body{visibility:hidden}
 .kpi-grid-v2{display:grid;grid-template-columns:repeat(4,minmax(190px,1fr));gap:14px}
 .kpi-card-v2{position:relative;min-height:146px;padding:18px 20px;overflow:hidden;box-shadow:0 7px 20px rgba(16,42,67,.065);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
 .kpi-card-v2:hover{transform:translateY(-2px);box-shadow:0 11px 26px rgba(16,42,67,.10)}
+.kpi-card-v2.kpi-filter-card:not(.kpi-score-card){padding-bottom:36px}
+.kpi-card-v2.kpi-filter-card:not(.kpi-score-card) .kpi-card-mainline{min-height:88px}
 .kpi-filter-card{cursor:pointer;user-select:none}
+.kpi-filter-card::after{content:"กดเพื่อกรอง →";position:absolute;right:14px;bottom:10px;display:inline-flex;align-items:center;min-height:22px;padding:3px 8px;border:1px solid #d9e5f2;border-radius:999px;background:#f5f8fc;color:#627d98;font-size:10px;font-weight:800;line-height:1;letter-spacing:.01em;pointer-events:none;transition:background .16s ease,color .16s ease,border-color .16s ease,transform .16s ease}
+.kpi-filter-card[data-status-filter=""]::after{content:"กดเพื่อแสดงทั้งหมด →"}
+.kpi-filter-card:hover::after{background:#eaf2fb;color:#245dcc;border-color:#c8daf3;transform:translateX(2px)}
 .kpi-filter-card:focus-visible{outline:3px solid rgba(47,111,214,.22);outline-offset:3px}
 .kpi-filter-card.is-active{outline:2px solid #2f6fd6;outline-offset:0;box-shadow:0 10px 25px rgba(47,111,214,.13)}
+.kpi-filter-card.is-active::after{content:"กำลังกรอง ✓";background:#eaf2fb;color:#245dcc;border-color:#bcd2ef}
+.kpi-filter-card[data-status-filter=""].is-active::after{content:"แสดงทั้งหมด ✓"}
 .kpi-card-v2.complete.kpi-filter-card.is-active{outline-color:var(--green);box-shadow:0 10px 25px rgba(31,157,112,.16)}
+.kpi-card-v2.complete.kpi-filter-card.is-active::after{background:#e8f7f1;color:#127a55;border-color:#bee6d6}
 .kpi-card-v2.partial.kpi-filter-card.is-active{outline-color:var(--amber);box-shadow:0 10px 25px rgba(209,128,0,.16)}
+.kpi-card-v2.partial.kpi-filter-card.is-active::after{background:#fff5df;color:#9a6700;border-color:#f4d79a}
 .kpi-card-v2.notdone.kpi-filter-card.is-active{outline-color:var(--red);box-shadow:0 10px 25px rgba(230,65,86,.15)}
+.kpi-card-v2.notdone.kpi-filter-card.is-active::after{background:#fff0f2;color:#b4233b;border-color:#f3c7ce}
 
 .kpi-card-v2::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:#2f6fd6}
 .kpi-card-v2.complete::before{background:var(--green)}
@@ -569,7 +584,7 @@ html.auth-check body{visibility:hidden}
 .kpi-status-value{display:flex;align-items:baseline;gap:7px}
 .kpi-status-value .kpi-unit{font-size:14px;font-weight:700;color:#627d98}
 .right-summary-stack{display:grid;grid-template-rows:auto minmax(0,1fr);gap:16px;min-width:0;height:100%}
-.kpi-score-card{background:linear-gradient(145deg,#fff,#f8fbff);min-height:166px;padding:18px 20px}
+.kpi-score-card{background:linear-gradient(145deg,#fff,#f8fbff);min-height:166px;padding:18px 20px 40px}
 .charts-grid{align-items:stretch}
 .right-summary-stack>.chart-panel{height:100%;display:flex;flex-direction:column}
 .right-summary-stack>.chart-panel .donut-body{flex:1;align-content:center}
@@ -1095,10 +1110,10 @@ function renderTable(rows){
   const html=[];
   pageFaculties.forEach(([faculty,items],facultyIndex)=>{
     const fid='f'+currentPage+'_'+facultyIndex;
-    html.push(`<tr class="faculty-group-row"><td colspan="8"><div class="faculty-group-content"><button type="button" class="tree-toggle faculty-toggle" data-faculty-group="${fid}" aria-expanded="true" aria-label="ย่อกลุ่ม ${esc(faculty)}">−</button><span>${esc(faculty)}</span><small>${items.length.toLocaleString('th-TH')} รายวิชา</small></div></td></tr>`);
+    html.push(`<tr class="faculty-group-row"><td colspan="8"><div class="faculty-group-content"><button type="button" class="tree-toggle faculty-toggle" data-faculty-group="${fid}" aria-expanded="true" aria-label="ย่อกลุ่ม ${esc(faculty)}">−</button><span class="faculty-group-name">${esc(faculty)}</span><span class="faculty-count-badge">${items.length.toLocaleString('th-TH')} รายวิชา</span></div></td></tr>`);
     items.forEach((g,courseIndex)=>{
       const id=fid+'_c'+courseIndex;
-      html.push(`<tr class="course-group-row" data-faculty-parent="${fid}"><td class="tree-course-cell"><span class="course-group-main"><button type="button" class="tree-toggle course-toggle" data-group="${id}" aria-expanded="false" aria-label="ขยาย ${esc(g.courseCode)}">+</button><strong>${esc(g.courseCode)}</strong><small>(${g.profileCount} Profile)</small></span></td><td>—</td><td>${esc([...g.courseTypes].join(', ')||'—')}</td><td>—</td><td class="center"><span class="score-pill">${g.score.toFixed(2)} / 1</span></td><td class="center">${courseBadge(g.score)}</td><td class="center">—</td><td>—</td></tr>`);
+      html.push(`<tr class="course-group-row" data-faculty-parent="${fid}"><td class="tree-course-cell"><span class="course-group-main"><button type="button" class="tree-toggle course-toggle" data-group="${id}" aria-expanded="false" aria-label="ขยาย ${esc(g.courseCode)}">+</button><span class="course-title-cluster"><strong class="course-code">${esc(g.courseCode)}</strong><span class="profile-count-badge">${g.profileCount} Profile</span></span></span></td><td>—</td><td>${esc([...g.courseTypes].join(', ')||'—')}</td><td>—</td><td class="center"><span class="score-pill">${g.score.toFixed(2)} / 1</span></td><td class="center">${courseBadge(g.score)}</td><td class="center">—</td><td>—</td></tr>`);
       g.profiles.forEach(d=>{
         html.push(`<tr class="profile-row" data-parent="${id}" data-faculty-parent="${fid}" hidden><td class="profile-tree-cell"></td><td class="profile-code-cell">${esc(d.courseProfile)}</td><td>${esc(d.courseType||'—')}</td><td>${esc(d.instructors||'—')}</td><td class="center">${`${esc(d.podcastCount||'0')} · ${formatPct(d.profileScore)}`}</td><td class="center">${statusBadge(d.podcastStatus,d.podcastCount)}</td><td class="center">${adviceCell(d)}</td><td>${d.courseLink?`<a href="${esc(d.courseLink)}" target="_blank" rel="noopener">เปิด ↗</a>`:'—'}</td></tr>`);
       });
