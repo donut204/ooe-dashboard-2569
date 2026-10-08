@@ -8,7 +8,7 @@
 :root{--navy:#102a43;--blue:#245dcc;--ink:#243b53;--muted:#627d98;--line:#d9e2ec;--bg:#f3f6fb;--green:#199c6b;--amber:#eaa018;--red:#e64256;--gray:#7b8794;--shadow:0 8px 24px rgba(16,42,67,.08)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px "Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif}
 .topbar{background:#142b50;color:#fff}.topbar-inner{max-width:1500px;margin:auto;padding:23px 28px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px}
-h1{margin:0;font-size:clamp(23px,3vw,34px)}.subtitle{margin:5px 0 0;color:#d9e8f5}.source{text-align:right;color:#d9e8f5;font-size:13px;line-height:1.55}.source span{display:block}.source-summary{color:#fff;font-weight:800}
+h1{margin:0;font-size:clamp(23px,3vw,34px)}.subtitle{margin:5px 0 0;color:#d9e8f5}.source{text-align:right;color:#d9e8f5;font-size:13px;line-height:1.55}.source span{display:block}.source-summary{color:#fff;font-weight:800}.source-reference{display:flex!important;align-items:center;justify-content:flex-end;gap:7px}.source-status-dot{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#32d583;box-shadow:0 0 0 3px rgba(50,213,131,.16);animation:sourceStatusPulse 1.8s ease-in-out infinite}@keyframes sourceStatusPulse{0%,100%{opacity:1;box-shadow:0 0 0 3px rgba(50,213,131,.14)}50%{opacity:.45;box-shadow:0 0 0 6px rgba(50,213,131,.04)}}
 main{max-width:1500px;margin:auto;padding:22px 28px 40px}.panel{background:#fff;border:1px solid #e2e8f0;border-radius:14px;box-shadow:var(--shadow)}
 .page-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}.tab{min-width:112px;height:42px;background:#dfe8f4;color:var(--navy);border:1px solid #c8d5e5;border-radius:9px;padding:0 18px;font:inherit;font-weight:700;display:inline-flex;align-items:center;justify-content:center;text-decoration:none}
 .tab:hover{text-decoration:none;background:#cfdced}.tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
@@ -23,7 +23,7 @@ button{height:42px;border:0;border-radius:9px;padding:0 18px;font:inherit;font-w
 .table-panel{overflow:hidden}.table-tools{padding:19px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:14px}.count{color:var(--muted);font-size:13px}.table-wrap{overflow:auto;max-height:650px}table{width:100%;min-width:1250px;border-collapse:separate;border-spacing:0}thead th{position:sticky;top:0;z-index:2;padding:12px 14px;background:#edf2f8;border-bottom:1px solid #cbd5e1;text-align:left;color:#44546a;font-size:12px;white-space:nowrap}tbody td{padding:13px 14px;border-bottom:1px solid #edf2f7;vertical-align:middle;font-size:13px;max-width:320px}tbody tr:hover{background:#f7fbff}.num{text-align:right}.center{text-align:center}.nowrap{white-space:nowrap}.course{font-weight:800;color:#14345f}a{color:var(--blue);text-decoration:none;font-weight:800}a:hover{text-decoration:underline}.badge{display:inline-flex;border-radius:999px;padding:5px 10px;color:#fff;font-weight:700;white-space:nowrap}.badge.green{background:var(--green)}.badge.amber{background:#c77a00}.badge.red{background:var(--red)}.badge.gray{background:var(--gray)}.pager{padding:14px 18px;display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line)}.pager-controls{display:flex;gap:8px}.pager button{height:34px;padding:0 12px;background:#e6edf8;color:var(--navy)}.pager button:disabled{opacity:.45}.empty{padding:28px;text-align:center;color:var(--muted);background:#f7fafc;border-radius:10px}
 .note{margin:13px 0 0;color:var(--muted);font-size:12px}
 @media(max-width:1150px){.charts-grid{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:650px){main{padding:16px 12px 30px}.topbar-inner{padding:18px 14px;align-items:flex-start;flex-direction:column}.source{text-align:left}.filters{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}.chart-row{grid-template-columns:1fr}.faculty{text-align:left}.donut-body{grid-template-columns:1fr;justify-items:center}.filter-actions{display:grid;grid-template-columns:1fr 1fr}}
+@media(max-width:650px){main{padding:16px 12px 30px}.topbar-inner{padding:18px 14px;align-items:flex-start;flex-direction:column}.source{text-align:left}.source-reference{justify-content:flex-start}.filters{grid-template-columns:1fr}.kpis{grid-template-columns:1fr}.chart-row{grid-template-columns:1fr}.faculty{text-align:left}.donut-body{grid-template-columns:1fr;justify-items:center}.filter-actions{display:grid;grid-template-columns:1fr 1fr}}
 </style>
 <script>document.documentElement.classList.add("auth-check");</script>
 <style>
@@ -69,6 +69,7 @@ html.auth-check body{visibility:hidden}
 @media (prefers-reduced-motion:reduce){
   .kpi,.kpi:hover{transition:none;transform:none}
   .dashboard-reveal .seg,.dashboard-reveal .donut{animation:none}
+  .source-status-dot{animation:none}
 }
 </style>
 
@@ -683,7 +684,7 @@ html.auth-check body{visibility:hidden}
 </style>
 </head>
 <body>
-<header class="topbar"><div class="topbar-inner"><div><h1>Dashboard Podcast</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source"><span>สำนักการจัดการศึกษาออนไลน์ (OOE)</span><span class="source-summary" id="sourceSummary">กำลังโหลดข้อมูลออนไลน์...</span><span>ข้อมูลอ้างอิง ณ วันที่ 05/10/2569</span></div></div></header>
+<header class="topbar"><div class="topbar-inner"><div><h1>Dashboard Podcast</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="source"><span>สำนักการจัดการศึกษาออนไลน์ (OOE)</span><span class="source-summary" id="sourceSummary">กำลังโหลดข้อมูลออนไลน์...</span><span class="source-reference"><i class="source-status-dot" aria-hidden="true"></i>ข้อมูลอ้างอิง ณ วันที่ 05/10/2569</span></div></div></header>
 <main>
 <nav class="page-tabs"><a class="tab" href="index.html#GS">หน้า GS</a><a class="tab" href="index.html#GR">หน้า GR</a><a class="tab " href="ai-tutor.html">AI Tutor</a><a class="tab active" href="podcast.html">Podcast</a></nav>
 <section class="panel filters">
