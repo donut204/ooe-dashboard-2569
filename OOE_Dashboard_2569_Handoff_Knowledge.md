@@ -1080,3 +1080,16 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
   - เปลี่ยน cue `กดเพื่อกรอง → / แสดงทั้งหมด ✓` จาก absolute overlay ให้เป็น element ใน normal flow ด้านล่างขวาของ Card เพื่อไม่ให้ทับข้อความเมื่อขนาด Card หรือจำนวนตัวเลขเปลี่ยน
   - ไม่เปลี่ยน KPI/filter logic
 - Commit GR/GS KPI overlap fix: `96a1e63805d433f8ba5499f14922890365236fa3`
+- **AI Tutor / Podcast Criteria Modal — Minimal Executive UI (08/10/2569):** ปรับ Modal เกณฑ์การนับรายวิชาให้น้อยแต่มาก และอ่านลำดับข้อมูลได้เร็วขึ้น
+  - ลดความกว้าง Modal จาก 720px เหลือ 660px และลด visual density
+  - ตัด emoji ออกจากหัวข้อ ใช้ Blue accent line เล็กแทน
+  - ลดขนาดปุ่มปิดและใช้เส้นกรอบบาง/พื้นโปร่ง
+  - เก็บเฉพาะ `ตัวตั้ง` เป็น callout สีฟ้าอ่อน เพื่อเน้นเกณฑ์หลัก
+  - `ตัวหาร` เปลี่ยนเป็น section เรียบ ไม่มี card ซ้อน ใช้ divider บาง
+  - รายการข้อยกเว้นเปลี่ยนจากเลขในวงกลมเป็นเลข `01–07` แบบ muted เพื่อให้ scan เร็วและลด visual noise
+  - ลดขนาด icon, typography และ spacing ให้กระชับ โดยยังคง readability
+  - Footer กระชับขึ้น แต่ยังคง `ห้ามแสดงอีก` และ `เข้าใจแล้ว`
+  - รักษา LocalStorage, Close, Backdrop click, Escape key และ Modal logic เดิมทั้งหมด
+  - ไม่มีการเปลี่ยนเกณฑ์/ข้อความสาระสำคัญ/ข้อมูล KPI
+- Commit AI Tutor criteria modal: `f82c756fd4e115259669bc31c7b65f3031b9c0ba`
+- Commit Podcast criteria modal: `3db9df8a356cea612ab62cf082cc09e5592ab733`
