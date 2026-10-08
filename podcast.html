@@ -398,85 +398,118 @@ html.auth-check body{visibility:hidden}
   .advice-btn{transition:none}
 }
 
-/* Podcast counting criteria modal */
+/* Podcast counting criteria modal — minimal executive layout */
 .criteria-dialog{
-  width:min(720px,100%);
-  max-height:min(90vh,820px);
+  width:min(660px,100%);
+  max-height:min(88vh,760px);
 }
-.criteria-head{padding-bottom:16px}
+.criteria-head{
+  padding:22px 24px 12px;
+  border-bottom:0;
+}
 .criteria-head h2{
   display:flex;
   align-items:center;
   gap:10px;
-  font-size:23px;
+  margin:0;
+  color:#17365d;
+  font-size:20px;
+  line-height:1.35;
 }
+.criteria-head h2::before{
+  content:"";
+  width:4px;
+  height:22px;
+  flex:0 0 4px;
+  border-radius:999px;
+  background:#2b78c5;
+}
+.criteria-head .advice-close{
+  width:36px;
+  height:36px;
+  border:1px solid #dde6ef;
+  border-radius:10px;
+  background:transparent;
+  color:#52667d;
+}
+.criteria-head .advice-close:hover{background:#f4f7fa}
 .criteria-body{
-  display:grid;
-  gap:12px;
+  display:block;
+  padding:0 24px 6px;
 }
 .criteria-card{
   display:grid;
-  grid-template-columns:44px 1fr;
-  gap:14px;
+  grid-template-columns:36px minmax(0,1fr);
+  gap:12px;
   align-items:start;
-  padding:16px 18px;
-  border:1px solid #e1e9f1;
-  border-radius:15px;
-  background:#fff;
+  padding:18px 0;
+  border:0;
+  border-radius:0;
+  background:transparent;
 }
 .criteria-card.primary{
-  border-color:#cfe3f7;
-  background:#f7fbff;
+  margin-bottom:2px;
+  padding:15px 16px;
+  border:1px solid #d9e8f7;
+  border-radius:12px;
+  background:#f6faff;
+}
+.criteria-card + .criteria-card{
+  border-top:1px solid #e7edf3;
 }
 .criteria-icon{
-  width:44px;
-  height:44px;
+  width:36px;
+  height:36px;
   display:grid;
   place-items:center;
-  border-radius:12px;
-  background:#e8f3ff;
+  border-radius:10px;
+  background:#eaf3fd;
   color:#216fba;
 }
 .criteria-card:not(.primary) .criteria-icon{
-  background:#f1f4f7;
-  color:#486581;
+  background:#f2f5f8;
+  color:#52667d;
 }
 .criteria-icon svg{
-  width:22px;
-  height:22px;
+  width:19px;
+  height:19px;
   display:block;
 }
 .criteria-copy h3{
   margin:0;
-  color:#163a5f;
-  font-size:18px;
+  color:#17365d;
+  font-size:15px;
+  line-height:1.35;
 }
 .criteria-copy .criteria-lead{
-  margin:5px 0 0;
-  color:#243b53;
-  font-weight:800;
+  margin:3px 0 0;
+  color:#334e68;
+  font-size:13px;
+  font-weight:700;
 }
 .criteria-highlight{
   display:inline-flex;
   align-items:center;
-  gap:8px;
-  margin-top:11px;
-  padding:7px 11px;
-  border-radius:10px;
-  background:#eaf4ff;
-  color:#155fa0;
+  gap:7px;
+  margin-top:8px;
+  padding:0;
+  background:transparent;
+  color:#1769b0;
+  font-size:14px;
   font-weight:800;
 }
 .criteria-highlight::before{
   content:"";
-  width:7px;
-  height:7px;
+  width:6px;
+  height:6px;
+  flex:0 0 6px;
   border-radius:50%;
   background:#2b78c5;
 }
 .criteria-copy .criteria-muted{
-  margin:6px 0 0;
-  color:#627d98;
+  margin:8px 0 0;
+  color:#829ab1;
+  font-size:12px;
   font-weight:700;
 }
 .criteria-list{
@@ -490,23 +523,21 @@ html.auth-check body{visibility:hidden}
 .criteria-list li{
   counter-increment:criteria;
   display:grid;
-  grid-template-columns:28px 1fr;
-  gap:9px;
+  grid-template-columns:24px minmax(0,1fr);
+  gap:8px;
   align-items:start;
-  color:#334e68;
+  color:#40566f;
+  font-size:13px;
   line-height:1.5;
 }
 .criteria-list li::before{
-  content:counter(criteria);
-  width:26px;
-  height:26px;
-  display:grid;
-  place-items:center;
-  border-radius:999px;
-  background:#f1f4f7;
-  color:#486581;
-  font-size:12px;
+  content:counter(criteria,decimal-leading-zero);
+  display:block;
+  padding-top:1px;
+  color:#9aabba;
+  font-size:10px;
   font-weight:800;
+  letter-spacing:.04em;
 }
 .criteria-item-text{min-width:0}
 .criteria-term{
@@ -519,29 +550,31 @@ html.auth-check body{visibility:hidden}
   align-items:center;
   justify-content:space-between;
   gap:16px;
-  padding:16px 24px 22px;
+  padding:14px 24px 18px;
   border-top:1px solid #edf2f7;
+  background:#fff;
 }
 .criteria-hide{
   display:inline-flex;
   align-items:center;
-  gap:9px;
-  color:#486581;
-  font-size:14px;
+  gap:8px;
+  color:#627d98;
+  font-size:13px;
   cursor:pointer;
   user-select:none;
 }
 .criteria-hide input{
-  width:18px;
-  height:18px;
+  width:17px;
+  height:17px;
   margin:0;
   accent-color:#2b78c5;
 }
 .criteria-confirm{
-  min-width:118px;
+  min-width:108px;
+  min-height:38px;
   border:0;
-  border-radius:10px;
-  padding:10px 18px;
+  border-radius:9px;
+  padding:8px 16px;
   background:#1f73d2;
   color:#fff;
   font:inherit;
@@ -550,10 +583,13 @@ html.auth-check body{visibility:hidden}
 }
 .criteria-confirm:hover{background:#1767bf}
 @media(max-width:600px){
-  .criteria-head h2{font-size:20px}
-  .criteria-card{grid-template-columns:38px 1fr;padding:14px}
-  .criteria-icon{width:38px;height:38px}
-  .criteria-foot{align-items:stretch;flex-direction:column}
+  .criteria-head{padding:18px 16px 10px}
+  .criteria-head h2{font-size:18px}
+  .criteria-body{padding:0 16px 4px}
+  .criteria-card{grid-template-columns:32px minmax(0,1fr);gap:10px;padding:16px 0}
+  .criteria-card.primary{padding:14px}
+  .criteria-icon{width:32px;height:32px}
+  .criteria-foot{align-items:stretch;flex-direction:column;padding:13px 16px 16px}
   .criteria-confirm{width:100%}
 }
 .tree-toggle{width:22px;height:22px;border:0;border-radius:6px;background:#2f6fd6;color:#fff;font:inherit;font-size:16px;font-weight:900;line-height:1;display:inline-grid;place-items:center;padding:0;cursor:pointer;flex:0 0 22px;box-shadow:0 1px 2px rgba(16,42,67,.12)}
@@ -743,7 +779,7 @@ html.auth-check body{visibility:hidden}
 <div class="advice-modal" id="podcastCriteriaModal" role="dialog" aria-modal="true" aria-labelledby="podcastCriteriaTitle">
   <div class="advice-dialog criteria-dialog">
     <div class="advice-head criteria-head">
-      <h2 id="podcastCriteriaTitle">🎙️ เกณฑ์การนับรายวิชาสำหรับ Podcast</h2>
+      <h2 id="podcastCriteriaTitle">เกณฑ์การนับรายวิชาสำหรับ Podcast</h2>
       <button class="advice-close" id="podcastCriteriaClose" type="button" aria-label="ปิด">
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
