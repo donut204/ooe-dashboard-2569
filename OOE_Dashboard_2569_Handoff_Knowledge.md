@@ -1062,3 +1062,15 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 - Commit GR/GS KPI affordance: `1d9f7c9072e725e6e88d862559320e7d9397e7b6`
 - Commit AI Tutor KPI + Tree hierarchy: `de644b9f8df56e8be1ddaca5e41ebf32e0391662`
 - Commit Podcast KPI + Tree hierarchy: `089b98e92c44ff0f6e2763e933dd5078add5f84e`
+- **Faculty Chart Tooltip Interaction (08/10/2569):** เพิ่ม Custom Tooltip ให้กราฟคณะทั้ง GR/GS, AI Tutor และ Podcast
+  - Tooltip แสดงเมื่อ Mouse Hover และ Keyboard Focus
+  - AI Tutor / Podcast แสดง: `คณะ · จำนวนรายวิชา` + `ครบ · จัดทำไม่ครบ · ไม่ทำ`
+  - GR/GS แสดง: `คณะ · จำนวนรายวิชา` + `ผ่าน · ไม่ผ่าน · อยู่ระหว่างการตรวจสอบ`
+  - เพิ่มข้อความ `คลิกเพื่อกรองคณะนี้` ใน Tooltip เพื่อสื่อ action
+  - เพิ่ม `aria-label` ที่มี summary เดียวกับ Tooltip สำหรับ screen reader
+  - เอา native browser `title` tooltip ออกเพื่อไม่ให้ซ้อนกับ Custom Tooltip
+  - รักษา Click-to-filter, Keyboard Enter/Space และ filter logic เดิมทั้งหมด
+  - Tooltip เป็น presentation/accessibility layer เท่านั้น ไม่เปลี่ยนข้อมูลหรือ KPI
+- Commit GR/GS Faculty tooltip: `a6d2dc18867d7f97860e786b65443f138c11e5bb`
+- Commit AI Tutor Faculty tooltip: `93b16537b87104d3145462a24c4a34700e1c5646`
+- Commit Podcast Faculty tooltip: `8ca53bef0da53001645878e2e4b0af6677e48782`
