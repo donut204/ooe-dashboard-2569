@@ -1252,3 +1252,19 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Tables retain original column structure, grouping and filter interactions, with contained horizontal touch scrolling; a dedicated card-view conversion was deliberately avoided to minimize regression risk.
 - Criteria/advice modals have safer viewport-constrained sizing and scrolling on mobile.
 - Static checks completed: all three HTML files reference new CSS once; all inline script syntax checks passed; course grouping and GR/GS data selector preserved. Actual interactive browser/device screenshot QA (320/375/390/768px, TH/EN) remains a follow-up and must not be claimed as tested.
+
+
+## 08/10/2569 — Google Session Recovery (Phase 1)
+
+- Issue: Google ID Token was treated as the sole client-side session credential. On expiry, requireAuth() immediately redirected to login; no refresh/re-authentication.
+- Implemented in `auth.js` on branch `fix/google-session-recovery`:
+  - Attempts a fresh credential via Google Identity Services when stored token is expired, instead of redirecting immediately.
+  - Checks again when returning to the tab and schedules renewal shortly before expiry (90 seconds).
+  - Re-authentication uses Google Identity Services; no extension of `exp`, bypass of email/domain/audience checks, or fake token.
+  - Falls back to the regular Google Sign-In button if silent recovery fails (Google/FedCM/browser-dependent).
+  - Preserves destination page, hash and query language in `login.html?next=...` and validates local destination allowlist.
+  - Explicit Sign Out disables Google auto selection and skips automatic prompting on that logout visit.
+  - Bounded GIS loading/prompt attempts (8 seconds) to avoid infinite loops.
+- Client-only validation still decodes JWT without server-side signature verification and is **not equivalent to secure backend access control**. For truly private course data use server-validated sessions and HttpOnly cookies.
+- No dashboard HTML, KPI, data, filter, or spreadsheet logic changed.
+- QA: JavaScript syntax checked; browser verification on live Google Identity Services still needed.
