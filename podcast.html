@@ -659,7 +659,8 @@ html.auth-check body{visibility:hidden}
 .kpi-status-value{display:flex;align-items:baseline;gap:7px}
 .kpi-status-value .kpi-unit{font-size:14px;font-weight:700;color:#627d98}
 .right-summary-stack{display:grid;grid-template-rows:auto minmax(0,1fr);gap:16px;min-width:0;height:100%}
-.kpi-score-card{background:linear-gradient(145deg,#fff,#f8fbff);min-height:166px;padding:18px 20px 40px}
+.kpi-score-card{background:linear-gradient(145deg,#fff,#f8fbff);min-height:166px;padding:18px 20px}
+.kpi-score-card::after{display:none}
 .charts-grid{align-items:stretch}
 .right-summary-stack>.chart-panel{height:100%;display:flex;flex-direction:column}
 .right-summary-stack>.chart-panel .donut-body{flex:1;align-content:center}
