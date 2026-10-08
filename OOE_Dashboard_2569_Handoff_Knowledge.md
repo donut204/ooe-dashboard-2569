@@ -1136,3 +1136,13 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
   - ไม่เพิ่มข้อความเวลาโหลดกลับมา และไม่เปลี่ยนข้อมูล/KPI logic
 - Commit AI Tutor source status pulse: `dd840709337b7139e4a41a848ce5fef190c02af8`
 - Commit Podcast source status pulse: `cab12daec2757c32c42a02b1d613dfae1dc443fa`
+- **GR/GS Header source summary + pulse alignment (08/10/2569):** ปรับ Header หน้า GR/GS ให้ใช้รูปแบบเดียวกับ AI Tutor / Podcast
+  - บรรทัด 1: `สำนักการจัดการศึกษาออนไลน์ (OOE)`
+  - บรรทัด 2: `n รายวิชา` โดยคำนวณ Dynamic ตาม `activeType` ปัจจุบัน (GR หรือ GS)
+  - บรรทัด 3: จุดสถานะสีเขียวแบบ pulse + `ข้อมูลอ้างอิง ณ วันที่ 05/10/2569`
+  - ตัดข้อความ `ดึงข้อมูลเมื่อ <วันที่> <เวลา>` ออกจาก Header
+  - เมื่อสลับ GR/GS จำนวนรายวิชาใน Header เปลี่ยนตามหน้าปัจจุบันอัตโนมัติ
+  - Desktop จัดชิดขวา; responsive <=950px จัดชิดซ้าย
+  - รองรับ `prefers-reduced-motion` โดยปิด pulse animation
+  - ไม่เปลี่ยน KPI, filter, chart หรือ data logic
+- Commit GR/GS header alignment: `f01453a7f7fa916858f58c1ecb97a48b78ff0a49`
