@@ -1225,3 +1225,14 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 `feature/bilingual-dashboard`
 
 
+
+## 08/10/2569 — Bilingual Phase 2 & Animated Language Switch (main)
+
+- Implemented bilingual presentation adapter for `ai-tutor.html` and `podcast.html` via `assets/ooe-page-i18n.js`, reusing `assets/ooe-i18n.js` language preference and URL handling (`?lang=en`, localStorage).
+- Adapter translates visible DOM text, attributes, status labels, dynamic faculty charts, generated tables, pagination, error/loading messages, KPI notes and criteria/advice modals. It does NOT mutate CSV data, internal `select.value`, grouping, ProfileScore, CourseScore, or KPI calculations.
+- New shared `assets/ooe-language-switch.css` implements `TH | EN` sliding segmented control (`::before` animated thumb), reduced-motion fallback and responsive layout.
+- Across `index.html`, `ai-tutor.html`, `podcast.html`, Header places the language switch **to the right of** the 3-line source summary on desktop; mobile uses flex space-between with wrapping safeguards.
+- New AI Tutor/Podcast header loads shared i18n core before a deferred bilingual adapter; source reference date changes Buddhist/Gregorian via `OOEI18n.referenceDate()`.
+- Official faculty English names remain fallback-to-source until verified mapping. Course teacher names and raw course details remain unmodified.
+- Static JS syntax checks passed for the shared adapter and all inline scripts in the three dashboard pages. Browser visual/functional QA on deployed site still recommended.
+- Commits: CSS `08cb50e6b92dce26265cd2041cdf2ef94ac96c54`, adapter `ebdaf47333ef759407e7b9ec4d7faed39dac31cd`, GR/GS `305de9f3797b9f97871ddbf22bbab9c7be52fe50`, AI Tutor `368d7bf3536b6718d3c45b06769baa234f03bd03`, Podcast `2b3f1439c1dd3f0dea76cda56a796ed9bb36398f`.
