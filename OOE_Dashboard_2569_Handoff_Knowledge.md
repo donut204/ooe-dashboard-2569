@@ -1146,3 +1146,82 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
   - รองรับ `prefers-reduced-motion` โดยปิด pulse animation
   - ไม่เปลี่ยน KPI, filter, chart หรือ data logic
 - Commit GR/GS header alignment: `f01453a7f7fa916858f58c1ecb97a48b78ff0a49`
+
+---
+
+## 08/10/2569 — Bilingual Dashboard Phase 1 (Review Branch)
+
+> **สถานะ: อยู่บน branch `feature/bilingual-dashboard` เท่านั้น ยังไม่ merge เข้า `main` และยังไม่กระทบ GitHub Pages production**
+
+### เป้าหมาย
+
+รองรับ Dashboard ภาษาไทย / อังกฤษในระบบเดียว โดยไม่สร้าง logic หรือ data pipeline แยกอีกชุด เพื่อให้ตัวเลข KPI, Filter, Chart และ Table ของ TH/EN ใช้ข้อมูลเดียวกัน 100%
+
+### สิ่งที่ Implement แล้วใน Phase 1
+
+- เพิ่ม shared i18n core: `assets/ooe-i18n.js`
+- เพิ่ม Language Switcher `TH | EN` ใน Header ของหน้า GR/GS
+- ภาษาเริ่มต้นยังเป็นภาษาไทย
+- รองรับ URL `?lang=en` / `?lang=th`
+- จำภาษาที่เลือกด้วย `localStorage` key `ooe_dashboard_language_v1`
+- เมื่อสลับภาษา URL จะอัปเดต query `lang` โดยรักษา hash `#GR / #GS` และ query parameter อื่น
+- แปล UI หน้า GR/GS ทั้ง Static และ Dynamic ได้แก่:
+  - Header / Academic Year / Source reference date
+  - Navigation
+  - Filter labels / Search placeholder / Buttons / Options
+  - KPI Card labels / notes / filter cues / title attributes
+  - Faculty Chart title / description / legend / tooltip / aria-label
+  - Donut title / description / legend
+  - QR source description + alt text
+  - Table header / Semester / Status / Note / Links
+  - Result count / Pagination / Empty / Loading / Error state
+  - Footer note
+  - Auth chip / Sign Out
+- วันที่อ้างอิงเก็บใน i18n core เป็น ISO `2026-10-05`
+  - TH แสดง `05/10/2569`
+  - EN แสดง `05/10/2026`
+- จำนวนและตัวเลขใช้ formatter ตามภาษา
+- Browser title เปลี่ยนตามภาษาและหน้า เช่น `GS Course Dashboard | OOE 2026`
+
+### หลักความปลอดภัยของ Logic
+
+- **ห้ามแปล Internal Value ที่ใช้คำนวณ/Filter**
+- ค่า Source และ comparison logic ต่อไปนี้ยังคงเดิม:
+  - `ผ่าน`
+  - `ไม่ผ่าน`
+  - `อยู่ระหว่างการตรวจสอบ`
+  - `เนื้อหาและองค์ประกอบมากกว่า 50%`
+  - `เนื้อหาและองค์ประกอบน้อยกว่า 50%`
+  - `ไม่มีเนื้อหา`
+- ภาษาอังกฤษเป็น Presentation Layer เท่านั้น
+- Google Sheet / CSV URL / Mapping / KPI / Pagination / Chart calculation ไม่ได้เปลี่ยน
+
+### Faculty / College English Names
+
+Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษของคณะ/วิทยาลัยจากชื่อไทย**  
+`OOEI18n.faculty()` จะ fallback เป็นชื่อจาก Source เดิม จนกว่าจะมี Official SPU English Name Mapping ที่ยืนยันแล้ว เพื่อหลีกเลี่ยงชื่อหน่วยงานผิด
+
+### QA ที่ตรวจแล้ว
+
+- Translation key ที่หน้า GR/GS เรียกใช้มีครบทั้ง TH และ EN
+- JavaScript syntax ของ `assets/ooe-i18n.js` ผ่าน
+- Inline JavaScript ทั้งหมดใน `index.html` ผ่าน syntax check
+- Query language priority ทำงาน: `?lang=en` override ค่า saved language
+- LocalStorage persistence ทำงาน
+- URL update รักษา query อื่นและ `#GS/#GR`
+- Reference year เปลี่ยน Buddhist Era / Gregorian ถูกต้อง
+- Internal Thai data values ยังอยู่ครบและไม่ถูกเปลี่ยนเป็น English
+- KPI / Chart / Table dynamic wording ใช้ i18n แต่ calculation เดิม
+
+### Scope ที่ยังไม่ทำใน Phase 1
+
+- `ai-tutor.html` และ `podcast.html` ยังไม่ได้เปิดใช้ EN UI
+- `login.html` ยังไม่ได้เปิดใช้ Language Switcher
+- Official Faculty/College English Name Mapping ยังรอยืนยัน
+- ยังไม่ merge เข้า `main`; ต้องให้ผู้ใช้ตรวจ/อนุมัติก่อน
+
+### Branch
+
+`feature/bilingual-dashboard`
+
+
