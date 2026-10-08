@@ -1047,3 +1047,18 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
 - เปลี่ยน Donut `คะแนนที่ยังขาด` จาก Gray เป็น Amber ทั้ง AI Tutor และ Podcast
 - Commit AI Tutor: `c0e4ebc0cc6680bd26147ecdeb9fa8b34f1c8853`
 - Commit Podcast: `35411d241e1f06ec93a961e18c0fb8c1c3c2b2dd`
+- **UX KPI Card affordance (08/10/2569):** ทำให้ Card ที่กดกรองได้สื่อความเป็น interactive control ชัดขึ้นทั้ง GR/GS, AI Tutor และ Podcast
+  - เพิ่ม visual cue ด้านล่างขวา: `กดเพื่อกรอง →`
+  - Card “ทั้งหมด” / Card คะแนน KPI รวมที่ใช้ reset แสดง `กดเพื่อแสดงทั้งหมด →`
+  - เมื่อ Card เป็นสถานะที่กำลังเลือก แสดง `กำลังกรอง ✓` หรือ `แสดงทั้งหมด ✓`
+  - รักษา hover, focus-visible, keyboard Enter/Space และ Active state เดิม พร้อมใช้สี Active ตามสถานะ
+  - การปรับนี้เป็น presentation/interaction affordance เท่านั้น ไม่เปลี่ยน filter logic
+- **Tree hierarchy refinement (08/10/2569):** เพิ่มความชัดของลำดับ `คณะ / วิทยาลัย → รายวิชา → Course Profile` ใน AI Tutor / Podcast
+  - Faculty row เด่นขึ้นด้วย Blue gradient + left accent และ count badge จำนวนรายวิชา
+  - Course row ใช้พื้นฟ้าอ่อน + left accent; รหัสวิชาเด่นขึ้น และจำนวน Profile เปลี่ยนเป็น pill badge
+  - Profile row ใช้ typography/สีที่เบากว่าระดับรายวิชาเพื่อให้เห็นว่าเป็นข้อมูลย่อย
+  - รักษา Tree connector, Expand/Collapse และ alignment เดิม
+  - ไม่เปลี่ยน CourseScore, KPI, source, grouping หรือ pagination
+- Commit GR/GS KPI affordance: `1d9f7c9072e725e6e88d862559320e7d9397e7b6`
+- Commit AI Tutor KPI + Tree hierarchy: `de644b9f8df56e8be1ddaca5e41ebf32e0391662`
+- Commit Podcast KPI + Tree hierarchy: `089b98e92c44ff0f6e2763e933dd5078add5f84e`
