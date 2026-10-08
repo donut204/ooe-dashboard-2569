@@ -199,13 +199,71 @@ let currentPage=1;
 let activeType=location.hash.replace('#','').toUpperCase()==='GS'?'GS':'GR';
 
 const $=id=>document.getElementById(id);
-function syncPageIdentity(){
-  const label=`Dashboard รายวิชา ${activeType}`;
-  $('pageTitle').textContent=label;
-  document.title=`${label} | OOE 2569`;
-}
-syncPageIdentity();
+const I18N=window.OOEI18n;
+const t=(key,vars={})=>I18N.t(key,vars);
+const fmt=(value,options)=>I18N.number(value,options);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function syncPageIdentity(){
+  const label=t('page.dashboardCourse',{type:activeType});
+  $('pageTitle').textContent=label;
+  document.title=t('page.documentTitle',{type:activeType});
+}
+function syncFilterOptionLabels(){
+  const allText=t('filters.all');
+  ['facultyFilter','statusFilter','reviewFilter'].forEach(id=>{
+    const first=$(id)?.querySelector('option[value=""]');
+    if(first)first.textContent=allText;
+  });
+  [...$('statusFilter').options].forEach(o=>{
+    if(o.value===STATUS.good)o.textContent=t('progress.good');
+    else if(o.value===STATUS.low)o.textContent=t('progress.low');
+    else if(o.value===STATUS.none)o.textContent=t('progress.none');
+  });
+  [...$('reviewFilter').options].forEach(o=>{
+    if(o.value===REVIEW.pass)o.textContent=t('kpi.pass');
+    else if(o.value===REVIEW.reviewing)o.textContent=t('kpi.reviewing');
+    else if(o.value===REVIEW.fail)o.textContent=t('kpi.fail');
+  });
+}
+function syncKpiCueLabels(){
+  const titleKeys={
+    '':'kpi.titleAll',
+    [REVIEW.pass]:'kpi.titlePass',
+    [REVIEW.reviewing]:'kpi.titleReviewing',
+    [REVIEW.fail]:'kpi.titleFail'
+  };
+  document.querySelectorAll('.kpi-filter-card[data-review-filter]').forEach(card=>{
+    const value=card.dataset.reviewFilter||'';
+    card.dataset.cue=t(value?'kpi.cueFilter':'kpi.cueShowAll');
+    card.dataset.cueActive=t(value?'kpi.cueFiltering':'kpi.cueAllShown');
+    card.title=t(titleKeys[value]||'kpi.titleAll');
+  });
+}
+function syncSourceSummary(){
+  const el=$('sourceSummary');
+  const state=el.dataset.state||'loading';
+  if(state==='ready')el.textContent=t('source.courseCount',{count:fmt(typeRows().length)});
+  else if(state==='error')el.textContent=t('source.loadError');
+  else el.textContent=t('source.loading');
+}
+function syncLanguageUI(){
+  I18N.apply(document);
+  $('sourceReferenceText').textContent=t('source.referenceDate',{date:I18N.referenceDate()});
+  document.querySelectorAll('.lang-btn').forEach(btn=>{
+    const active=btn.dataset.lang===I18N.getLanguage();
+    btn.classList.toggle('is-active',active);
+    btn.setAttribute('aria-pressed',String(active));
+  });
+  syncFilterOptionLabels();
+  syncKpiCueLabels();
+  syncPageIdentity();
+  syncSourceSummary();
+  if($('sourceSummary').dataset.state==='error'){
+    $('facultyChart').innerHTML=`<div class="empty">${t('error.chart')}</div>`;
+    $('resultCount').textContent=t('error.result');
+  }
+}
 
 function showLoadingSkeleton(){
   document.querySelectorAll('.kpi-value').forEach(el=>{
@@ -224,7 +282,7 @@ function showLoadingSkeleton(){
   const cols=document.querySelectorAll('thead th').length||8;
   $('courseRows').innerHTML=Array.from({length:6},()=>`<tr class="skeleton-table-row" aria-hidden="true">${Array.from({length:cols},(_,i)=>`<td><span class="skeleton-cell" style="width:${55+(i%4)*10}%"></span></td>`).join('')}</tr>`).join('');
   $('resultCount').innerHTML='<span class="skeleton-pill" aria-hidden="true"></span>';
-  $('pageInfo').textContent='กำลังโหลดข้อมูล...';
+  $('pageInfo').textContent=t('source.loading');
 }
 function clearLoadingSkeleton(){
   $('donutChart').classList.remove('skeleton-circle');
@@ -309,9 +367,10 @@ function mapRow(r){
 
 async function loadData(){
   showLoadingSkeleton();
-  $('sourceSummary').textContent='กำลังโหลดข้อมูลออนไลน์...';
+  $('sourceSummary').dataset.state='loading';
+  syncSourceSummary();
   $('refreshBtn').disabled=true;
-  $('refreshBtn').textContent='กำลังอัปเดต...';
+  $('refreshBtn').textContent=t('filters.refreshing');
   try{
     const url=CSV_URL+(CSV_URL.includes('?')?'&':'?')+'_='+Date.now();
     const response=await fetch(url,{cache:'no-store'});
@@ -325,13 +384,14 @@ async function loadData(){
   }catch(err){
     clearLoadingSkeleton();
     console.error(err);
-    $('sourceSummary').textContent='ไม่สามารถโหลดข้อมูลออนไลน์ได้';
-    $('facultyChart').innerHTML='<div class="empty">โหลดข้อมูลจาก Google Sheets ไม่สำเร็จ กรุณาลองกด “อัปเดตข้อมูล” อีกครั้ง</div>';
+    $('sourceSummary').dataset.state='error';
+    syncSourceSummary();
+    $('facultyChart').innerHTML=`<div class="empty">${t('error.chart')}</div>`;
     $('courseRows').innerHTML='';
-    $('resultCount').textContent='โหลดข้อมูลไม่สำเร็จ';
+    $('resultCount').textContent=t('error.result');
   }finally{
     $('refreshBtn').disabled=false;
-    $('refreshBtn').textContent='อัปเดตข้อมูล';
+    $('refreshBtn').textContent=t('filters.refresh');
   }
 }
 
@@ -342,15 +402,11 @@ function addOptions(id,values){
   });
 }
 addOptions('statusFilter',[STATUS.good,STATUS.low,STATUS.none]);
-[...$('statusFilter').options].forEach(o=>{
-  if(o.value===STATUS.good) o.textContent='เนื้อหาและองค์ประกอบมากกว่า 50%';
-  if(o.value===STATUS.low) o.textContent='เนื้อหาและองค์ประกอบน้อยกว่า 50%';
-});
 addOptions('reviewFilter',[REVIEW.pass,REVIEW.reviewing,REVIEW.fail]);
 
 function refreshFaculty(){
   const old=$('facultyFilter').value;
-  $('facultyFilter').innerHTML='<option value="" data-i18n="filters.all">ทั้งหมด</option>';
+  $('facultyFilter').innerHTML=`<option value="">${t('filters.all')}</option>`;
   addOptions('facultyFilter',unique(typeRows(),'คณะ'));
   if([...$('facultyFilter').options].some(o=>o.value===old)) $('facultyFilter').value=old;
 }
@@ -374,15 +430,16 @@ function setKpis(rows){
   const reviewing=rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.reviewing).length;
   const fail=rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.fail).length;
 
-  $('totalKpi').textContent=total.toLocaleString('th-TH');
-  $('passKpi').textContent=pass.toLocaleString('th-TH');
-  $('reviewingKpi').textContent=reviewing.toLocaleString('th-TH');
-  $('failKpi').textContent=fail.toLocaleString('th-TH');
+  $('totalKpi').textContent=fmt(total);
+  $('passKpi').textContent=fmt(pass);
+  $('reviewingKpi').textContent=fmt(reviewing);
+  $('failKpi').textContent=fmt(fail);
 
-  $('totalNote').textContent=`จาก ${all.toLocaleString('th-TH')} รายวิชาทั้งหมด`;
-  $('passNote').textContent=`จาก ${total.toLocaleString('th-TH')} รายวิชาที่แสดง`;
-  $('reviewingNote').textContent=`จาก ${total.toLocaleString('th-TH')} รายวิชาที่แสดง`;
-  $('failNote').textContent=`จาก ${total.toLocaleString('th-TH')} รายวิชาที่แสดง`;
+  $('totalNote').textContent=t('kpi.totalNote',{count:fmt(all)});
+  const visibleNote=t('kpi.visibleNote',{count:fmt(total)});
+  $('passNote').textContent=visibleNote;
+  $('reviewingNote').textContent=visibleNote;
+  $('failNote').textContent=visibleNote;
 }
 
 function renderChart(rows){
@@ -407,20 +464,21 @@ function renderChart(rows){
   const max=Math.max(1,...list.map(([,v])=>v.reviewed));
 
   $('facultyChart').innerHTML=list.length?list.map(([f,v])=>{
-    const seg=(n,c)=>n?`<div class="seg ${c}" style="width:${n/v.reviewed*100}%"><span>${n.toLocaleString('th-TH')}</span></div>`:'';
+    const seg=(n,c)=>n?`<div class="seg ${c}" style="width:${n/v.reviewed*100}%"><span>${fmt(n)}</span></div>`:'';
     const reviewing=Math.max(0,v.total-v.reviewed);
-    const summary=`${f} · ${v.total.toLocaleString('th-TH')} รายวิชา · ผ่าน ${v.pass.toLocaleString('th-TH')} · ไม่ผ่าน ${v.fail.toLocaleString('th-TH')} · อยู่ระหว่างการตรวจสอบ ${reviewing.toLocaleString('th-TH')}`;
-    return `<div class="chart-row" data-faculty="${esc(f)}" role="button" tabindex="0" aria-label="${esc(summary)} · กดเพื่อกรองคณะนี้">
-      <div class="faculty">${esc(f)} <span style="color:var(--muted)">(${v.reviewed.toLocaleString('th-TH')} ตรวจแล้ว)</span></div>
+    const displayFaculty=I18N.faculty(f);
+    const summary=t('chart.summary',{faculty:displayFaculty,total:fmt(v.total),pass:fmt(v.pass),fail:fmt(v.fail),reviewing:fmt(reviewing)});
+    return `<div class="chart-row" data-faculty="${esc(f)}" role="button" tabindex="0" aria-label="${esc(summary)} · ${esc(t('chart.filterFaculty'))}">
+      <div class="faculty">${esc(displayFaculty)} <span style="color:var(--muted)">(${esc(t('chart.reviewed',{count:fmt(v.reviewed)}))})</span></div>
       <div class="track" style="width:${v.reviewed/max*100}%">${seg(v.pass,'green')}${seg(v.fail,'red')}</div>
-      <div class="total">${v.pass.toLocaleString('th-TH')}/${v.reviewed.toLocaleString('th-TH')}</div>
+      <div class="total">${fmt(v.pass)}/${fmt(v.reviewed)}</div>
       <div class="faculty-tooltip" role="tooltip" aria-hidden="true">
-        <strong>${esc(f)} · ${v.total.toLocaleString('th-TH')} รายวิชา</strong>
-        <span>ผ่าน ${v.pass.toLocaleString('th-TH')} · ไม่ผ่าน ${v.fail.toLocaleString('th-TH')} · อยู่ระหว่างการตรวจสอบ ${reviewing.toLocaleString('th-TH')}</span>
-        <small>คลิกเพื่อกรองคณะนี้</small>
+        <strong>${esc(t('chart.facultyTotal',{faculty:displayFaculty,total:fmt(v.total)}))}</strong>
+        <span>${esc(t('chart.statusLine',{pass:fmt(v.pass),fail:fmt(v.fail),reviewing:fmt(reviewing)}))}</span>
+        <small>${esc(t('chart.filterFaculty'))}</small>
       </div>
     </div>`;
-  }).join(''):'<div class="empty">ยังไม่มีรายวิชาที่มีผลตรวจ “ผ่าน / ไม่ผ่าน” ตามตัวกรองนี้</div>';
+  }).join(''):`<div class="empty">${t('chart.empty')}</div>`;
 }
 
 function renderDonut(rows){
@@ -430,35 +488,35 @@ function renderDonut(rows){
   $('donutChart').style.background=total
     ?`conic-gradient(var(--green) 0 ${gp}%,var(--amber) ${gp}% ${gp+lp}%,var(--red) ${gp+lp}% ${gp+lp+np}%,var(--gray) ${gp+lp+np}% 100%)`
     :'#e8eef5';
-  $('donutTotal').textContent=total.toLocaleString('th-TH');
-  const item=(label,n,p,cls)=>`<div class="donut-item"><i class="dot ${cls}"></i><span>${label}</span><strong>${n.toLocaleString('th-TH')} วิชา (${p.toFixed(1)}%)</strong></div>`;
+  $('donutTotal').textContent=fmt(total);
+  const item=(label,n,p,cls)=>`<div class="donut-item"><i class="dot ${cls}"></i><span>${label}</span><strong>${t('progress.item',{count:fmt(n),pct:p.toFixed(1)})}</strong></div>`;
   $('donutLegend').innerHTML=
-    item('เนื้อหาและองค์ประกอบมากกว่า 50%',good,gp,'green')+
-    item('เนื้อหาและองค์ประกอบน้อยกว่า 50%',low,lp,'amber')+
-    item('ไม่มีเนื้อหา',none,np,'red')+
-    (pending?item('รอข้อมูล',pending,pp,'gray'):'');
+    item(t('progress.good'),good,gp,'green')+
+    item(t('progress.low'),low,lp,'amber')+
+    item(t('progress.none'),none,np,'red')+
+    (pending?item(t('progress.pending'),pending,pp,'gray'):'');
 }
 
 const td=(v,c='')=>`<td class="${c}">${esc(v)}</td>`;
 
 function badge(s){
-  if(s===STATUS.good) return '<span class="badge green">เนื้อหาและองค์ประกอบมากกว่า 50%</span>';
-  if(s===STATUS.low) return '<span class="badge amber">เนื้อหาและองค์ประกอบน้อยกว่า 50%</span>';
-  if(s===STATUS.none) return '<span class="badge red">ไม่มีเนื้อหา</span>';
-  return '<span class="badge gray">รอข้อมูล</span>';
+  if(s===STATUS.good) return `<span class="badge green">${t('progress.good')}</span>`;
+  if(s===STATUS.low) return `<span class="badge amber">${t('progress.low')}</span>`;
+  if(s===STATUS.none) return `<span class="badge red">${t('progress.none')}</span>`;
+  return `<span class="badge gray">${t('progress.pending')}</span>`;
 }
 
 function reviewBadge(s){
-  if(s===REVIEW.pass) return '<span class="review-badge pass">ผ่าน</span>';
-  if(s===REVIEW.reviewing) return '<span class="review-badge reviewing">อยู่ระหว่างการตรวจสอบ</span>';
-  if(s===REVIEW.fail) return '<span class="review-badge fail">ไม่ผ่าน</span>';
+  if(s===REVIEW.pass) return `<span class="review-badge pass">${t('kpi.pass')}</span>`;
+  if(s===REVIEW.reviewing) return `<span class="review-badge reviewing">${t('kpi.reviewing')}</span>`;
+  if(s===REVIEW.fail) return `<span class="review-badge fail">${t('kpi.fail')}</span>`;
   return '<span class="review-badge wait">—</span>';
 }
 
 function note(s){
-  if(s===STATUS.none) return 'ไม่พบเนื้อหาในรายวิชา';
-  if(s===STATUS.low) return 'ควรเพิ่มเนื้อหา';
-  if(!s) return 'รอข้อมูลความคืบหน้า';
+  if(s===STATUS.none) return t('note.none');
+  if(s===STATUS.low) return t('note.low');
+  if(!s) return t('note.pending');
   return '—';
 }
 
@@ -468,21 +526,21 @@ function renderTable(rows){
   const start=(currentPage-1)*PAGE_SIZE;
   const pageRows=rows.slice(start,start+PAGE_SIZE);
   $('courseRows').innerHTML=pageRows.map((d,i)=>`<tr>
-    ${td(start+i+1,'num')}
+    ${td(fmt(start+i+1),'num')}
     ${td(d['รหัสวิชา'],'course nowrap')}
     ${td(d['หน่วยกิต']||'—','nowrap')}
     ${td(d['Course Profile'],'nowrap')}
-    ${td(d['คณะ'])}
+    ${td(I18N.faculty(d['คณะ']))}
     ${td(d['ผู้สอน']||'—')}
-    ${td('1/2569','nowrap')}
+    ${td(t('table.semesterValue'),'nowrap')}
     <td>${badge(d['ความคืบหน้าการทำ'])}</td>
     <td>${reviewBadge(d['สถานะการตรวจสอบ'])}</td>
     ${td(note(d['ความคืบหน้าการทำ']))}
-    <td>${d['ลิงก์']?`<a href="${esc(d['ลิงก์'])}" target="_blank" rel="noopener">เปิด ↗</a>`:'—'}</td>
-    <td>${d['หลักฐานการตรวจ']?`<a href="${esc(d['หลักฐานการตรวจ'])}" target="_blank" rel="noopener">ดูหลักฐาน ↗</a>`:'—'}</td>
+    <td>${d['ลิงก์']?`<a href="${esc(d['ลิงก์'])}" target="_blank" rel="noopener">${t('table.open')}</a>`:'—'}</td>
+    <td>${d['หลักฐานการตรวจ']?`<a href="${esc(d['หลักฐานการตรวจ'])}" target="_blank" rel="noopener">${t('table.viewEvidence')}</a>`:'—'}</td>
   </tr>`).join('');
-  $('resultCount').textContent=`แสดง ${rows.length.toLocaleString('th-TH')} จาก ${typeRows().length.toLocaleString('th-TH')} วิชา`;
-  $('pageInfo').textContent=rows.length?`แสดง ${start+1}–${Math.min(start+PAGE_SIZE,rows.length)} จาก ${rows.length} รายวิชา`:'ไม่พบข้อมูล';
+  $('resultCount').textContent=t('result.showing',{shown:fmt(rows.length),total:fmt(typeRows().length)});
+  $('pageInfo').textContent=rows.length?t('pager.showing',{start:fmt(start+1),end:fmt(Math.min(start+PAGE_SIZE,rows.length)),total:fmt(rows.length)}):t('pager.empty');
   $('prevBtn').disabled=currentPage===1;
   $('nextBtn').disabled=currentPage===pages;
 }
@@ -490,11 +548,12 @@ function renderTable(rows){
 function render(reset=true){
   if(reset) currentPage=1;
   syncPageIdentity();
-  $('sourceSummary').textContent=`${typeRows().length.toLocaleString('th-TH')} รายวิชา`;
+  $('sourceSummary').dataset.state='ready';
+  syncSourceSummary();
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.type===activeType));
-  $('chartTitle').textContent=`ผลการตรวจแยกตามคณะ — ${activeType}`;
-  $('donutTitle').textContent=`สัดส่วนความคืบหน้าของเนื้อหา — ${activeType}`;
-  $('detailTitle').textContent=`รายละเอียดรายวิชา ${activeType}`;
+  $('chartTitle').textContent=t('chart.title',{type:activeType});
+  $('donutTitle').textContent=t('donut.title',{type:activeType});
+  $('detailTitle').textContent=t('detail.title',{type:activeType});
   const rows=filtered();
   setKpis(rows);
   renderChart(rows);
@@ -562,6 +621,15 @@ $('refreshBtn').addEventListener('click',()=>loadData());
 $('prevBtn').addEventListener('click',()=>{currentPage--;render(false)});
 $('nextBtn').addEventListener('click',()=>{currentPage++;render(false)});
 
+document.querySelector('.lang-switch').addEventListener('click',e=>{
+  const btn=e.target.closest('.lang-btn[data-lang]');
+  if(!btn||btn.dataset.lang===I18N.getLanguage())return;
+  I18N.setLanguage(btn.dataset.lang);
+  syncLanguageUI();
+  if(DATA.length)render(false);
+});
+
+syncLanguageUI();
 bindFacultyChartFilter();
 loadData();
 </script><div class="auth-chip" data-i18n-aria-label="auth.account" aria-label="บัญชีผู้ใช้"><span id="authUserEmail"></span><button type="button" onclick="OOEAuth.logout()" data-i18n="auth.signOut">ออกจากระบบ</button></div>
