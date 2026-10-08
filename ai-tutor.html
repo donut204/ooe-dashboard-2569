@@ -92,15 +92,57 @@ html.auth-check body{visibility:hidden}
 <style>
 /* Interactive faculty chart + loading skeleton */
 .chart-row[data-faculty]{
+  position:relative;
   cursor:pointer;
   border-radius:8px;
   transition:background .16s ease,transform .16s ease;
 }
 .chart-row[data-faculty]:hover,
 .chart-row[data-faculty]:focus-visible{
+  z-index:12;
   background:#f7fbff;
   transform:translateX(2px);
   outline:none;
+}
+.faculty-tooltip{
+  position:absolute;
+  left:50%;
+  top:calc(100% + 8px);
+  z-index:30;
+  width:max-content;
+  max-width:min(380px,calc(100vw - 40px));
+  padding:10px 12px;
+  border:1px solid #d7e3f0;
+  border-radius:10px;
+  background:#102a43;
+  color:#fff;
+  box-shadow:0 10px 28px rgba(16,42,67,.20);
+  opacity:0;
+  visibility:hidden;
+  pointer-events:none;
+  transform:translate(-50%,6px);
+  transition:opacity .14s ease,transform .14s ease,visibility .14s ease;
+  text-align:left;
+  line-height:1.45;
+}
+.faculty-tooltip::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:-6px;
+  width:10px;
+  height:10px;
+  background:#102a43;
+  transform:translateX(-50%) rotate(45deg);
+}
+.faculty-tooltip strong{display:block;font-size:12px;font-weight:800;white-space:normal}
+.faculty-tooltip span{display:block;margin-top:3px;color:#d9e8f5;font-size:11px;font-weight:600;white-space:normal}
+.faculty-tooltip small{display:block;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.16);color:#a9c6df;font-size:10px;font-weight:700}
+.chart-row[data-faculty]:hover .faculty-tooltip,
+.chart-row[data-faculty]:focus-visible .faculty-tooltip{
+  opacity:1;
+  visibility:visible;
+  transform:translate(-50%,0);
 }
 .skeleton-block,.skeleton-line,.skeleton-pill,.skeleton-circle{
   position:relative;
@@ -971,7 +1013,19 @@ function renderChart(rows){
     const pct=count/maxTotal*100;
     return count?`<div class="seg ${cls}" style="width:${pct}%"><span>${count.toLocaleString('th-TH')}</span></div>`:'';
   };
-  $('facultyChart').innerHTML=list.length?list.map(([f,v])=>`<div class="chart-row" data-faculty="${esc(f)}" role="button" tabindex="0" title="คลิกเพื่อกรองตามคณะนี้"><div class="faculty">${esc(f)}</div><div class="track">${seg(v.complete,'green')}${seg(v.partial,'amber')}${seg(v.notdone,'red')}</div><div class="total">${v.total.toLocaleString('th-TH')} วิชา</div></div>`).join(''):'<div class="empty">ไม่พบข้อมูลตามตัวกรอง</div>';
+  $('facultyChart').innerHTML=list.length?list.map(([f,v])=>{
+    const summary=`${f} · ${v.total.toLocaleString('th-TH')} รายวิชา · ครบ ${v.complete.toLocaleString('th-TH')} · จัดทำไม่ครบ ${v.partial.toLocaleString('th-TH')} · ไม่ทำ ${v.notdone.toLocaleString('th-TH')}`;
+    return `<div class="chart-row" data-faculty="${esc(f)}" role="button" tabindex="0" aria-label="${esc(summary)} · กดเพื่อกรองคณะนี้">
+      <div class="faculty">${esc(f)}</div>
+      <div class="track">${seg(v.complete,'green')}${seg(v.partial,'amber')}${seg(v.notdone,'red')}</div>
+      <div class="total">${v.total.toLocaleString('th-TH')} วิชา</div>
+      <div class="faculty-tooltip" role="tooltip" aria-hidden="true">
+        <strong>${esc(f)} · ${v.total.toLocaleString('th-TH')} รายวิชา</strong>
+        <span>ครบ ${v.complete.toLocaleString('th-TH')} · จัดทำไม่ครบ ${v.partial.toLocaleString('th-TH')} · ไม่ทำ ${v.notdone.toLocaleString('th-TH')}</span>
+        <small>คลิกเพื่อกรองคณะนี้</small>
+      </div>
+    </div>`;
+  }).join(''):'<div class="empty">ไม่พบข้อมูลตามตัวกรอง</div>';
 }
 function renderDonut(rows){
   const total=rows.length,points=rows.reduce((a,g)=>a+g.score,0),pct=total?points/total*100:0,remain=100-pct;
