@@ -205,8 +205,10 @@
 
   function readInitialLanguage(){
     try{
-      const query=new URLSearchParams(global.location.search).get('lang');
-      if(query&&SUPPORTED.includes(query.toLowerCase()))return query.toLowerCase();
+      const search=String(global.location&&global.location.search||'');
+      const match=search.match(/[?&]lang=([^&]+)/i);
+      const query=match?decodeURIComponent(match[1].replace(/\+/g,' ')).toLowerCase():'';
+      if(query&&SUPPORTED.includes(query))return query;
     }catch(e){}
     try{
       const saved=global.localStorage.getItem(STORAGE_KEY);
@@ -238,9 +240,13 @@
 
   function updateUrl(){
     try{
-      const url=new URL(global.location.href);
-      url.searchParams.set('lang',language);
-      global.history.replaceState(global.history.state,'',url.pathname+url.search+url.hash);
+      const search=String(global.location&&global.location.search||'').replace(/^\?/,'');
+      const parts=search?search.split('&').filter(Boolean):[];
+      const kept=parts.filter(part=>!/^lang=/i.test(part));
+      kept.push('lang='+encodeURIComponent(language));
+      const pathname=String(global.location&&global.location.pathname||'');
+      const hash=String(global.location&&global.location.hash||'');
+      global.history.replaceState(global.history.state,'',pathname+'?'+kept.join('&')+hash);
     }catch(e){}
   }
 
