@@ -1129,3 +1129,10 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
   - ไม่ hard-code จำนวนรายวิชา/Profile และไม่เปลี่ยน data/KPI logic
 - Commit AI Tutor header source summary: `55586b926d18487b8c470d60c3fc38a6d53cfc1a`
 - Commit Podcast header source summary: `201c21a91fd2e14ba3490ed9b0cdbcce9a84f6e4`
+- **Header source status pulse (08/10/2569):** เพิ่มจุดสถานะสีเขียวไว้หน้าบรรทัด `ข้อมูลอ้างอิง ณ วันที่ 05/10/2569` ของ AI Tutor และ Podcast
+  - ใช้จุดสีเขียวขนาดเล็กพร้อม pulse animation แบบเบา `1.8s ease-in-out infinite`
+  - Desktop จัดชิดขวาตาม Header เดิม; Mobile จัดชิดซ้ายตาม layout responsive
+  - รองรับ `prefers-reduced-motion`: ปิด animation และคงจุดสีเขียวแบบนิ่ง
+  - ไม่เพิ่มข้อความเวลาโหลดกลับมา และไม่เปลี่ยนข้อมูล/KPI logic
+- Commit AI Tutor source status pulse: `dd840709337b7139e4a41a848ce5fef190c02af8`
+- Commit Podcast source status pulse: `cab12daec2757c32c42a02b1d613dfae1dc443fa`
