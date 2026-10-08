@@ -1093,3 +1093,12 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
   - ไม่มีการเปลี่ยนเกณฑ์/ข้อความสาระสำคัญ/ข้อมูล KPI
 - Commit AI Tutor criteria modal: `f82c756fd4e115259669bc31c7b65f3031b9c0ba`
 - Commit Podcast criteria modal: `3db9df8a356cea612ab62cf082cc09e5592ab733`
+- **Criteria Modal denominator card refinement (08/10/2569):** แก้ Section `ตัวหาร` ที่ดูคลุมเครือระหว่าง Section กับ Card ให้เป็น Neutral Card ที่ชัดเจนทั้ง AI Tutor และ Podcast
+  - ใช้ geometry เดียวกับ `ตัวตั้ง`: padding / radius / grid alignment เท่ากัน
+  - `ตัวตั้ง` คง Blue-tinted card เพื่อเน้นเกณฑ์หลัก
+  - `ตัวหาร` ใช้พื้น neutral `#fbfcfe` + เส้นบาง `#e4eaf1` เพื่อให้เป็นรองแต่ยังเป็นกลุ่มเดียวกัน
+  - เพิ่มระยะห่างระหว่างสอง Card 10px
+  - Mobile ใช้ padding 14px ทั้งสอง Card เพื่อให้ alignment คงที่
+  - ไม่เปลี่ยนข้อความเกณฑ์หรือ Modal logic
+- Commit AI Tutor denominator card: `2ff837356cd2f75a66e6a50078caeb3b36a4be09`
+- Commit Podcast denominator card: `10530233873cbb11b3992c827dfe6b3bbed8bded`
