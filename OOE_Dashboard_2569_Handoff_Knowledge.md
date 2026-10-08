@@ -1102,3 +1102,10 @@ Modal “ห้ามแสดงอีก” จำค่าต่อ browser/d
   - ไม่เปลี่ยนข้อความเกณฑ์หรือ Modal logic
 - Commit AI Tutor denominator card: `2ff837356cd2f75a66e6a50078caeb3b36a4be09`
 - Commit Podcast denominator card: `10530233873cbb11b3992c827dfe6b3bbed8bded`
+- **KPI Score Card cue cleanup (08/10/2569):** เอา visual cue `กดเพื่อแสดงทั้งหมด →` ออกจาก Card `คะแนน KPI รวม` ของ AI Tutor และ Podcast ตาม UX review
+  - Card คะแนน KPI รวมกลับมาเน้นเฉพาะคะแนนที่ได้ / คะแนนเต็ม / ความคืบหน้า / Progress Bar
+  - ลด bottom padding ที่เคยเผื่อพื้นที่ให้ cue จาก 40px กลับเป็น 18px
+  - คง click-to-reset Status Filter และ keyboard behavior เดิมไว้; เปลี่ยนเฉพาะ visual cue
+  - Card สถานะอื่นยังคง `กดเพื่อกรอง →` / active cue ตามเดิม
+- Commit AI Tutor KPI score cue cleanup: `96505c1add580cf8f8c1f85aacd919db6720c7c2`
+- Commit Podcast KPI score cue cleanup: `2d0f49f38456ed03f2ebaf2b441d4a76b0b958f7`
