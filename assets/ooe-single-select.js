@@ -131,6 +131,8 @@
         const bounds=trigger.getBoundingClientRect();
         const below=window.innerHeight-bounds.bottom;
         panel.classList.toggle('is-up',below<320&&bounds.top>below);
+        const panelWidth=Math.min(340,Math.max(bounds.width,222),window.innerWidth-24);
+        panel.classList.toggle('is-end',bounds.left+panelWidth>window.innerWidth-12);
         if(searchable)search.value='';
         panel.hidden=false;
         sync();
