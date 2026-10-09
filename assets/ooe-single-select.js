@@ -65,6 +65,7 @@
     const searchable=select.id==='facultyFilter';
     searchWrap.hidden=!searchable;
     if(label){
+      list.setAttribute('aria-labelledby',label.id);
       trigger.setAttribute('aria-labelledby',label.id);
       if(label.hasAttribute('for')){
         label.setAttribute('for',trigger.id);
@@ -124,8 +125,8 @@
     }
     function setOpen(open,focusTrigger=false){
       if(open){
-        document.querySelectorAll('.ooe-single .ss-panel:not([hidden])').forEach(other=>{
-          if(other!==panel)other.hidden=true;
+        instances.forEach(item=>{
+          if(item.panel!==panel&&!item.panel.hidden)item.close();
         });
         const bounds=trigger.getBoundingClientRect();
         const below=window.innerHeight-bounds.bottom;
