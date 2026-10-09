@@ -137,7 +137,8 @@ function update(){
   process(document.body);
   const source=document.getElementById('sourceReferenceText');
   if(source)source.textContent=I.t('source.referenceDate',{date:I.referenceDate()});
-  document.documentElement.lang=I.getLanguage();
+  // Changing lang triggers other observers; skip the write if already correct.
+  if(document.documentElement.lang!==I.getLanguage())document.documentElement.lang=I.getLanguage();
   document.querySelectorAll('.lang-btn').forEach(btn=>{
     const on=btn.dataset.lang===I.getLanguage();btn.classList.toggle('is-active',on);btn.setAttribute('aria-pressed',String(on));
   });

@@ -1298,3 +1298,19 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Menu presentation is bilingual: `ooe-single-select.js` reads `OOEI18n.getLanguage()` for static UI/status labels, while leaving faculty, course type, and exact raw select values untouched. `assets/ooe-page-i18n.js` skips dynamically owned menu nodes to avoid two translators overwriting each other. GR/GS translations still use the existing `OOEI18n.t()` keys.
 - Existing GR/GS, AI Tutor, Podcast CSV sources, faculty+courseCode grouping, ProfileScore/CourseScore, status values, KPI calculations, chart/table rendering and Profile multi-select behavior remain unchanged.
 - Branch: `feature/unified-filter-dropdown-ui`. QA: syntax checks for shared JS, i18n adapter and all three inline scripts; mocked native-select interaction verified that picking GS dispatched a change and retained the value, programmatic status selection synced the UI, EN label and searchable faculty filtering worked. Actual authenticated browser and visual/mobile QA remains unverified; check after Pages publishes.
+
+
+## 09/10/2569 — Hotfix: AI Tutor / Podcast unresponsive after filter redesign
+
+- Symptom reported: AI Tutor and Podcast stopped responding after the unified filter dropdown release (PR #6).
+- Root cause: feedback loop between `assets/ooe-page-i18n.js` `MutationObserver(document.body)` and `assets/ooe-single-select.js` `MutationObserver(document.documentElement lang)`.
+  1. The translation adapter wrote `document.documentElement.lang` even when unchanged.
+  2. The dropdown language observer then called `syncAll()`, which unconditionally assigned the current label `textContent` (creating a fresh DOM mutation even if identical), and sometimes recreated the open option list.
+  3. The translation adapter observed this mutation and wrote `lang` again, repeating without stopping and starving page interaction.
+- Fix isolated to **2 shared JS files**:
+  - `assets/ooe-page-i18n.js`: only assign the HTML language when it actually differs.
+  - `assets/ooe-single-select.js`: only write dropdown visible text, placeholder, accessible name and disabled state when different; rebuild options only if source options/selected value changed, or when intentionally opening the menu.
+- AI Tutor/Podcast dropdown selection, GR/GS presentation, status/teacher data, CSV, filters, course grouping, CourseScore, KPI and Profile checkbox multi-select logic remain unchanged.
+- QA: JS syntax checks passed; isolated interaction simulation confirmed 15 consecutive `syncAll()` calls produce zero redundant visible-label writes, choosing faculty dispatches one change, programmatic status change updates the visible control, and EN translation works.
+- Live authenticated browser end-to-end test remains pending; if symptoms persist collect Browser Console errors and reproduce on device.
+- Implemented on `fix/dropdown-observer-freeze`, approved emergency fix to be merged to main with Handoff.
