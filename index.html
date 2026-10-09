@@ -168,6 +168,7 @@ html.auth-check body{visibility:hidden}
 
 <link rel="stylesheet" href="assets/ooe-language-switch.css">
 <link rel="stylesheet" href="assets/ooe-mobile.css">
+<link rel="stylesheet" href="assets/ooe-single-select.css">
 </head><body>
 <header class="topbar"><div class="topbar-inner"><div><h1 id="pageTitle">Dashboard รายวิชา GR</h1><p class="subtitle" data-i18n="header.subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="header-meta"><div class="source"><span data-i18n="header.office">สำนักการจัดการศึกษาออนไลน์ (OOE)</span><span class="source-summary" id="sourceSummary">กำลังโหลดข้อมูลออนไลน์...</span><span class="source-reference"><i class="source-status-dot" aria-hidden="true"></i><span id="sourceReferenceText">ข้อมูลอ้างอิง ณ วันที่ 05/10/2569</span></span></div><div class="lang-switch" data-active="th" role="group" data-i18n-aria-label="language.switcher" aria-label="เลือกภาษา"><button class="lang-btn" type="button" data-lang="th" aria-pressed="true">TH</button><button class="lang-btn" type="button" data-lang="en" aria-pressed="false">EN</button></div></div></div></header>
 <main><nav class="page-tabs" data-i18n-aria-label="nav.aria" aria-label="เลือกหน้าประเภทรายวิชา"><button class="tab" data-type="GS" type="button" data-i18n="nav.gs">หน้า GS</button><button class="tab" data-type="GR" type="button" data-i18n="nav.gr">หน้า GR</button><a class="tab nav-link" href="ai-tutor.html" data-i18n="nav.aiTutor">AI Tutor</a><a class="tab nav-link" href="podcast.html" data-i18n="nav.podcast">Podcast</a></nav>
@@ -563,6 +564,7 @@ function render(reset=true){
   renderDonut(rows);
   renderTable(rows);
   syncKpiCardState();
+  window.OOESingleSelect?.syncAll();
 }
 
 function syncKpiCardState(){
@@ -635,5 +637,7 @@ document.querySelector('.lang-switch').addEventListener('click',e=>{
 syncLanguageUI();
 bindFacultyChartFilter();
 loadData();
-</script><div class="auth-chip" data-i18n-aria-label="auth.account" aria-label="บัญชีผู้ใช้"><span id="authUserEmail"></span><button type="button" onclick="OOEAuth.logout()" data-i18n="auth.signOut">ออกจากระบบ</button></div>
+</script>
+<script src="assets/ooe-single-select.js"></script>
+<div class="auth-chip" data-i18n-aria-label="auth.account" aria-label="บัญชีผู้ใช้"><span id="authUserEmail"></span><button type="button" onclick="OOEAuth.logout()" data-i18n="auth.signOut">ออกจากระบบ</button></div>
 </body></html>
