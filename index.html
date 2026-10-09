@@ -177,6 +177,7 @@ html.auth-check body{visibility:hidden}
 <section class="charts-grid"><article class="panel chart-panel"><div class="section-head"><div><h2 id="chartTitle"></h2><p data-i18n="chart.description">แสดงผลการตรวจเฉพาะ “ผ่าน / ไม่ผ่าน” แยกตามคณะ · รายวิชาที่อยู่ระหว่างการตรวจสอบยังไม่รวมในแท่งกราฟ</p></div><div class="legend"><span><i class="dot green"></i><b data-i18n="chart.pass">ผ่าน</b></span><span><i class="dot red"></i><b data-i18n="chart.fail">ไม่ผ่าน</b></span></div></div><div class="chart" id="facultyChart"></div></article><article class="panel chart-panel"><div class="section-head"><div><h2 id="donutTitle">สัดส่วนความคืบหน้าของเนื้อหา</h2><p data-i18n="donut.description">คำนวณตามตัวกรองที่เลือก</p></div></div><div class="donut-body"><div class="donut-wrap"><div class="donut" id="donutChart"></div><div class="donut-center"><span class="donut-number" id="donutTotal">0</span><span class="donut-label" data-i18n="donut.centerLabel">รายวิชา</span></div></div><div class="donut-list" id="donutLegend"></div></div><div class="source-qr"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVYAAAFWAQAAAAAa1IguAAAEBUlEQVR4nO2bQW4jOQxFX0UFZEkDOUCOIt9gjtSYI/UBGpCPkgMEkJcBaPxZkCpn2ZsCalSplWxwoaJJfv5PehF/+zxe/toUfmz/n7aoAxTJQVJRc2ulgzUHpxZFyFQ/wn139EON15eEKR6sYQ1qUcNUJPX5/QC19Orx4r26tYgBt+ZUN5VOmdwP63Z6dYDHe39Q/X7xt9/cr0W318/rznc4gu36/YPuF1+X8rkAK7/+gAPW1n3vcBRbqQEOy3tbrTlVvTqs1PV+BTD5znc4gO1tWRZgvV/Lx6/y8WuFFV47pQOV+/WxLMvlMPfdxZZEiI46ktRr6VUdqTlValDDZOo6GXhB4GaRwgmAJKBIEAbT+wFMbi2bqNFTlV6lpg4WndXcuImkAIVoJLaeyuP1M1NOEA+jjfSM/+agjkPEBhbN9ux+6Li1jAeTQ5bKzJGMk/n5hRQ/vXotaoGVCR+9ZspI8/uhVzcVyU2BlW6ZC0BRg4rpBHlRI/iTTJkc3BRngm3ZKfimB80MqcGaJKm5taDkgZ5nwAs3bdpLtE+jLDQnyMUp6mRUg+ir3ZrUBkwQzsmO4gj33RcvajQMRXKqg9RKr1Eko6M4QZ0Eokhm+7QFBoC1koExe170JBRA6YN+Bs3sSC34xRnwIkhlhETpNbIAsjJEkWTyvHgBvpZF/RYY8fXeSq+l38IhjwsrSP/OrkeR4BitoykluI195/DiFPUhBEnIViqlGFNSsESTuf3wgum1syaVuH0tV0LFvi9Q1/tVnZWKtYPcdy/b+xWIUoAJbkE/oa55wLmVj+tB7ruPbbRMcUz9Id/d5KOJAmbHi5xvxvBOUnRNMdxMSarXMn99ePILrDEG3Dn87ZVg3NQz8IuYXwzKGecIjKqU8ev8/EKt9CHPjsetYdrk6zhP7oceilPbNGp/itgpR0RgTO6HYBCmklx7tE9DrpeGlH2E++6JF/HTD9yMj8qdEGDw0Mn9EKApsS0AWEZICrZqp5jzqoUsnxTDcjnq+3zzBLybTY7eWFVRG19GfdAp+oeeK4LEcNNalIuyrUDkjO8EeLFJkYrsIKdauVEZisTsfng2Udu2Q4hyTw3fqfPHQ39ObTZtdmwE5Z7MOeZZLcYWG8Xe5hcDKaJszh4PUgy4AY/RVSdeP/TJ8XH6eBj7chqFcXDMTJlch5g7Hl64L8uyrNZWbk59XG4Oocgtl5TmTqBPskkusRVWctxZtyWZDIzp82Ls25cgEUOfTM3h2WKdxA8QotzYEAt9Urkk02bvo5779uXzH+Bx4fHWF+vAAxb4evtdPi573uEIts//44zNh1yPGfWBsSY0fV5AKi2tdEKYjVzwgImNZRzhvnvZLj//W/yx/fb8B0LsUH8eWOpnAAAAAElFTkSuQmCC" data-i18n-alt="sourceQr.alt" alt="QR Code สำหรับเปิดข้อมูลออนไลน์"><div><h3 data-i18n="sourceQr.title">ข้อมูลออนไลน์จาก Google Sheets</h3><p data-i18n="sourceQr.description">สแกน QR Code เพื่อเปิดข้อมูลที่เผยแพร่สำหรับ Dashboard โดยตรง</p></div></div></article></section>
 <section class="panel table-panel"><div class="table-tools"><div><h2 id="detailTitle"></h2><p data-i18n="detail.description">รายวิชาใน d-Learning / i-Learning · ดึงข้อมูลออนไลน์จาก Google Sheets</p></div><div class="count" id="resultCount"></div></div><div class="table-wrap"><table><thead><tr><th data-i18n="table.order">ลำดับ</th><th data-i18n="table.courseCode">รหัสวิชา</th><th data-i18n="table.credits">หน่วยกิต</th><th data-i18n="table.courseProfile">รหัสรายวิชาในระบบ</th><th data-i18n="table.faculty">คณะ / วิทยาลัย</th><th data-i18n="table.instructors">อาจารย์ผู้สอน</th><th data-i18n="table.semester">ภาคเรียน</th><th data-i18n="table.progress">ความคืบหน้า</th><th data-i18n="table.reviewStatus">สถานะการตรวจสอบ</th><th data-i18n="table.note">หมายเหตุ</th><th data-i18n="table.course">รายวิชา</th><th data-i18n="table.evidence">หลักฐานการตรวจ</th></tr></thead><tbody id="courseRows"></tbody></table></div><div class="pager"><div class="count" id="pageInfo"></div><div class="pager-controls"><button id="prevBtn" type="button" data-i18n="pager.prev">ก่อนหน้า</button><button id="nextBtn" type="button" data-i18n="pager.next">ถัดไป</button></div></div></section><p class="note" data-i18n="footer.note">หน้าข้อมูล GR และ GS แยกจากกันโดยสมบูรณ์ · ข้อมูลโหลดจาก Google Sheets เมื่อเปิดหน้าเว็บหรือกด “อัปเดตข้อมูล” · ตัวเลขทั้งหมดเป็นจำนวนรายวิชา</p></main>
 
+<script src="assets/ooe-progress.js"></script>
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=131857057&single=true&output=csv';
 let DATA=[];
@@ -187,11 +188,8 @@ function revealDashboardOnce(){
   document.body.classList.add('dashboard-reveal');
   window.setTimeout(()=>document.body.classList.remove('dashboard-reveal'),950);
 }
-const STATUS={
-  good:'เนื้อหาและองค์ประกอบมากกว่า 50%',
-  low:'เนื้อหาและองค์ประกอบน้อยกว่า 50%',
-  none:'ไม่มีเนื้อหา'
-};
+const PROGRESS=window.OOEProgress;
+const STATUS=PROGRESS.STATUS;
 const REVIEW={
   pass:'ผ่าน',
   reviewing:'อยู่ระหว่างการตรวจสอบ',
@@ -212,16 +210,31 @@ function syncPageIdentity(){
   $('pageTitle').textContent=label;
   document.title=t('page.documentTitle',{type:activeType});
 }
+function progressLabel(status,raw=''){
+  if(I18N.getLanguage()==='th'&&raw&&status!==STATUS.unknown&&status!==STATUS.pending)return raw;
+  if(I18N.getLanguage()==='th'&&[STATUS.good,STATUS.low,STATUS.none].includes(status)){
+    const source=PROGRESS.commonLabel(typeRows(),status);
+    if(source)return source;
+  }
+  return t('progress.'+status);
+}
 function syncFilterOptionLabels(){
   const allText=t('filters.all');
   ['facultyFilter','statusFilter','reviewFilter'].forEach(id=>{
     const first=$(id)?.querySelector('option[value=""]');
-    if(first)first.textContent=allText;
+    if(first&&first.textContent!==allText)first.textContent=allText;
   });
-  [...$('statusFilter').options].forEach(o=>{
-    if(o.value===STATUS.good)o.textContent=t('progress.good');
-    else if(o.value===STATUS.low)o.textContent=t('progress.low');
-    else if(o.value===STATUS.none)o.textContent=t('progress.none');
+  const statusSelect=$('statusFilter');
+  for(const status of [STATUS.pending,STATUS.unknown]){
+    const found=typeRows().some(d=>d['ความคืบหน้าการทำ']===status);
+    const option=[...statusSelect.options].find(o=>o.value===status);
+    if(found&&!option){const opt=document.createElement('option');opt.value=status;statusSelect.appendChild(opt);}
+    if(!found&&option){if(statusSelect.value===status)statusSelect.value='';option.remove();}
+  }
+  [...statusSelect.options].forEach(o=>{
+    if(!o.value)return;
+    const text=progressLabel(o.value);
+    if(o.textContent!==text)o.textContent=text;
   });
   [...$('reviewFilter').options].forEach(o=>{
     if(o.value===REVIEW.pass)o.textContent=t('kpi.pass');
@@ -319,7 +332,6 @@ const natural=(a,b)=>String(a).localeCompare(String(b),'th',{numeric:true,sensit
 const typeRows=()=>DATA.filter(d=>d['ประเภท']===activeType);
 const unique=(rows,key)=>[...new Set(rows.map(d=>d[key]).filter(Boolean))].sort(natural);
 const count=(rows,value)=>rows.filter(d=>d['ความคืบหน้าการทำ']===value).length;
-const pendingCount=rows=>rows.filter(d=>!String(d['ความคืบหน้าการทำ']||'').trim()).length;
 
 function parseCSV(text){
   const rows=[];
@@ -347,6 +359,7 @@ function parseCSV(text){
 }
 
 function mapRow(r){
+  const rawProgress=String(r.progress||'').trim();
   return {
     'ประเภท':String(r.group||'').trim(),
     'คณะ':String(r.faculty||'').trim(),
@@ -362,7 +375,8 @@ function mapRow(r){
     'จำนวนนักศึกษา':Number(String(r.students||'0').replace(/,/g,''))||0,
     'จำนวนสัปดาห์':Number(String(r.weeks||'0').replace(/,/g,''))||0,
     'รวมเนื้อหาและกิจกรรม':Number(String(r.activities||'0').replace(/,/g,''))||0,
-    'ความคืบหน้าการทำ':String(r.progress||'').trim(),
+    'ความคืบหน้าการทำ':PROGRESS.classify(rawProgress),
+    'ข้อความความคืบหน้าต้นฉบับ':rawProgress,
     'สถานะการตรวจสอบ':String(r.reviewStatus||'').trim(),
     'ลิงก์':String(r.courseLink||'').trim(),
     'หลักฐานการตรวจ':String(r.evidence||'').trim()
