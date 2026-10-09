@@ -1314,3 +1314,18 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - QA: JS syntax checks passed; isolated interaction simulation confirmed 15 consecutive `syncAll()` calls produce zero redundant visible-label writes, choosing faculty dispatches one change, programmatic status change updates the visible control, and EN translation works.
 - Live authenticated browser end-to-end test remains pending; if symptoms persist collect Browser Console errors and reproduce on device.
 - Implemented on `fix/dropdown-observer-freeze`, approved emergency fix to be merged to main with Handoff.
+
+
+## 09/10/2569 — GR/GS dynamic content-progress wording from Google Sheets
+
+- User changed public source progress wording (column `ปริมาณเนื้อหารายวิชา`, mapped to `r.progress` in `GRGS_Public`) from earlier `เนื้อหาและองค์ประกอบมากกว่า/น้อยกว่า 50%` to `พบเนื้อหาในระดับมาก` and `พบเนื้อหาในระดับน้อย`. Previously the GR/GS Dashboard used exact-string status equality, falsely displaying **รอข้อมูล** for recognized new values.
+- New shared, pure normalization helper `assets/ooe-progress.js` maps content-progress source text (whitespace/Unicode normalized) into stable **internal keys**: `good`, `low`, `none`, `pending`, `unknown`.
+  - Recognized terms: old threshold-based terms and new high/low-volume wording, `ไม่มีเนื้อหา`/`ไม่พบเนื้อหา`, and carefully selected variants. No arbitrary guessing for new semantics.
+  - Unrecognized non-empty strings, contradictory phrases or unsupported new category words are **unknown**, NOT silently `pending`, `good`, `low` or `none`.
+  - Empty or explicitly pending source status is `pending`.
+- `index.html` stores `ข้อความความคืบหน้าต้นฉบับ` per row, plus normalized `ความคืบหน้าการทำ`. GR/GS progress filtering, donut counts, badges and notes use the stable key; Thai badges show each row's original label exactly, and Thai filter/donut legend chooses the most common source label for each semantic category on the active GR or GS tab. English uses stable translated categories from `assets/ooe-i18n.js`, not unvalidated machine translation of novel Thai strings.
+- The Dashboard auto-adjusts whenever **fresh CSV is loaded on page open or on `อัปเดตข้อมูล`**; it does not receive push updates while idle. When new source wording carries a recognized semantic signal, labels and status calculations update without GitHub changes.
+- Unknown values are separately counted in Donut as gray and show a visible warning beneath the filters with the count and top example raw labels; add `ตรวจสอบข้อความ` / `Unrecognized Status` to the progress filter only when unknown source rows exist, to make auditing possible. Pending rows are also separately filterable when present.
+- ***Guardrail:*** If future source text no longer contains any recognized high/low/none signals, a dashboard cannot reliably infer meaning from arbitrary prose. The fallback warning intentionally requires human confirmation or a mapping update instead of false KPI classification.
+- Scope: GR/GS only; no changes to faculty KPI pass/review/fail calculations, review status, faculty chart or CSV source, AI Tutor/Podcast, auth or shared select filtering. Updated the localized canonical English/Thai fallback progress labels and explanatory text.
+- QA: JS syntax passed for the new module, 3 inline scripts in `index.html`; 18 classification cases passed including old and new labels, ambiguous and unknown statuses, Thai/English variants and missing values; original review KPI predicate unchanged. Browser visual/authenticated end-to-end testing remains pending.
