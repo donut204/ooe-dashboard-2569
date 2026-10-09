@@ -1268,3 +1268,16 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Client-only validation still decodes JWT without server-side signature verification and is **not equivalent to secure backend access control**. For truly private course data use server-validated sessions and HttpOnly cookies.
 - No dashboard HTML, KPI, data, filter, or spreadsheet logic changed.
 - QA: JavaScript syntax checked; browser verification on live Google Identity Services still needed.
+
+
+## 09/10/2569 — Course Profile Count multi-select (AI Tutor / Podcast)
+
+- User approved replacing the single-select `จำนวน Profile` control with a compact checkbox dropdown for **AI Tutor and Podcast only**.
+- New shared component `assets/ooe-profile-count-filter.js`, styled by `assets/ooe-profile-count-filter.css`, loaded in `ai-tutor.html` / `podcast.html`. GR/GS and desktop layout outside this filter were not modified.
+- Data-dependent options still originate from `groupCourses(DATA).map(g => g.profileCount)`: sorted actual Profile counts, not hard-coded. Course grouping remains **faculty + courseCode**; CourseScore = mean of ProfileScore, unchanged.
+- Multi-select semantics: no selected option = `ทั้งหมด` (all); one or more selected counts = OR match, e.g. 1+2 Profile shows courses where `g.profileCount` is 1 **or** 2; selecting every option also normalizes to all. Unchecking the last option returns to all.
+- Filter updates immediately on checkbox change. UI summary indicates one Profile or "เลือก N รายการ"; no extra Apply step. Global "ล้างตัวกรอง" resets the multi-select too.
+- Dropdown accessible with native checkboxes, keyboard focus, outside-pointer close, Escape close/focus return, Done close; mobile touch targets and scrollable option list. Data refresh reconciles selected counts against available counts.
+- `assets/ooe-page-i18n.js` enhanced with TH→EN labels for the new control and selected-count messages. The raw data values / select values for all other filters are unchanged.
+- Dynamic table, KPI, faculty chart and donut continue using existing `filtered()` results. KPI, ProfileScore, CourseScore, CSV parsing, course grouping, search, status and faculty filters untouched.
+- Branch: `feature/profile-count-checkbox`. QA: JS syntax checks for new shared component, translated adapter and dashboard inline scripts; simulated multi-select interactions (single, multiple, deselect last, option refresh, keyboard Escape, reset) passed. Live authenticated browser/visual tests remain unverified; verify on mobile and TH/EN after GitHub Pages refresh.
