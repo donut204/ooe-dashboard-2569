@@ -1329,3 +1329,11 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - ***Guardrail:*** If future source text no longer contains any recognized high/low/none signals, a dashboard cannot reliably infer meaning from arbitrary prose. The fallback warning intentionally requires human confirmation or a mapping update instead of false KPI classification.
 - Scope: GR/GS only; no changes to faculty KPI pass/review/fail calculations, review status, faculty chart or CSV source, AI Tutor/Podcast, auth or shared select filtering. Updated the localized canonical English/Thai fallback progress labels and explanatory text.
 - QA: JS syntax passed for the new module, 3 inline scripts in `index.html`; 24 classification cases passed including old and new labels, ambiguous and unknown statuses, Thai/English variants and missing values; original review KPI predicate unchanged. Browser visual/authenticated end-to-end testing remains pending.
+
+
+## 09/10/2569 — GR/GS course content volume column title
+
+- User requested the **GR/GS result table column heading only** change from `ความคืบหน้า` to `ปริมาณเนื้อหารายวิชา`, aligning with Google Sheets source column wording.
+- Updated `index.html` column `<th data-i18n="table.progress">` Thai text and `assets/ooe-i18n.js` dictionary key `table.progress`: Thai `ปริมาณเนื้อหารายวิชา`, English `Course Content Volume`.
+- **Scope intentionally excludes** filter label `ความคืบหน้า`, Donut title, progress classifier, source column keys, CSV parsing, status logic, KPI, GR/GS result rows, AI Tutor/Podcast and styling.
+- Validation: HTML inline JS and i18n file syntax passed; table heading anchor updated and filter title unchanged.
