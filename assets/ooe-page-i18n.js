@@ -104,7 +104,7 @@ function translate(s){
 }
 function localizeNode(node){
   if(node.nodeType!==3)return;
-  const parent=node.parentElement;if(!parent||parent.closest('script,style,textarea,option[data-source-code],.lang-switch'))return;
+  const parent=node.parentElement;if(!parent||parent.closest('script,style,textarea,option[data-source-code],.lang-switch,.ooe-single'))return;
   const raw=originals.has(node)?originals.get(node):node.nodeValue;
   if(!originals.has(node))originals.set(node,raw);
   const trimmed=raw.trim();if(!trimmed)return;
@@ -123,7 +123,7 @@ function process(root){
 }
 const attrs=new WeakMap();
 function syncAttrs(el){
-  if(el.matches('.lang-switch,.lang-btn'))return;
+  if(el.matches('.lang-switch,.lang-btn')||el.closest('.ooe-single'))return;
   let saved=attrs.get(el);if(!saved){saved={};for(const key of ['title','aria-label','placeholder'])if(el.hasAttribute(key))saved[key]=el.getAttribute(key);attrs.set(el,saved)}
   for(const [key,value] of Object.entries(saved)){
     const next=I.getLanguage()==='en'?translate(value):value;

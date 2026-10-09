@@ -687,6 +687,7 @@ html.auth-check body{visibility:hidden}
 <link rel="stylesheet" href="assets/ooe-language-switch.css">
 <link rel="stylesheet" href="assets/ooe-mobile.css">
 <link rel="stylesheet" href="assets/ooe-profile-count-filter.css">
+<link rel="stylesheet" href="assets/ooe-single-select.css">
 </head>
 <body>
 <header class="topbar"><div class="topbar-inner"><div><h1>Dashboard Podcast</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="header-meta"><div class="source"><span>สำนักการจัดการศึกษาออนไลน์ (OOE)</span><span class="source-summary" id="sourceSummary">กำลังโหลดข้อมูลออนไลน์...</span><span class="source-reference"><i class="source-status-dot" aria-hidden="true"></i><span id="sourceReferenceText">ข้อมูลอ้างอิง ณ วันที่ 05/10/2569</span></span></div><div class="lang-switch" data-active="th" role="group" aria-label="เลือกภาษา"><button class="lang-btn" type="button" data-lang="th" aria-pressed="true">TH</button><button class="lang-btn" type="button" data-lang="en" aria-pressed="false">EN</button></div></div></div></header>
@@ -1262,7 +1263,7 @@ function closePodcastAdvice(){
   $('podcastAdviceModal').classList.remove('open');
   document.body.style.overflow='';
 }
-function render(reset=true){if(reset)currentPage=1;const rows=filtered();setKpis(rows);renderChart(rows);renderDonut(rows);renderTable(rows);syncKpiCardState()}
+function render(reset=true){if(reset)currentPage=1;const rows=filtered();setKpis(rows);renderChart(rows);renderDonut(rows);renderTable(rows);syncKpiCardState();window.OOESingleSelect?.syncAll()}
 async function loadData(){
   showLoadingSkeleton();
   $('sourceSummary').textContent='กำลังโหลดข้อมูลออนไลน์...';$('refreshBtn').disabled=true;
@@ -1343,5 +1344,6 @@ bindFacultyChartFilter();
 openPodcastCriteria();
 loadData();
 </script>
+<script src="assets/ooe-single-select.js"></script>
 <div class="auth-chip" aria-label="บัญชีผู้ใช้"><span id="authUserEmail"></span><button type="button" onclick="OOEAuth.logout()">ออกจากระบบ</button></div>
 </body></html>
