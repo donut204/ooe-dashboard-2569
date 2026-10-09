@@ -20,6 +20,11 @@
     if((high&&/น้อย|ต่ำกว่า|lowcontent/.test(compact))||(low&&/มาก|สูงกว่า|highcontent/.test(compact)))return STATUS.unknown;
     if(high&&!low)return STATUS.good;
     if(low&&!high)return STATUS.low;
+    // Recognize a few common paraphrases while still requiring explicit content wording.
+    const highAlt=/(?:เนื้อหา|ปริมาณเนื้อหา)(?:มี|อยู่ใน)?(?:ระดับ)?(?:มาก|สูง|เยอะ)|^(?:high|complete|completed)$/i.test(compact);
+    const lowAlt=/(?:เนื้อหา|ปริมาณเนื้อหา)(?:มี|อยู่ใน)?(?:ระดับ)?(?:น้อย|ต่ำ)|(?:เนื้อหา)(?:บางส่วน)|^(?:low|partial|partiallycompleted)$/i.test(compact);
+    if(highAlt&&!lowAlt&&!/น้อย|ต่ำ|บางส่วน/.test(compact))return STATUS.good;
+    if(lowAlt&&!highAlt&&!/มาก|สูง|เยอะ/.test(compact))return STATUS.low;
     return STATUS.unknown;
   }
   function commonLabel(rows,category){
