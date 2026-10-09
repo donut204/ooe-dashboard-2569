@@ -71,9 +71,14 @@ const D={
 'กดเพื่อกรองคณะนี้':'Select to filter this faculty',
 'คะแนนที่ได้':'Achieved Score','คะแนนที่ยังขาด':'Remaining Score',
 'ครบ':'Complete','วิชา':'Courses',
-'กำลังอัปเดต...':'Refreshing...'
+'กำลังอัปเดต...':'Refreshing...',
+'เลือกจำนวน Profile':'Select Profile count',
+'เสร็จสิ้น':'Done',
+'แสดงทุกจำนวน Profile':'Showing all Profile counts'
 };
 const patterns=[
+[/^เลือก (\d+) รายการ$/,'$1 selected'],
+[/^เลือกแล้ว (\d+) รายการ$/,'$1 selected'],
 [/^จาก ([\d,]+) Profile$/,'From $1 Profile'],
 [/^([\d,]+) รายวิชา \(([\d,]+) Profile\)$/,'$1 Courses ($2 Profile)'],
 [/^([\d,]+) รายวิชา$/,'$1 Courses'],
