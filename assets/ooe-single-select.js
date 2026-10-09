@@ -77,6 +77,7 @@
     }
     const checkSvg='<svg class="ss-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 4.5 4.5L19 7" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     let optionsFingerprint='';
+    let lastSelectedValue=null;
     let latestOptions=[];
     function renderList(){
       const query=searchable?search.value.trim().toLocaleLowerCase():'';
@@ -112,11 +113,15 @@
       latestOptions=[...select.options].map(o=>({value:o.value,textContent:o.textContent}));
       const next=language()+'|'+latestOptions.map(o=>JSON.stringify([o.value,o.textContent])).join('|');
       const selected=latestOptions.find(o=>o.value===select.value);
-      value.textContent=selected?textFor(select,selected):allText();
-      if(next!==optionsFingerprint||!panel.hidden){
-        optionsFingerprint=next;
-        renderList();
-      }
+      const display=selected?textFor(select,selected):allText();
+      // Avoid creating a mutation when the visible text has not actually changed.
+      // The bilingual observer also watches the page, so redundant writes can freeze it.
+      if(value.textContent!==display)value.textContent=display;
+      const optionsChanged=next!==optionsFingerprint;
+      const selectionChanged=lastSelectedValue!==select.value;
+      optionsFingerprint=next;
+      lastSelectedValue=select.value;
+      if(optionsChanged||(!panel.hidden&&selectionChanged))renderList();
       trigger.disabled=select.disabled;
       if(searchable){
         search.placeholder=language()==='en'?'Search faculty or college…':'ค้นหาคณะ / วิทยาลัย…';
@@ -136,6 +141,8 @@
         if(searchable)search.value='';
         panel.hidden=false;
         sync();
+        // Regenerate after resetting search even when options themselves are unchanged.
+        renderList();
         if(searchable)search.focus();
         else (list.querySelector('[aria-selected="true"]')||list.querySelector('.ss-option'))?.focus();
       }else{
