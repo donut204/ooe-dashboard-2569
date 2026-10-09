@@ -577,6 +577,7 @@ function renderTable(rows){
 
 function render(reset=true){
   if(reset) currentPage=1;
+  syncFilterOptionLabels();
   syncPageIdentity();
   $('sourceSummary').dataset.state='ready';
   syncSourceSummary();
@@ -590,7 +591,6 @@ function render(reset=true){
   renderDonut(rows);
   renderTable(rows);
   syncKpiCardState();
-  syncFilterOptionLabels();
   renderProgressNotice();
   window.OOESingleSelect?.syncAll();
 }
