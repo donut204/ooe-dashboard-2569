@@ -122,10 +122,12 @@
       optionsFingerprint=next;
       lastSelectedValue=select.value;
       if(optionsChanged||(!panel.hidden&&selectionChanged))renderList();
-      trigger.disabled=select.disabled;
+      if(trigger.disabled!==select.disabled)trigger.disabled=select.disabled;
       if(searchable){
-        search.placeholder=language()==='en'?'Search faculty or college…':'ค้นหาคณะ / วิทยาลัย…';
-        search.setAttribute('aria-label',language()==='en'?'Search faculty or college':'ค้นหาคณะ / วิทยาลัย');
+        const placeholder=language()==='en'?'Search faculty or college…':'ค้นหาคณะ / วิทยาลัย…';
+        const aria=language()==='en'?'Search faculty or college':'ค้นหาคณะ / วิทยาลัย';
+        if(search.placeholder!==placeholder)search.placeholder=placeholder;
+        if(search.getAttribute('aria-label')!==aria)search.setAttribute('aria-label',aria);
       }
     }
     function setOpen(open,focusTrigger=false){
