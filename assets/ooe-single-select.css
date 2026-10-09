@@ -30,6 +30,7 @@
 }
 .ooe-single .ss-panel[hidden]{display:none!important}
 .ooe-single .ss-panel.is-up{top:auto;bottom:calc(100% + 6px)}
+.ooe-single .ss-panel.is-end{left:auto;right:0}
 .ooe-single .ss-search-wrap{padding:5px 5px 7px}
 .ooe-single .ss-search{width:100%;height:39px!important;min-height:39px;padding:0 10px!important;
   border:1px solid #cbd8e8;border-radius:8px;background:#f8fbff;font:inherit;font-size:13px;color:#243b53}
