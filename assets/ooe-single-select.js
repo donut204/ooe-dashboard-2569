@@ -48,7 +48,7 @@
     holder.dataset.ooeNoTranslate='true';
     holder.innerHTML=
       '<button type="button" class="ss-trigger" id="ss-trigger-'+select.id+'" aria-haspopup="listbox" aria-expanded="false" aria-controls="ss-panel-'+select.id+'">'+
-        '<span class="ss-value">ทั้งหมด</span>'+
+        '<span class="ss-value" id="ss-value-'+select.id+'">ทั้งหมด</span>'+
         '<svg class="ss-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'+
       '</button>'+
       '<div class="ss-panel" id="ss-panel-'+select.id+'" hidden>'+
@@ -66,7 +66,7 @@
     searchWrap.hidden=!searchable;
     if(label){
       list.setAttribute('aria-labelledby',label.id);
-      trigger.setAttribute('aria-labelledby',label.id);
+      trigger.setAttribute('aria-labelledby',label.id+' '+value.id);
       if(label.hasAttribute('for')){
         label.setAttribute('for',trigger.id);
       }else{
