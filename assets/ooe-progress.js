@@ -16,6 +16,8 @@
     if(/^(รอข้อมูล|รอการตรวจสอบข้อมูล|ยังไม่มีข้อมูล|ไม่ระบุ|pending|n\/a|-|—)$/.test(compact))return STATUS.pending;
     const high=/ระดับมาก|ปริมาณ(?:ของ)?เนื้อหา(?:อยู่ใน)?ระดับมาก|เนื้อหา(?:และองค์ประกอบ)?มากกว่า(?:ร้อยละ)?50(?:%|เปอร์เซ็นต์)?|มากกว่า(?:ร้อยละ)?50(?:%|เปอร์เซ็นต์)?|เกิน(?:ร้อยละ)?50(?:%|เปอร์เซ็นต์)?|^highcontent(?:volume)?$|^ทำครบ$/.test(compact);
     const low=/ระดับน้อย|ปริมาณ(?:ของ)?เนื้อหา(?:อยู่ใน)?ระดับน้อย|เนื้อหา(?:และองค์ประกอบ)?น้อยกว่า(?:ร้อยละ)?50(?:%|เปอร์เซ็นต์)?|น้อยกว่า(?:ร้อยละ)?50(?:%|เปอร์เซ็นต์)?|ต่ำกว่า(?:ร้อยละ)?50(?:%|เปอร์เซ็นต์)?|ไม่ถึง(?:ร้อยละ)?50(?:%|เปอร์เซ็นต์)?|^lowcontent(?:volume)?$|^ทำบ้าง$/.test(compact);
+    // Contradictory wording must be reviewed rather than guessed.
+    if((high&&/น้อย|ต่ำกว่า|lowcontent/.test(compact))||(low&&/มาก|สูงกว่า|highcontent/.test(compact)))return STATUS.unknown;
     if(high&&!low)return STATUS.good;
     if(low&&!high)return STATUS.low;
     return STATUS.unknown;
