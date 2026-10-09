@@ -1,0 +1,62 @@
+/* Unified OOE filter surfaces. The native selects remain the data/API source of truth. */
+.filters{position:relative;z-index:8}
+.field{min-width:0}
+.field select.ooe-native-select{
+  position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;
+  overflow:hidden!important;padding:0!important;margin:0!important;border:0!important;
+  pointer-events:none!important;clip-path:inset(50%)!important
+}
+.ooe-single{position:relative;min-width:0}
+.ooe-single .ss-trigger{
+  width:100%;height:42px;min-height:42px;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;text-align:left;padding:0 12px;
+  border:1px solid #bcccdc;border-radius:9px;background:#fff;
+  color:var(--ink,#243b53);font:inherit;font-weight:500;box-shadow:none;
+  transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;
+}
+.ooe-single .ss-trigger:hover{border-color:#87a6cc;background:#fbfdff}
+.ooe-single .ss-trigger[aria-expanded="true"]{border-color:#2563cb;box-shadow:0 0 0 3px rgba(36,93,204,.11)}
+.ooe-single .ss-trigger:focus-visible,.ooe-single .ss-option:focus-visible,
+.ooe-single .ss-search:focus-visible{outline:3px solid rgba(36,93,204,.29);outline-offset:2px}
+.ooe-single .ss-value{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ooe-single .ss-chevron{width:16px;height:16px;flex:0 0 16px;color:#526b85;transition:transform .18s ease}
+.ooe-single .ss-trigger[aria-expanded="true"] .ss-chevron{transform:rotate(180deg)}
+.ooe-single .ss-panel{
+  position:absolute;z-index:90;top:calc(100% + 6px);left:0;
+  width:max(100%,222px);max-width:min(340px,calc(100vw - 24px));
+  border:1px solid #d7e3f1;border-radius:12px;
+  background:#fff;box-shadow:0 14px 38px rgba(16,42,67,.17);
+  padding:5px;animation:ss-enter .15s ease-out both;
+}
+.ooe-single .ss-panel[hidden]{display:none!important}
+.ooe-single .ss-panel.is-up{top:auto;bottom:calc(100% + 6px)}
+.ooe-single .ss-search-wrap{padding:5px 5px 7px}
+.ooe-single .ss-search{width:100%;height:39px!important;min-height:39px;padding:0 10px!important;
+  border:1px solid #cbd8e8;border-radius:8px;background:#f8fbff;font:inherit;font-size:13px;color:#243b53}
+.ooe-single .ss-options{max-height:min(292px,45dvh);overflow-y:auto;overscroll-behavior:contain}
+.ooe-single .ss-option{
+  width:100%;height:auto;min-height:42px;display:flex;align-items:center;
+  justify-content:space-between;gap:10px;padding:9px 10px;
+  background:transparent;color:#243b53;border:0;border-radius:8px;
+  font:inherit;font-size:13px;font-weight:500;text-align:left;line-height:1.45;
+  white-space:normal;word-break:break-word;
+}
+.ooe-single .ss-option:hover,.ooe-single .ss-option:focus-visible{background:#f2f6fc}
+.ooe-single .ss-option[aria-selected="true"]{background:#eef5ff;color:#154786;font-weight:700}
+.ooe-single .ss-option-name{min-width:0;flex:1;overflow-wrap:anywhere}
+.ooe-single .ss-check{width:16px;height:16px;flex:0 0 16px;opacity:0;color:#2563cb}
+.ooe-single .ss-option[aria-selected="true"] .ss-check{opacity:1}
+.ooe-single .ss-empty{padding:14px 11px;color:#627d98;font-size:13px;text-align:center}
+.field input[type="search"]:not(.ss-search){border-color:#bcccdc;transition:border-color .15s ease,box-shadow .15s ease}
+.field input[type="search"]:not(.ss-search):hover{border-color:#87a6cc}
+.field input[type="search"]:not(.ss-search):focus-visible{outline:0;border-color:#2563cb;box-shadow:0 0 0 3px rgba(36,93,204,.11)}
+@keyframes ss-enter{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:650px){
+ .ooe-single .ss-trigger{min-height:44px;height:44px}
+ .ooe-single .ss-panel{width:100%;max-width:100%}
+ .ooe-single .ss-option{min-height:46px}
+}
+@media(prefers-reduced-motion:reduce){
+ .ooe-single .ss-panel{animation:none}
+ .ooe-single .ss-chevron,.ooe-single .ss-trigger,.field input[type="search"]:not(.ss-search){transition:none}
+}
