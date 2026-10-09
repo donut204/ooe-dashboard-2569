@@ -657,6 +657,7 @@ html.auth-check body{visibility:hidden}
 </style>
 <link rel="stylesheet" href="assets/ooe-language-switch.css">
 <link rel="stylesheet" href="assets/ooe-mobile.css">
+<link rel="stylesheet" href="assets/ooe-profile-count-filter.css">
 </head>
 <body>
 <header class="topbar"><div class="topbar-inner"><div><h1>Dashboard AI Tutor</h1><p class="subtitle">ปีการศึกษา 2569 · ภาคการศึกษา 1</p></div><div class="header-meta"><div class="source"><span>สำนักการจัดการศึกษาออนไลน์ (OOE)</span><span class="source-summary" id="sourceSummary">กำลังโหลดข้อมูลออนไลน์...</span><span class="source-reference"><i class="source-status-dot" aria-hidden="true"></i><span id="sourceReferenceText">ข้อมูลอ้างอิง ณ วันที่ 05/10/2569</span></span></div><div class="lang-switch" data-active="th" role="group" aria-label="เลือกภาษา"><button class="lang-btn" type="button" data-lang="th" aria-pressed="true">TH</button><button class="lang-btn" type="button" data-lang="en" aria-pressed="false">EN</button></div></div></div></header>
@@ -666,7 +667,7 @@ html.auth-check body{visibility:hidden}
 <div class="field"><label>คณะ / วิทยาลัย</label><select id="facultyFilter"><option value="">ทั้งหมด</option></select></div>
 <div class="field"><label>ประเภทรายวิชา</label><select id="typeFilter"><option value="">ทั้งหมด</option></select></div>
 <div class="field"><label>สถานะ AI Tutor</label><select id="statusFilter"><option value="">ทั้งหมด</option><option value="complete">ทำครบทุก Profile</option><option value="partial">จัดทำไม่ครบ</option><option value="notdone">ไม่ทำ</option></select></div>
-<div class="field"><label>จำนวน Profile</label><select id="profileCountFilter"><option value="">ทั้งหมด</option></select></div>
+<div class="field profile-count-field"><label id="profileCountLabel">จำนวน Profile</label><div id="profileCountFilter" class="profile-count-filter"></div></div>
 <div class="field"><label>ค้นหารหัสวิชาหรือรหัสรายวิชาในระบบ</label><input id="searchBox" type="search" placeholder="เช่น ICT112 หรือ 691GN..."></div>
 <div class="filter-actions"><button class="refresh" id="refreshBtn">อัปเดตข้อมูล</button><button class="reset" id="resetBtn">ล้างตัวกรอง</button></div>
 </section>
@@ -850,6 +851,7 @@ html.auth-check body{visibility:hidden}
 </div>
 
 </main>
+<script src="assets/ooe-profile-count-filter.js"></script>
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=223035731&single=true&output=csv';
 let DATA=[]; const FACULTY_PAGE_SIZE=4; let currentPage=1;
@@ -861,6 +863,7 @@ function revealDashboardOnce(){
   window.setTimeout(()=>document.body.classList.remove('dashboard-reveal'),950);
 }
 const $=id=>document.getElementById(id);
+const profileCountFilter=OOEProfileCountFilter.create($("profileCountFilter"),()=>render());
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 function showLoadingSkeleton(){
@@ -955,8 +958,7 @@ function refillFilters(){
   $('facultyFilter').innerHTML='<option value="">ทั้งหมด</option>';addOptions('facultyFilter',fs);
   $('typeFilter').innerHTML='<option value="">ทั้งหมด</option>';addOptions('typeFilter',ts);
   const profileCounts=[...new Set(groupCourses(DATA).map(g=>g.profileCount))].sort((a,b)=>a-b);
-  $('profileCountFilter').innerHTML='<option value="">ทั้งหมด</option>';
-  profileCounts.forEach(count=>{const o=document.createElement('option');o.value=String(count);o.textContent=String(count)+' Profile';$('profileCountFilter').appendChild(o)});
+  profileCountFilter.setOptions(profileCounts);
 }
 function baseFiltered(){
   const f=$('facultyFilter').value,t=$('typeFilter').value;
@@ -986,12 +988,12 @@ function groupCourses(rows){
   }).sort((a,b)=>natural(a.faculty,b.faculty)||natural(a.courseCode,b.courseCode));
 }
 function filtered(){
-  const f=$('facultyFilter').value,t=$('typeFilter').value,s=$('statusFilter').value,p=$('profileCountFilter').value,q=$('searchBox').value.trim().toLowerCase();
+  const f=$('facultyFilter').value,t=$('typeFilter').value,s=$('statusFilter').value,q=$('searchBox').value.trim().toLowerCase();
   return groupCourses(DATA).filter(g=>{
     if(f&&g.faculty!==f)return false;
     if(t&&!g.courseTypes.has(t))return false;
     if(s&&courseStatus(g.score)!==s)return false;
-    if(p&&g.profileCount!==Number(p))return false;
+    if(!profileCountFilter.matches(g.profileCount))return false;
     if(!q)return true;
     return [g.faculty,g.courseCode,g.courseName,...g.profiles.flatMap(d=>[d.courseProfile,d.instructors])].some(x=>String(x||'').toLowerCase().includes(q));
   });
@@ -1183,9 +1185,9 @@ document.querySelectorAll('.kpi-filter-card[data-status-filter]').forEach(card=>
     applyKpiCardFilter(card);
   });
 });
-['facultyFilter','typeFilter','statusFilter','profileCountFilter'].forEach(id=>$(id).addEventListener('change',()=>render()));
+['facultyFilter','typeFilter','statusFilter'].forEach(id=>$(id).addEventListener('change',()=>render()));
 $('searchBox').addEventListener('input',()=>render());
-$('resetBtn').addEventListener('click',()=>{$('facultyFilter').value='';$('typeFilter').value='';$('statusFilter').value='';$('profileCountFilter').value='';$('searchBox').value='';render()});
+$('resetBtn').addEventListener('click',()=>{$('facultyFilter').value='';$('typeFilter').value='';$('statusFilter').value='';profileCountFilter.clear();$('searchBox').value='';render()});
 $('refreshBtn').addEventListener('click',loadData);$('prevBtn').addEventListener('click',()=>{currentPage--;render(false)});$('nextBtn').addEventListener('click',()=>{currentPage++;render(false)});
 $('courseRows').addEventListener('click',e=>{
   const facultyToggle=e.target.closest('.faculty-toggle[data-faculty-group]');
