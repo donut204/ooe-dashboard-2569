@@ -1281,3 +1281,20 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - `assets/ooe-page-i18n.js` enhanced with TH→EN labels for the new control and selected-count messages. The raw data values / select values for all other filters are unchanged.
 - Dynamic table, KPI, faculty chart and donut continue using existing `filtered()` results. KPI, ProfileScore, CourseScore, CSV parsing, course grouping, search, status and faculty filters untouched.
 - Branch: `feature/profile-count-checkbox`. QA: JS syntax checks for new shared component, translated adapter and dashboard inline scripts; simulated multi-select interactions (single, multiple, deselect last, option refresh, keyboard Escape, reset) passed. Live authenticated browser/visual tests remain unverified; verify on mobile and TH/EN after GitHub Pages refresh.
+
+
+## 09/10/2569 — Unified Filter Dropdown UX (GR / GS / AI Tutor / Podcast)
+
+- User requested other Dashboard filters to adopt the attractive styling from the Profile-count checkbox dropdown, **without making every filter a checkbox**.
+- Selected UX according to data type:
+  - `คณะ / วิทยาลัย` = **single-select with in-dropdown search**, because faculty list is long; selection is exclusive.
+  - `ประเภทรายวิชา`, `สถานะ AI Tutor/Podcast`, `ความคืบหน้า`, `สถานะการตรวจสอบ` = **single-select listbox** with a visual checkmark on the current choice, NOT multi-checkbox.
+  - `จำนวน Profile` on AI Tutor/Podcast **retains the existing multi-checkbox**, allowing 1 + 2 etc.
+  - Text search remains a text input with consistent hover/focus styling.
+- Added shared assets `assets/ooe-single-select.css` and `assets/ooe-single-select.js` loaded by `index.html`, `ai-tutor.html`, `podcast.html`.
+- The ORIGINAL native `<select>` objects remain present and authoritative (with their IDs, options, values, listeners and programmatic assignments unchanged). JS enhances the presentation; selecting an item writes `select.value` and dispatches a native bubbling `change` event, triggering the existing KPI/filter render path.
+- Dashboard `render()` now calls `window.OOESingleSelect?.syncAll()` **only for UI synchronization**, because chart click, KPI click and reset can change select values programmatically without change events. There is no new data filter logic.
+- Menu supports outside-click and Escape dismissal, selected value display, keyboard up/down/home/end, accessible labels/roles, no-results messaging, scrollable options, faculty search, mobile touch sizing, reduced-motion preference and viewport-edge-aware positioning.
+- Menu presentation is bilingual: `ooe-single-select.js` reads `OOEI18n.getLanguage()` for static UI/status labels, while leaving faculty, course type, and exact raw select values untouched. `assets/ooe-page-i18n.js` skips dynamically owned menu nodes to avoid two translators overwriting each other. GR/GS translations still use the existing `OOEI18n.t()` keys.
+- Existing GR/GS, AI Tutor, Podcast CSV sources, faculty+courseCode grouping, ProfileScore/CourseScore, status values, KPI calculations, chart/table rendering and Profile multi-select behavior remain unchanged.
+- Branch: `feature/unified-filter-dropdown-ui`. QA: syntax checks for shared JS, i18n adapter and all three inline scripts; mocked native-select interaction verified that picking GS dispatched a change and retained the value, programmatic status selection synced the UI, EN label and searchable faculty filtering worked. Actual authenticated browser and visual/mobile QA remains unverified; check after Pages publishes.
