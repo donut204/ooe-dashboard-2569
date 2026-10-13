@@ -25,6 +25,7 @@ const D={
 'ความคืบหน้า':'Progress','ความคืบหน้า AI Tutor':'AI Tutor Progress','ความคืบหน้า Podcast':'Podcast Progress',
 'คะแนนเต็ม 1 คะแนนต่อรายวิชา และหารตามจำนวน Profile':'Each course is worth 1 point, averaged across its Profile',
 'รายละเอียดรายวิชา — AI Tutor':'AI Tutor Course Details','รายละเอียดรายวิชา — Podcast':'Podcast Course Details',
+'รายละเอียดรายวิชา AI Tutor 1/2569':'AI Tutor Course Details 1/2026','รายละเอียดรายวิชา Podcast 1/2569':'Podcast Course Details 1/2026',
 '1 รหัสวิชา = 1 รายวิชา · กด + เพื่อดูผลแต่ละ Profile':'1 course code = 1 course · Select + to view individual Profile',
 'คณะ / วิทยาลัย · รายวิชา':'Faculty / College · Course',
 'อาจารย์ผู้สอน':'Instructor(s)','คะแนน / AI Tutor':'AI Tutor Score','คะแนน / Podcast':'Podcast Score',
