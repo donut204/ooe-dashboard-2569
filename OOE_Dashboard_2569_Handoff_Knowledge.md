@@ -1337,3 +1337,17 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Updated `index.html` column `<th data-i18n="table.progress">` Thai text and `assets/ooe-i18n.js` dictionary key `table.progress`: Thai `ปริมาณเนื้อหารายวิชา`, English `Course Content Volume`.
 - **Scope intentionally excludes** filter label `ความคืบหน้า`, Donut title, progress classifier, source column keys, CSV parsing, status logic, KPI, GR/GS result rows, AI Tutor/Podcast and styling.
 - Validation: HTML inline JS and i18n file syntax passed; table heading anchor updated and filter title unchanged.
+
+
+## 13/10/2569 — Compact course detail tables and semester-qualified headings
+
+- User requested a cleaner course-details section across all dashboards, using concise headings:
+  - GR: `รายละเอียดรายวิชา GR 1/2569`
+  - GS: `รายละเอียดรายวิชา GS 1/2569`
+  - AI Tutor: `รายละเอียดรายวิชา AI Tutor 1/2569`
+  - Podcast: `รายละเอียดรายวิชา Podcast 1/2569`.
+- In GR/GS (`index.html`) **remove only the visible results-table columns** `ภาคเรียน` and `ปริมาณเนื้อหารายวิชา` (matching their corresponding table-body cells). Table decreases 12 to 10 columns; its minimum width changes from 1180px to 980px so the reduced table is more usable on smaller screens. `renderTable` still lists all other columns in original order.
+- The semester is displayed in the course-details heading using the existing `table.semesterValue` translation: `1/2569` TH / `1/2026` EN. `assets/ooe-i18n.js` changes the `detail.title` template to `รายละเอียดรายวิชา {type} {semester}` / `{type} Course Details {semester}`. The existing GR/GS tab change and TH/EN re-render functions update the title automatically.
+- AI Tutor and Podcast **already had neither semester nor content-volume columns** in their course tables; preserve all 8 columns and Profile expand/collapse rows. Change only each static course-details heading. `assets/ooe-page-i18n.js` now translates these complete Thai titles to `AI Tutor Course Details 1/2026` and `Podcast Course Details 1/2026`.
+- Keep all source data (including raw content-progress fields), CSV mapping, status normalization, progress filters, GR/GS donut/KPI, AI Tutor/Podcast CourseScore/ProfileScore, grouping, charts, authentication and course navigation unchanged.
+- Branch `ui/course-details-heading-semester-2569`. Static QA: GR/GS table has exactly 10 headings and no semester/progress table cells; its filter/donut code still references progress; AI Tutor/Podcast retain eight-column table structures; all inline script syntax and bilingual translation modules pass. Browser-based live/responsive visual verification remains recommended.
