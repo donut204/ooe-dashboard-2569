@@ -1351,3 +1351,15 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - AI Tutor and Podcast **already had neither semester nor content-volume columns** in their course tables; preserve all 8 columns and Profile expand/collapse rows. Change only each static course-details heading. `assets/ooe-page-i18n.js` now translates these complete Thai titles to `AI Tutor Course Details 1/2026` and `Podcast Course Details 1/2026`.
 - Keep all source data (including raw content-progress fields), CSV mapping, status normalization, progress filters, GR/GS donut/KPI, AI Tutor/Podcast CourseScore/ProfileScore, grouping, charts, authentication and course navigation unchanged.
 - Branch `ui/course-details-heading-semester-2569`. Static QA: GR/GS table has exactly 10 headings and no semester/progress table cells; its filter/donut code still references progress; AI Tutor/Podcast retain eight-column table structures; all inline script syntax and bilingual translation modules pass. Browser-based live/responsive visual verification remains recommended.
+
+
+## 15/10/2569 — GR/GS course criteria announcement link
+
+- User requested a quick-access button in the **รายละเอียดรายวิชา GR / GS** table header to open the university announcement / course-preparation criteria folder.
+- Added an outlined document-style external link button in `index.html`, positioned beside the result count within `.table-actions`.
+- Destination (user-provided): `https://drive.google.com/drive/folders/1ROpp-UgUJHhUZ_e5OwFkJ5IUnu6a54FL?usp=sharing`.
+- Thai label: `ดูประกาศเกณฑ์การจัดทำรายวิชา`; English label in `assets/ooe-i18n.js`: `View Course Preparation Criteria Announcement`.
+- Opens in a new tab with `target="_blank"` + `rel="noopener noreferrer"`. Includes accessible label and a small document icon.
+- Responsive behavior: desktop keeps the link on the right side of the course-details header; <=650px stretches the header area and uses a 44px minimum touch target with wrapping text if needed.
+- Scope: GR/GS only. No changes to table rows/columns, filters, KPI, charts, CSV mappings, progress logic, authentication, AI Tutor or Podcast.
+- Static QA: inline JS syntax passed; link appears once; TH/EN i18n keys present; mobile CSS is scoped to the new button/header area. Live authenticated browser visual QA still recommended.
