@@ -1363,3 +1363,13 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Responsive behavior: desktop keeps the link on the right side of the course-details header; <=650px stretches the header area and uses a 44px minimum touch target with wrapping text if needed.
 - Scope: GR/GS only. No changes to table rows/columns, filters, KPI, charts, CSV mappings, progress logic, authentication, AI Tutor or Podcast.
 - Static QA: inline JS syntax passed; link appears once; TH/EN i18n keys present; mobile CSS is scoped to the new button/header area. Live authenticated browser visual QA still recommended.
+
+
+## 15/10/2569 — Compact GR/GS criteria button and hidden result-count label
+
+- User requested removal of the visible course-count text in the GR/GS course-details header (e.g. `แสดง 40 จาก 40 วิชา`) and a shorter, clearer criteria button label.
+- `#resultCount` remains in the DOM but is now `hidden aria-hidden="true"`, so existing loading/error/render JS can safely write to it without showing the text or breaking references.
+- Button Thai label changed to `เกณฑ์การจัดทำรายวิชา`; English changed to `Course Preparation Criteria`.
+- Mobile `.table-actions` now right-aligns the single visible action button.
+- Added a version query to the GR/GS `assets/ooe-i18n.js` script URL to force browsers to fetch the updated dictionary. This addresses the observed case where the page showed the raw key `detail.criteriaAnnouncement` after HTML deployed ahead of cached i18n JS.
+- Destination URL, icon, new-tab behavior and all Dashboard logic remain unchanged. Scope: GR/GS header presentation only.
