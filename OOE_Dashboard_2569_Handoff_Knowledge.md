@@ -1373,3 +1373,17 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Mobile `.table-actions` now right-aligns the single visible action button.
 - Added a version query to the GR/GS `assets/ooe-i18n.js` script URL to force browsers to fetch the updated dictionary. This addresses the observed case where the page showed the raw key `detail.criteriaAnnouncement` after HTML deployed ahead of cached i18n JS.
 - Destination URL, icon, new-tab behavior and all Dashboard logic remain unchanged. Scope: GR/GS header presentation only.
+
+
+## 15/10/2569 — GR/GS review status: “ไม่พบเนื้อหา”
+
+- Source change confirmed in the live Google Sheet: `69/1-GR` and published `GRGS_Public.reviewStatus` now include a fourth review status `ไม่พบเนื้อหา` (example: ALB235). This is a **review-status value**, distinct from the course-content-volume/progress classifier.
+- Prior Dashboard behavior recognized only `ผ่าน`, `อยู่ระหว่างการตรวจสอบ`, `ไม่ผ่าน`; therefore `ไม่พบเนื้อหา` fell through to a dash in the table and was absent from the review-status filter.
+- Added `REVIEW.noContent = 'ไม่พบเนื้อหา'` in `index.html`.
+  - Included as a selectable `สถานะการตรวจสอบ` filter value.
+  - Renders as a gray `ไม่พบเนื้อหา` badge in the GR/GS details table.
+  - TH/EN: `ไม่พบเนื้อหา` / `No Content Found`.
+- **KPI guardrail:** `ไม่พบเนื้อหา` remains a separate status. It is NOT automatically counted as `ไม่ผ่าน`, `ผ่าน`, or `อยู่ระหว่างการตรวจสอบ` because the user has not defined its KPI treatment. Total-course KPI still includes the row because it is part of the filtered course set; the three review-status KPI cards remain exact-match counts of their original statuses.
+- Faculty stacked bars remain Pass/Fail only. Tooltip/ARIA summaries now count `อยู่ระหว่างการตรวจสอบ` and `ไม่พบเนื้อหา` separately instead of lumping both into the old remainder calculation. Chart description explicitly states both excluded statuses.
+- Updated `assets/ooe-i18n.js` and versioned the GR/GS i18n script URL so the new bilingual label is not hidden by browser cache.
+- Scope: GR/GS only. No change to content-progress normalization, CSV source/mapping, pass/fail KPI definitions, AI Tutor/Podcast, authentication, or table columns.

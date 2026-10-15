@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="assets/ooe-font.css">
 <style>
 :root{--navy:#102a43;--blue:#245dcc;--ink:#243b53;--muted:#627d98;--line:#d9e2ec;--bg:#f3f6fb;--green:#199c6b;--amber:#eaa018;--red:#e64256;--gray:#7b8794;--shadow:0 8px 24px rgba(16,42,67,.08)}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px "Noto Sans Thai","Leelawadee UI",Tahoma,Arial,sans-serif}.topbar{background:#142b50;color:#fff}.topbar-inner{max-width:1500px;margin:auto;padding:23px 28px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px}.header-meta{display:flex;flex-direction:column;align-items:flex-end;gap:8px}h1{margin:0;font-size:clamp(23px,3vw,34px);line-height:1.2}.subtitle{margin:5px 0 0;color:#d9e8f5}.source{text-align:right;color:#d9e8f5;font-size:13px;line-height:1.55}.source span{display:block}.source-summary{color:#fff;font-weight:800}.source-reference{display:flex!important;align-items:center;justify-content:flex-end;gap:7px}.lang-switch{display:inline-flex;align-items:center;padding:3px;border:1px solid rgba(255,255,255,.22);border-radius:9px;background:rgba(255,255,255,.07)}.lang-btn{height:28px;min-width:38px;padding:0 9px;border:0;border-radius:6px;background:transparent;color:#c7d7e8;font-size:11px;font-weight:800;line-height:1;cursor:pointer}.lang-btn:hover{background:rgba(255,255,255,.09);color:#fff}.lang-btn.is-active{background:#fff;color:#17365d;box-shadow:0 2px 7px rgba(0,0,0,.12)}.lang-btn:focus-visible{outline:2px solid #fff;outline-offset:2px}.source-status-dot{width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#32d583;box-shadow:0 0 0 3px rgba(50,213,131,.16);animation:sourceStatusPulse 1.8s ease-in-out infinite}@keyframes sourceStatusPulse{0%,100%{opacity:1;box-shadow:0 0 0 3px rgba(50,213,131,.14)}50%{opacity:.45;box-shadow:0 0 0 6px rgba(50,213,131,.04)}}main{max-width:1500px;margin:auto;padding:22px 28px 40px}.panel{background:#fff;border:1px solid #e2e8f0;border-radius:14px;box-shadow:var(--shadow)}
-button{height:42px;border:0;border-radius:9px;padding:0 18px;font:inherit;font-weight:700;cursor:pointer}.page-tabs{display:flex;gap:8px;margin-bottom:16px}.tab{min-width:112px;background:#dfe8f4;color:var(--navy);border:1px solid #c8d5e5}.tab.active{background:var(--blue);border-color:var(--blue);color:#fff}.nav-link{height:42px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-weight:700;cursor:pointer;border-radius:9px}.nav-link:hover{text-decoration:none;background:#cfdced}.filters{padding:18px;display:grid;grid-template-columns:minmax(170px,1fr) minmax(170px,1fr) minmax(190px,1fr) minmax(260px,1.35fr) auto;gap:12px;align-items:end}.field label{display:block;margin:0 0 6px;color:var(--muted);font-size:12px;font-weight:700}.field select,.field input{width:100%;height:42px;padding:0 12px;border:1px solid #bcccdc;border-radius:9px;background:#fff;color:var(--ink);font:inherit}.field select:focus,.field input:focus{outline:3px solid rgba(36,93,204,.14);border-color:var(--blue)}.reset{background:#e6edf8;color:var(--navy)}.refresh{background:var(--blue);color:#fff}.filter-actions{display:flex;gap:8px;align-items:end}.review-badge{display:inline-flex;border-radius:999px;padding:5px 9px;font-weight:700;white-space:nowrap}.review-badge.pass{background:#e7f7f0;color:#127a55}.review-badge.fail{background:#fdecef;color:#b4233b}.review-badge.wait{background:#eef2f6;color:#627d98}.review-badge.reviewing{background:#fff4d6;color:#9a6700}
+button{height:42px;border:0;border-radius:9px;padding:0 18px;font:inherit;font-weight:700;cursor:pointer}.page-tabs{display:flex;gap:8px;margin-bottom:16px}.tab{min-width:112px;background:#dfe8f4;color:var(--navy);border:1px solid #c8d5e5}.tab.active{background:var(--blue);border-color:var(--blue);color:#fff}.nav-link{height:42px;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;font-weight:700;cursor:pointer;border-radius:9px}.nav-link:hover{text-decoration:none;background:#cfdced}.filters{padding:18px;display:grid;grid-template-columns:minmax(170px,1fr) minmax(170px,1fr) minmax(190px,1fr) minmax(260px,1.35fr) auto;gap:12px;align-items:end}.field label{display:block;margin:0 0 6px;color:var(--muted);font-size:12px;font-weight:700}.field select,.field input{width:100%;height:42px;padding:0 12px;border:1px solid #bcccdc;border-radius:9px;background:#fff;color:var(--ink);font:inherit}.field select:focus,.field input:focus{outline:3px solid rgba(36,93,204,.14);border-color:var(--blue)}.reset{background:#e6edf8;color:var(--navy)}.refresh{background:var(--blue);color:#fff}.filter-actions{display:flex;gap:8px;align-items:end}.review-badge{display:inline-flex;border-radius:999px;padding:5px 9px;font-weight:700;white-space:nowrap}.review-badge.pass{background:#e7f7f0;color:#127a55}.review-badge.fail{background:#fdecef;color:#b4233b}.review-badge.no-content{background:#eef2f6;color:#627d98}.review-badge.wait{background:#eef2f6;color:#627d98}.review-badge.reviewing{background:#fff4d6;color:#9a6700}
 .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:16px 0}.kpi{position:relative;padding:18px 20px;min-height:146px;overflow:hidden;box-shadow:0 7px 20px rgba(16,42,67,.065);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.kpi::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--blue)}.kpi.green::before{background:var(--green)}.kpi.amber::before{background:var(--amber)}.kpi.red::before{background:var(--red)}.kpi-mainline{display:flex;align-items:center;gap:16px;min-height:106px}.kpi-copy{min-width:0;flex:1}.kpi-icon{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;flex:0 0 52px;background:#eaf2fb;color:#245dcc}.kpi-icon.green{background:#e8f7f1;color:var(--green)}.kpi-icon.amber{background:#fff5df;color:#c77a00}.kpi-icon.red{background:#fff0f2;color:var(--red)}.kpi-icon svg{width:27px;height:27px}.kpi-label{font-size:15px;font-weight:800;color:#334e68;line-height:1.35}.kpi-value{font-size:39px;font-weight:800;line-height:1.05;margin:5px 0 0;color:#071d40;letter-spacing:-.025em}.kpi-note{margin-top:7px;font-size:13px;color:var(--muted);line-height:1.4}
 .kpi-filter-card{cursor:pointer;user-select:none;display:flex;flex-direction:column;padding-bottom:14px;transition:transform .16s ease,box-shadow .16s ease,outline-color .16s ease}
 .kpi-filter-card .kpi-mainline{min-height:92px;flex:1}
@@ -32,7 +32,7 @@ html.auth-check body{visibility:hidden}
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
 <script>OOEAuth.requireAuth();</script>
-<script src="assets/ooe-i18n.js?v=20261015-criteria2"></script>
+<script src="assets/ooe-i18n.js?v=20261015-review-no-content"></script>
 
 <style>
 /* OOE dashboard micro-interactions */
@@ -200,7 +200,8 @@ const STATUS=PROGRESS.STATUS;
 const REVIEW={
   pass:'ผ่าน',
   reviewing:'อยู่ระหว่างการตรวจสอบ',
-  fail:'ไม่ผ่าน'
+  fail:'ไม่ผ่าน',
+  noContent:'ไม่พบเนื้อหา'
 };
 const PAGE_SIZE=20;
 let currentPage=1;
@@ -247,6 +248,7 @@ function syncFilterOptionLabels(){
     if(o.value===REVIEW.pass)o.textContent=t('kpi.pass');
     else if(o.value===REVIEW.reviewing)o.textContent=t('kpi.reviewing');
     else if(o.value===REVIEW.fail)o.textContent=t('kpi.fail');
+    else if(o.value===REVIEW.noContent)o.textContent=t('review.noContent');
   });
 }
 function syncKpiCueLabels(){
@@ -427,7 +429,7 @@ function addOptions(id,values){
   });
 }
 addOptions('statusFilter',[STATUS.good,STATUS.low,STATUS.none]);
-addOptions('reviewFilter',[REVIEW.pass,REVIEW.reviewing,REVIEW.fail]);
+addOptions('reviewFilter',[REVIEW.pass,REVIEW.reviewing,REVIEW.fail,REVIEW.noContent]);
 
 function refreshFaculty(){
   const old=$('facultyFilter').value;
@@ -471,7 +473,7 @@ function renderChart(rows){
   const groups={};
   rows.forEach(d=>{
     const f=d['คณะ']||t('faculty.unspecified');
-    groups[f]??={pass:0,fail:0,total:0,reviewed:0};
+    groups[f]??={pass:0,fail:0,reviewing:0,noContent:0,total:0,reviewed:0};
     groups[f].total++;
     if(d['สถานะการตรวจสอบ']===REVIEW.pass){
       groups[f].pass++;
@@ -479,6 +481,10 @@ function renderChart(rows){
     }else if(d['สถานะการตรวจสอบ']===REVIEW.fail){
       groups[f].fail++;
       groups[f].reviewed++;
+    }else if(d['สถานะการตรวจสอบ']===REVIEW.reviewing){
+      groups[f].reviewing++;
+    }else if(d['สถานะการตรวจสอบ']===REVIEW.noContent){
+      groups[f].noContent++;
     }
   });
 
@@ -490,16 +496,17 @@ function renderChart(rows){
 
   $('facultyChart').innerHTML=list.length?list.map(([f,v])=>{
     const seg=(n,c)=>n?`<div class="seg ${c}" style="width:${n/v.reviewed*100}%"><span>${fmt(n)}</span></div>`:'';
-    const reviewing=Math.max(0,v.total-v.reviewed);
+    const reviewing=v.reviewing;
+    const noContent=v.noContent;
     const displayFaculty=I18N.faculty(f);
-    const summary=t('chart.summary',{faculty:displayFaculty,total:fmt(v.total),pass:fmt(v.pass),fail:fmt(v.fail),reviewing:fmt(reviewing)});
+    const summary=t('chart.summary',{faculty:displayFaculty,total:fmt(v.total),pass:fmt(v.pass),fail:fmt(v.fail),reviewing:fmt(reviewing),noContent:fmt(noContent)});
     return `<div class="chart-row" data-faculty="${esc(f)}" role="button" tabindex="0" aria-label="${esc(summary)} · ${esc(t('chart.filterFaculty'))}">
       <div class="faculty">${esc(displayFaculty)} <span style="color:var(--muted)">(${esc(t('chart.reviewed',{count:fmt(v.reviewed)}))})</span></div>
       <div class="track" style="width:${v.reviewed/max*100}%">${seg(v.pass,'green')}${seg(v.fail,'red')}</div>
       <div class="total">${fmt(v.pass)}/${fmt(v.reviewed)}</div>
       <div class="faculty-tooltip" role="tooltip" aria-hidden="true">
         <strong>${esc(t('chart.facultyTotal',{faculty:displayFaculty,total:fmt(v.total)}))}</strong>
-        <span>${esc(t('chart.statusLine',{pass:fmt(v.pass),fail:fmt(v.fail),reviewing:fmt(reviewing)}))}</span>
+        <span>${esc(t('chart.statusLine',{pass:fmt(v.pass),fail:fmt(v.fail),reviewing:fmt(reviewing),noContent:fmt(noContent)}))}</span>
         <small>${esc(t('chart.filterFaculty'))}</small>
       </div>
     </div>`;
@@ -539,6 +546,7 @@ function reviewBadge(s){
   if(s===REVIEW.pass) return `<span class="review-badge pass">${t('kpi.pass')}</span>`;
   if(s===REVIEW.reviewing) return `<span class="review-badge reviewing">${t('kpi.reviewing')}</span>`;
   if(s===REVIEW.fail) return `<span class="review-badge fail">${t('kpi.fail')}</span>`;
+  if(s===REVIEW.noContent) return `<span class="review-badge no-content">${t('review.noContent')}</span>`;
   return '<span class="review-badge wait">—</span>';
 }
 
