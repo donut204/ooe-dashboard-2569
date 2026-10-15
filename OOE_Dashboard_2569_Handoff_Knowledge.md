@@ -1387,3 +1387,17 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Faculty stacked bars remain Pass/Fail only. Tooltip/ARIA summaries now count `อยู่ระหว่างการตรวจสอบ` and `ไม่พบเนื้อหา` separately instead of lumping both into the old remainder calculation. Chart description explicitly states both excluded statuses.
 - Updated `assets/ooe-i18n.js` and versioned the GR/GS i18n script URL so the new bilingual label is not hidden by browser cache.
 - Scope: GR/GS only. No change to content-progress normalization, CSV source/mapping, pass/fail KPI definitions, AI Tutor/Podcast, authentication, or table columns.
+
+
+## 15/10/2569 — GR/GS table: วันที่ระบบสร้างรายวิชา
+
+- User requested a new visible column `วันที่ระบบสร้างรายวิชา` in the GR/GS course-details table, based on the existing source field `createdDate`.
+- Current source verified in the exact Google Sheet `GRGS_Public`: header `createdDate` is present and values are timestamps such as `2026-09-10 11:04:56`. `index.html` already mapped this field internally to `วันที่สร้างรายวิชา`; no source schema change was required.
+- Added the new table column immediately after `รหัสรายวิชาในระบบ` and before `คณะ / วิทยาลัย`.
+- Display is date-only for readability:
+  - Thai: `DD/MM/BBBB` (Gregorian source year + 543), e.g. `10/09/2569`.
+  - English: `DD/MM/YYYY`, e.g. `10/09/2026`.
+  - Missing dates display `—`; an unrecognized non-empty source format falls back to the raw value rather than guessing.
+- Added i18n key: TH `วันที่ระบบสร้างรายวิชา`, EN `Course Created Date`. Versioned the GR/GS i18n script URL to avoid a stale dictionary in browser cache.
+- GR/GS results table changes from 10 visible columns to 11. Minimum table width changes from 980px to 1100px; existing horizontal scrolling remains available on narrow/mobile screens.
+- No changes to CSV source, KPI, filters, review-status logic, progress normalization, charts, pagination, AI Tutor, Podcast, or authentication.
