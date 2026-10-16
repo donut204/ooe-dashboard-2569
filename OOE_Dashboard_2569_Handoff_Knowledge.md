@@ -1,7 +1,7 @@
 # OOE Dashboard 2569 — Handoff & Knowledge Base
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 08/10/2569**  
+> **อัปเดตล่าสุด: 16/10/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -18,6 +18,45 @@
 - ถ้าผู้ใช้บอกว่า Google Sheet “เพิ่งเปลี่ยน / ล่าสุด / เพิ่มข้อมูล” ต้องอ่าน source ล่าสุดก่อนแก้ Dashboard
 - ห้ามเดาเกณฑ์เอง หากไม่มีข้อมูลจากผู้ใช้หรือเอกสารต้นทาง
 - หลังแก้ระบบควรตรวจซ้ำว่า code ที่แก้มีผลจริง และไม่ทับงานใหม่
+
+---
+
+
+## 1E. หน้าที่ผู้ดูแลและข้อบังคับบันทึกความรู้ (16/10/2569)
+
+> **ข้อกำหนดสำคัญของเจ้าของโปรเจกต์:** ผู้ดูแลต้อง **อัปเดต Handoff MD และบันทึกความรู้ใหม่ทุกครั้ง** เมื่อเกิดการเปลี่ยนแปลง ค้นพบข้อเท็จจริงที่เกี่ยวข้องกับระบบ หรือสรุปการตัดสินใจสำคัญ แม้รอบนั้นจะไม่ได้แก้โค้ดก็ตาม ห้ามส่งมอบงานแก้ไขระบบโดยไม่มีเอกสารในรอบเดียวกัน
+
+### บทบาทผู้ดูแลโปรเจกต์
+
+- **Lead Developer:** พัฒนา/แก้ปัญหา HTML, CSS, JavaScript โดยแก้เฉพาะขอบเขตที่ร้องขอ
+- **System Architect:** ดูแลโครงสร้างระบบ, data flow, data mapping, dependencies และผลกระทบข้ามหน้า
+- **Data Analyst:** ตรวจสอบ Google Sheets/Public CSV, สูตร KPI, ProfileScore, CourseScore และหน่วยนับรายวิชา
+- **UI/UX Developer:** ดูแลความสอดคล้องของหน้าจอ, ความสามารถในการใช้งาน, TH/EN และ Desktop/Mobile
+- **QA Engineer:** ตรวจ syntax, business-rule regression, ข้อมูลและการแสดงผลโดยไม่อ้างว่าทดสอบสิ่งที่ยังไม่ทดสอบ
+- **GitHub Maintainer:** ดูแล branch, SHA, diff, PR, merge และตรวจผลบน `main` หลัง merge
+- **Technical Documentation / Knowledge Owner:** บันทึกความรู้และข้อสรุปที่ตรวจสอบได้ลง Handoff ให้แชทหรือผู้พัฒนาคนถัดไปรับช่วงได้โดยไม่พึ่งความจำ
+
+### Knowledge Capture — ต้องบันทึกอะไรบ้าง
+
+1. **Requirement / Decision:** สิ่งที่ผู้ใช้สั่ง ผลการตัดสินใจ เหตุผล และ business rule ที่ต้องรักษา
+2. **Source / Evidence:** แหล่งข้อมูลที่ตรวจจริง ชื่อชีท, spreadsheet ID/gid, ชื่อคอลัมน์, field mapping, วันที่ตรวจ และตัวอย่างควบคุม (เมื่อเกี่ยวข้อง)
+3. **Implementation:** ไฟล์/ฟังก์ชัน/หน้า/branch ที่เกี่ยวข้อง ความแตกต่างก่อน–หลัง และขอบเขตที่จงใจไม่แตะ
+4. **Validation:** ผลตรวจ syntax, KPI/control cases, source mapping, TH/EN, Desktop/Mobile, Diff/Regression โดยแยก **ผ่านการตรวจจริง** ออกจาก **ยังไม่ได้ตรวจ** อย่างชัดเจน
+5. **Issue / Risk / Follow-up:** Bug, root cause, ข้อจำกัด, assumption ที่ยังไม่ยืนยัน, ผลกระทบ, ทางแก้ และงานค้างที่จำเป็นต่อการรับช่วง
+6. **Traceability:** วันที่, PR, commit SHA, merge SHA และสถานะ `main`/Production เมื่อมีข้อมูลที่ยืนยันได้
+
+**ต้องแยก “ข้อเท็จจริงที่ตรวจจาก source/code จริง” ออกจาก “ข้อเสนอ / สมมติฐาน / ประวัติเก่า”**; เมื่อข้อมูลขัดกัน ให้ระบุว่าเอกสารช่วงเก่าเป็น historical context และยึดข้อกำหนด/โค้ดปัจจุบันที่ตรวจยืนยันล่าสุดเป็นหลัก ห้ามสร้าง business rule ใหม่จากการคาดเดา
+
+### Workflow บังคับก่อนปิดงาน
+
+1. อ่าน Handoff ฉบับเต็มจาก `main` ก่อนเริ่มทุกงาน แล้ว fetch ไฟล์ที่เกี่ยวข้องพร้อม blob SHA ล่าสุดจาก `main`
+2. หากข้อมูลต้นทางเปลี่ยน ให้ตรวจ Google Sheet/Public CSV จริงก่อนแก้ mapping, filter, KPI หรือ wording
+3. ประเมินผลกระทบก่อนแก้; ทำบน feature/fix/docs branch → ตรวจ diff/QA → PR → ตรวจ mergeable และ head SHA → merge ตาม workflow ที่ผู้ใช้กำหนด
+4. อัปเดต **`OOE_Dashboard_2569_Handoff_Knowledge.md` ใน branch/PR เดียวกับงานนั้น** (สำหรับการตรวจสอบอย่างเดียว ให้บันทึกเมื่อพบความรู้ใหม่หรือข้อสรุปสำคัญที่ต้องส่งต่อ)
+5. หลัง merge ให้ fetch `main` เพื่อยืนยันว่าโค้ดและ Handoff ใหม่อยู่จริง พร้อมแจ้ง PR/commit SHA และสถานะตรวจ Production ตามจริง
+6. ห้ามเปลี่ยน KPI, ProfileScore, CourseScore, source CSV, authentication, pagination, responsive หรือฟังก์ชันอื่นนอกขอบเขต; ห้ามใส่ token, secret หรือข้อมูลบุคคลที่ไม่จำเป็นลง Handoff
+
+**Definition of Done:** งานที่มีการแก้ logic, UI/UX, wording, filter, KPI, chart, data mapping, source, workflow หรือ business rule **ยังไม่ถือว่าเสร็จ** จนกว่าจะตรวจผลกระทบ/QA ตามขอบเขต และบันทึกความรู้ใน Handoff พร้อมการแก้ไขรอบเดียวกัน
 
 ---
 
@@ -1511,3 +1550,15 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - `login.html` has no source-reference-date element, so no date change is applicable there.
 - Repository-wide active HTML/JS scan confirmed no remaining `05/10/2569`, `05/10/2026`, or `2026-10-05` values in runtime files.
 - Scope is display/reference-date metadata only. No change to Google Sheets source URLs, KPI calculations, filters, charts, table data, ProfileScore/CourseScore, authentication, or semester labels.
+
+
+## 16/10/2569 — Mandatory Handoff knowledge-capture responsibility
+
+- User explicitly reaffirmed that **updating Handoff MD and recording newly learned project knowledge is critical and mandatory**, not an optional final step.
+- Added section `1E` defining the maintenance roles (Lead Developer, System Architect, Data Analyst, UI/UX Developer, QA Engineer, GitHub Maintainer, Technical Documentation/Knowledge Owner).
+- Defined a structured knowledge record: requirement/decision, source/evidence, implementation, validation, issue/risk/follow-up, and PR/commit traceability. Preserve unresolved questions as unresolved; distinguish verified evidence from assumptions and historical notes.
+- Confirmed the full lifecycle: read Handoff and latest SHA on `main`, investigate source if relevant, scoped branch change, QA and diff, update Handoff in the same branch/PR, verify mergeability/head SHA, merge and re-fetch `main`.
+- **Documentation-only**: no production HTML/JS/CSS, data sources, KPI, auth, filter, chart, pagination, scoring or responsive behavior changed.
+- Corrected the document's stale top-line “อัปเดตล่าสุด: 08/10/2569” to `16/10/2569`, consistent with the later dated entries already present.
+- Baseline before this documentation update: `main` merge commit `8940de4e2b50b4ab07cc26ad4d32864ee94f2412` (PR #20, reference-date 15/10/2569).
+
