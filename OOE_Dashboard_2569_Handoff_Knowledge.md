@@ -1493,3 +1493,21 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Versioned `assets/ooe-page-i18n.js` on both pages to `?v=20261016-course-criteria` so the new translation is not masked by browser cache.
 - Scope is presentation only. No changes to AI Tutor/Podcast `ProfileScore`, `CourseScore`, course grouping, profile expand/collapse, filters, KPI, faculty chart, donut, source CSV, FACULTY_PAGE_SIZE, pagination logic, or authentication.
 - Static QA: all inline scripts in both pages parse successfully; the criteria URL appears once on each page; `#resultCount` remains addressable but hidden; shared page-i18n syntax passes.
+
+
+## 16/10/2569 — Reference date updated to 15/10/2569 on all Dashboard pages
+
+- User requested changing the displayed source reference date from `ข้อมูลอ้างอิง ณ วันที่ 05/10/2569` to `ข้อมูลอ้างอิง ณ วันที่ 15/10/2569` **across all Dashboard pages**.
+- Updated shared canonical reference date in `assets/ooe-i18n.js`:
+  - `REFERENCE_DATE`: `2026-10-05` → `2026-10-15`.
+  - TH display produced by `referenceDate()`: `15/10/2569`.
+  - EN display: `15/10/2026`.
+- Updated static fallback text in:
+  - `index.html` (GR/GS)
+  - `ai-tutor.html`
+  - `podcast.html`
+- Updated `assets/ooe-page-i18n.js` static translation mapping for AI Tutor/Podcast to `Data as of 15/10/2026`.
+- Versioned the shared i18n assets on the three Dashboard pages to `20261016-reference-date` so browser cache does not retain the old date.
+- `login.html` has no source-reference-date element, so no date change is applicable there.
+- Repository-wide active HTML/JS scan confirmed no remaining `05/10/2569`, `05/10/2026`, or `2026-10-05` values in runtime files.
+- Scope is display/reference-date metadata only. No change to Google Sheets source URLs, KPI calculations, filters, charts, table data, ProfileScore/CourseScore, authentication, or semester labels.
