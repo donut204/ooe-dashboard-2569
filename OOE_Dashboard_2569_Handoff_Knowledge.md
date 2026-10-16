@@ -1473,3 +1473,23 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
   - <=1100px behavior remains a single-column chart layout.
 - Scope: GR/GS visualization only. No changes to KPI values, source normalization, filters, table data, AI Tutor/Podcast, or authentication.
 - Versioned GR/GS i18n asset to `?v=20261016-chart-balance`.
+
+
+## 16/10/2569 — AI Tutor / Podcast: course criteria button + hidden top result count
+
+- User requested the course-details header on both `ai-tutor.html` and `podcast.html` to match the GR/GS pattern.
+- Added the outlined document action **`เกณฑ์การจัดทำรายวิชา`** beside the course-details heading area on both pages.
+  - English through `assets/ooe-page-i18n.js`: `Course Preparation Criteria`.
+  - Destination is the same user-provided university criteria folder used by GR/GS:
+    `https://drive.google.com/drive/folders/1ROpp-UgUJHhUZ_e5OwFkJ5IUnu6a54FL?usp=sharing`.
+  - Opens a new tab with `target="_blank"` and `rel="noopener noreferrer"`.
+  - Uses the same document icon / outlined blue treatment as the GR/GS action.
+- Removed the visible top text such as `แสดง 767 จาก 767 รายวิชา` by keeping each page's `#resultCount` element in the DOM with `hidden aria-hidden="true"`.
+  - Existing loading and render functions may continue writing to `#resultCount` safely; no JavaScript references were removed.
+  - Bottom pagination/page information (`แสดงคณะ ...`) remains visible because it identifies the current page and faculty range.
+- Responsive behavior:
+  - Desktop action stays right-aligned in the table header.
+  - <=650px table header stacks cleanly; action remains right-aligned with a minimum 44px touch target and wrapping label support.
+- Versioned `assets/ooe-page-i18n.js` on both pages to `?v=20261016-course-criteria` so the new translation is not masked by browser cache.
+- Scope is presentation only. No changes to AI Tutor/Podcast `ProfileScore`, `CourseScore`, course grouping, profile expand/collapse, filters, KPI, faculty chart, donut, source CSV, FACULTY_PAGE_SIZE, pagination logic, or authentication.
+- Static QA: all inline scripts in both pages parse successfully; the criteria URL appears once on each page; `#resultCount` remains addressable but hidden; shared page-i18n syntax passes.
