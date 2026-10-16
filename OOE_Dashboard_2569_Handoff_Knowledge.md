@@ -1452,3 +1452,24 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - This prevents failed rows from showing a narrower content-only recommendation such as `ควรเพิ่มเนื้อหา` when the review result indicates broader course improvement is required.
 - Scope is GR/GS table note wording/priority only. No change to KPI counts, review-status normalization, filters, charts, source data, evidence links, AI Tutor/Podcast, or authentication.
 - Versioned GR/GS i18n asset to `?v=20261016-fail-note` to avoid stale browser translations.
+
+
+## 16/10/2569 — GR/GS faculty bar includes “ไม่พบเนื้อหา” + balanced chart proportions
+
+- User requested the GR/GS faculty stacked bar to include the result represented by the `ไม่พบเนื้อหา` KPI card and asked the faculty-bar / content-donut presentation to feel more balanced at the same visual level.
+- Faculty bar status set is now:
+  - `ผ่าน` = green
+  - `ไม่ผ่าน` = red
+  - `ไม่พบเนื้อหา` (including normalized source `ไม่มีเนื้อหา`) = muted slate-violet `--violet: #7467a8`
+  - `อยู่ระหว่างการตรวจสอบ` remains excluded from the bar because it is not a final review result.
+- `renderChart()` now treats `REVIEW.noContent` as part of the charted/reviewed denominator used for bar width and faculty row inclusion. A faculty with only no-content outcomes is therefore visible instead of disappearing from the chart.
+- Stacked segment order is Pass → Fail → No Content. Tooltip / ARIA summary still reports all four statuses separately.
+- Right-side fraction remains `ผ่าน / จำนวนผลตรวจที่แสดงในแท่ง`; the denominator now equals `ผ่าน + ไม่ผ่าน + ไม่พบเนื้อหา`, still excluding under-review rows.
+- Chart legend and TH/EN description now explicitly include `ไม่พบเนื้อหา / No Content Found`. Empty-state wording updated accordingly.
+- Layout balance:
+  - desktop chart columns changed from `2fr : .8fr` to approximately `1.55fr : 1fr`, keeping enough width for faculty labels while giving the donut card more presence.
+  - `.charts-grid` now uses `align-items: stretch`; both chart cards occupy the same row height on desktop.
+  - the donut card is a vertical flex container and `.donut-body` can expand, so donut content stays visually balanced when the faculty chart is taller.
+  - <=1100px behavior remains a single-column chart layout.
+- Scope: GR/GS visualization only. No changes to KPI values, source normalization, filters, table data, AI Tutor/Podcast, or authentication.
+- Versioned GR/GS i18n asset to `?v=20261016-chart-balance`.
