@@ -1422,3 +1422,20 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
   - `ไม่พบเนื้อหา` is separate and is **not** added into `ไม่ผ่าน`.
 - Versioned GR/GS i18n asset to `?v=20261016-no-content-kpi`; added TH/EN card tooltip text.
 - Scope: GR/GS only. No changes to AI Tutor/Podcast, progress-volume KPI/donut logic, CSV URL, course grouping, authentication, evidence/course links, or table data columns.
+
+
+## 16/10/2569 — Align GR/GS status colors with KPI cards
+
+- User requested the colors used in the GR/GS **review-status table badges** and **content-progress donut** to follow the same visual direction as the KPI cards.
+- Existing alignment retained:
+  - `ผ่าน` = green.
+  - `อยู่ระหว่างการตรวจสอบ` = amber.
+  - `ไม่ผ่าน` = red.
+- Changed `ไม่พบเนื้อหา` / normalized `ไม่มีเนื้อหา` visual color from gray/red to the same muted slate-violet used by the KPI card: `--violet: #7467a8`.
+  - Review-status table badge `.review-badge.no-content` now uses a pale violet background with violet text.
+  - Content-progress Donut segment for `STATUS.none` now uses `var(--violet)` instead of red.
+  - Donut legend for `ไม่มีเนื้อหา` / `ไม่พบเนื้อหา` uses `.dot.violet`.
+  - Generic content-progress `STATUS.none` badge class is also violet for consistency if that badge is displayed again in future.
+- `pending` / unrecognized states remain gray so they are visually distinct from the explicit no-content status.
+- Scope is color presentation only. No changes to status normalization, KPI counts, filters, source data, chart denominators, AI Tutor/Podcast, or authentication.
+- Static QA: all three inline scripts in `index.html` parse successfully.
