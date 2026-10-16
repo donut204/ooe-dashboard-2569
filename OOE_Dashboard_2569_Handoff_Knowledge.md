@@ -1439,3 +1439,16 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - `pending` / unrecognized states remain gray so they are visually distinct from the explicit no-content status.
 - Scope is color presentation only. No changes to status normalization, KPI counts, filters, source data, chart denominators, AI Tutor/Podcast, or authentication.
 - Static QA: all three inline scripts in `index.html` parse successfully.
+
+
+## 16/10/2569 — GR/GS failed-course note wording
+
+- User requested a clearer but shorter note for rows where `สถานะการตรวจสอบ = ไม่ผ่าน`.
+- Selected Thai wording: `ปรับปรุงรายวิชาตามเกณฑ์` (shorter than `ปรับปรุงรายวิชาให้เป็นไปตามเกณฑ์`, while keeping the action and subject explicit).
+- English: `Revise course to meet the criteria`.
+- Note priority in `index.html` now checks **review status first**:
+  - If `REVIEW.fail` → show `note.reviewFail`.
+  - Otherwise fall back to the existing content-progress notes (`ไม่พบเนื้อหาในรายวิชา`, `ควรเพิ่มเนื้อหา`, pending/unknown).
+- This prevents failed rows from showing a narrower content-only recommendation such as `ควรเพิ่มเนื้อหา` when the review result indicates broader course improvement is required.
+- Scope is GR/GS table note wording/priority only. No change to KPI counts, review-status normalization, filters, charts, source data, evidence links, AI Tutor/Podcast, or authentication.
+- Versioned GR/GS i18n asset to `?v=20261016-fail-note` to avoid stale browser translations.

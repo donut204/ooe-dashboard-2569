@@ -34,7 +34,7 @@ html.auth-check body{visibility:hidden}
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
 <script>OOEAuth.requireAuth();</script>
-<script src="assets/ooe-i18n.js?v=20261016-no-content-kpi"></script>
+<script src="assets/ooe-i18n.js?v=20261016-fail-note"></script>
 
 <style>
 /* OOE dashboard micro-interactions */
@@ -569,11 +569,12 @@ function reviewBadge(s){
   return '<span class="review-badge wait">—</span>';
 }
 
-function note(s){
-  if(s===STATUS.none) return t('note.none');
-  if(s===STATUS.low) return t('note.low');
-  if(s===STATUS.pending) return t('note.pending');
-  if(s===STATUS.unknown) return t('note.unknown');
+function note(progressStatus,reviewStatus){
+  if(reviewStatus===REVIEW.fail) return t('note.reviewFail');
+  if(progressStatus===STATUS.none) return t('note.none');
+  if(progressStatus===STATUS.low) return t('note.low');
+  if(progressStatus===STATUS.pending) return t('note.pending');
+  if(progressStatus===STATUS.unknown) return t('note.unknown');
   return '—';
 }
 
@@ -591,7 +592,7 @@ function renderTable(rows){
     ${td(I18N.faculty(d['คณะ']))}
     ${td(d['ผู้สอน']||'—')}
     <td>${reviewBadge(d['สถานะการตรวจสอบ'])}</td>
-    ${td(note(d['ความคืบหน้าการทำ']))}
+    ${td(note(d['ความคืบหน้าการทำ'],d['สถานะการตรวจสอบ']))}
     <td>${d['ลิงก์']?`<a href="${esc(d['ลิงก์'])}" target="_blank" rel="noopener">${t('table.open')}</a>`:'—'}</td>
     <td>${d['หลักฐานการตรวจ']?`<a href="${esc(d['หลักฐานการตรวจ'])}" target="_blank" rel="noopener">${t('table.viewEvidence')}</a>`:'—'}</td>
   </tr>`).join('');
