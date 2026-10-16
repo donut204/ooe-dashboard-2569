@@ -2,7 +2,7 @@
   'use strict';
 
   const STORAGE_KEY='ooe_dashboard_language_v1';
-  const REFERENCE_DATE='2026-10-05';
+  const REFERENCE_DATE='2026-10-15';
   const SUPPORTED=['th','en'];
 
   const translations={
