@@ -1401,3 +1401,24 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Added i18n key: TH `วันที่ระบบสร้างรายวิชา`, EN `Course Created Date`. Versioned the GR/GS i18n script URL to avoid a stale dictionary in browser cache.
 - GR/GS results table changes from 10 visible columns to 11. Minimum table width changes from 980px to 1100px; existing horizontal scrolling remains available on narrow/mobile screens.
 - No changes to CSV source, KPI, filters, review-status logic, progress normalization, charts, pagination, AI Tutor, Podcast, or authentication.
+
+
+## 16/10/2569 — GR/GS KPI Card: “ไม่พบเนื้อหา”
+
+- User requested a fifth clickable KPI card for review status `ไม่พบเนื้อหา`, using a restrained color not already used by the existing blue / green / amber / red cards.
+- Added a **muted slate-violet** KPI card (`--violet: #7467a8`) labeled `ไม่พบเนื้อหา` / `No Content Found`. The card uses the same accessible click/keyboard behavior as existing KPI cards and sets `reviewFilter = REVIEW.noContent`.
+- Desktop KPI layout becomes 5 columns. To avoid cramped cards, <=1250px uses 3 columns, <=950px remains 2 columns, <=650px remains 1 column.
+- **Current exact source verified 16/10/2569** from Google Sheet ID `1q8Dfe2f79ehjk7NsefGGYP6UduajKJDV7E79w1_fKMg`:
+  - Dashboard reads published sheet `GRGS_Public`, column **P** header `reviewStatus`.
+  - Upstream GR source is `69/1-GR`, column **W** header `สถานะการตรวจสอบ`.
+  - Upstream GS source is `69/1-GS`, column **W** header `สถานะการตรวจสอบ`.
+  - Current published data contains **12** `ไม่มีเนื้อหา` rows, all in GR, and **0** literal `ไม่พบเนื้อหา` rows.
+- To make the Dashboard resilient to wording drift, `normalizeReviewStatus()` maps BOTH `ไม่มีเนื้อหา` and `ไม่พบเนื้อหา` to canonical internal `REVIEW.noContent = 'ไม่พบเนื้อหา'`. This normalization applies before filtering/KPI/chart/table rendering.
+- `setKpis()` now counts exact normalized `REVIEW.noContent` rows into `#noContentKpi`; the card's note uses the same visible-row denominator text as the other review-status KPI cards.
+- Existing KPI semantics remain unchanged:
+  - `ผ่าน` exact-match count only.
+  - `อยู่ระหว่างการตรวจสอบ` exact-match count only.
+  - `ไม่ผ่าน` exact-match count only.
+  - `ไม่พบเนื้อหา` is separate and is **not** added into `ไม่ผ่าน`.
+- Versioned GR/GS i18n asset to `?v=20261016-no-content-kpi`; added TH/EN card tooltip text.
+- Scope: GR/GS only. No changes to AI Tutor/Podcast, progress-volume KPI/donut logic, CSV URL, course grouping, authentication, evidence/course links, or table data columns.
