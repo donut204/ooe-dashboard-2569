@@ -1572,4 +1572,4 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - `login.html` contains no reference-date display; no change required.
 - **Scope:** Reference-date display metadata and i18n cache-busting only; no changes to Google Sheets/Public CSV source or source snapshot contents, KPI, `ProfileScore`/`CourseScore`, filters, charts, pagination, authentication, or desktop/mobile layout.
 - QA: verified only the expected literal substitutions for the 5 runtime files; date fallback/i18n/canonical values and cache-busting are consistent in TH/EN. Changes do not alter executable JS statements beyond constant string contents. Authenticated browser render and GitHub Pages publish verification should be reported separately.
-- Branch: `chore/reference-date-20261025`. Baseline main: `39d8d7082a6528ebdd6c4b779309923a880fcb2b` (PR #21).
+- Branch: `chore/reference-date-20261025`; PR #22. Baseline main: `39d8d7082a6528ebdd6c4b779309923a880fcb2b` (PR #21).
