@@ -1,7 +1,7 @@
 # OOE Dashboard 2569 — Handoff & Knowledge Base
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 16/10/2569**  
+> **อัปเดตล่าสุด: 25/10/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -1562,3 +1562,14 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Corrected the document's stale top-line “อัปเดตล่าสุด: 08/10/2569” to `16/10/2569`, consistent with the later dated entries already present.
 - Baseline before this documentation update: `main` merge commit `8940de4e2b50b4ab07cc26ad4d32864ee94f2412` (PR #20, reference-date 15/10/2569).
 
+
+## 25/10/2569 — Update displayed reference date to 25/10/2569 across dashboards
+
+- Requirement: change the displayed header label to `ข้อมูลอ้างอิง ณ วันที่ 25/10/2569` (TH) and `Data as of 25/10/2026` (EN) on all Dashboard pages (GS, GR, AI Tutor, Podcast).
+- Canonical date changed only in `assets/ooe-i18n.js`: `REFERENCE_DATE='2026-10-25'` (previously `2026-10-15`); `referenceDate()` remains responsible for Buddhist/Gregorian calendar display.
+- Updated static Thai fallback in `index.html`, `ai-tutor.html`, and `podcast.html`; changed the exact Thai→English translation entry in `assets/ooe-page-i18n.js`.
+- All Dashboard HTML pages update the i18n asset URL query to `?v=20261025-reference-date` for browser cache-busting; AI Tutor and Podcast update both shared and page adapter asset query versions.
+- `login.html` contains no reference-date display; no change required.
+- **Scope:** Reference-date display metadata and i18n cache-busting only; no changes to Google Sheets/Public CSV source or source snapshot contents, KPI, `ProfileScore`/`CourseScore`, filters, charts, pagination, authentication, or desktop/mobile layout.
+- QA: verified only the expected literal substitutions for the 5 runtime files; date fallback/i18n/canonical values and cache-busting are consistent in TH/EN. Changes do not alter executable JS statements beyond constant string contents. Authenticated browser render and GitHub Pages publish verification should be reported separately.
+- Branch: `chore/reference-date-20261025`. Baseline main: `39d8d7082a6528ebdd6c4b779309923a880fcb2b` (PR #21).
