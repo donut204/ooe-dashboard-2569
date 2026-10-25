@@ -7,7 +7,7 @@ const D={
 'ปีการศึกษา 2569 · ภาคการศึกษา 1':'Academic Year 2026 · Semester 1',
 'สำนักการจัดการศึกษาออนไลน์ (OOE)':'Office of Online Education (OOE)',
 'กำลังโหลดข้อมูลออนไลน์...':'Loading online data...',
-'ข้อมูลอ้างอิง ณ วันที่ 15/10/2569':'Data as of 15/10/2026',
+'ข้อมูลอ้างอิง ณ วันที่ 25/10/2569':'Data as of 25/10/2026',
 'หน้า GS':'GS','หน้า GR':'GR',
 'คณะ / วิทยาลัย':'Faculty / College','ทั้งหมด':'All',
 'ประเภทรายวิชา':'Course Type','สถานะ AI Tutor':'AI Tutor Status','สถานะ Podcast':'Podcast Status',
