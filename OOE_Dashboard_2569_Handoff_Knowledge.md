@@ -1609,3 +1609,21 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Further investigate the 29 unmatched rows from the live source before interpreting their KPI treatment. No Dashboard runtime HTML, JS, CSS, authentication, pagination, faculty grouping or source CSV URL was changed in this task.
 - Knowledge handoff branch: docs/sheet-source-mapping-lab7-20261026. The live Google Sheet was edited in place through the Sheets connector; GitHub PR only updates this Markdown knowledge file.
 
+
+## 26/10/2569 — Root cause of 29 unmatched course lookups: renamed faculties (formula recommendation)
+
+- User confirmed all previously unmatched 29 records in 691 AI Tutor / 691 Podcast do have activity/status results in the original AI_Podcast_Result.
+- Verified in the live original Google Sheet Report691_25_10_2569 (spreadsheet ID 1q8Dfe2f79ehjk7NsefGGYP6UduajKJDV7E79w1_fKMg) on 26/10/2569.
+- **Root cause: faculty labels disagree, but full shortname matches.** All 29 target rows say faculty "โลจิสติกส์ การบิน และสมาร์ทโมบิลิตี้"; 12 source rows instead say "การบิน การท่องเที่ยว และการบริการ" and 17 say "โลจิสติกส์และซัพพลายเชน".
+- Under the 2-field join (faculty + full shortname), these 29 fail. Under full-shortname-only, **all 29 have exactly one matching source row**, so their existing results can be recovered without guessing values. Example target Podcast row 555 shortname 691GN-CHM111(T)-(T) matches source row 137 (AI Tutor=1, Podcast=14, Podcast status=จัดทำไม่ครบ, AI Tutor status=ทำ). Target row 594 has a Lab result from the former logistics faculty.
+- **Critical collision guard:** Across 1,436 source records, 1,423 distinct full shortnames were found; **13 shortnames occur in multiple faculty records** (e.g. same GN or GS profile offered in IC and other faculties). Never globally remove faculty matching or blindly choose the first shortname match; this could corrupt valid IC/other-faculty rows.
+- Recommended safe formula strategy: try exact faculty + shortname first; only on no exact match, fallback to shortname alone if COUNTIF(AI_Podcast_Result!B:B, target E row) = 1; otherwise return "ไม่พบ". Preserve IF(T row = 0, existing default) and preserve source mappings:
+  - 691 AI Tutor U = source D (numeric AI Tutor), V = source G (AI Tutor status); W unchanged.
+  - 691 Podcast U = source E (Podcast count), V = source F (Podcast status); W retains Lab 7 / other 15 scoring.
+- Google Sheets formula template (substitute COL = D/G/E/F; ZERO_DEFAULT = 0 for U, "ไม่มี" for V; ROW = current target row):
+~~~gs
+=IF($T2=0,0,IFNA(INDEX(FILTER(AI_Podcast_Result!$D$2:$D,AI_Podcast_Result!$A$2:$A=$A2,AI_Podcast_Result!$B$2:$B=$E2),1),IF(COUNTIF(AI_Podcast_Result!$B$2:$B,$E2)=1,IFNA(INDEX(FILTER(AI_Podcast_Result!$D$2:$D,AI_Podcast_Result!$B$2:$B=$E2),1),"ไม่พบ"),"ไม่พบ")))
+~~~
+- **Change status: recommendation/formula provided only. The 4 new U/V fallback formulas have NOT yet been written to the live Google Sheet.** Prior exact-match formulas from the previous task remain until explicitly applied. The repository production JS and Handoff apart from this documentation change are untouched.
+- Follow-up verification after actual spreadsheet formula rollout: target 29 rows should resolve; preserve 13 source duplicate-shortname cases by exact faculty; verify U/V/W and public CSV/KPI consistency. Do not count this as implemented or production-verified until then.
+
