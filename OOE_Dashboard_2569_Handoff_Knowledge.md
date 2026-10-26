@@ -1665,5 +1665,5 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Updated only Podcast page's page-i18n cache-busting query to `?v=20261026-compact-criteria` to avoid stale translations. Shared `assets/ooe-i18n.js` and all other Dashboard pages untouched.
 - Validation: reverse-substitution comparison against latest `main` confirmed only requested `podcast.html` HTML/CSS text and i18n version changed; i18n adapter only changed the exact relevant translation keys. Compiled all inline Podcast JavaScript and i18n JavaScript successfully; tested Thai→English lookup for all three displayed strings.
 - Regression guards: PODCAST_LAB_REQUIRED_COUNT=7, ProfileScore sourced from CSV, CourseScore average, `FACULTY_PAGE_SIZE=4`, table/grouping/filters, authentication and responsive rules unchanged. This is **presentation-only**; it does not modify Business Rules or Google Sheet. Desktop/mobile browser screenshots not independently verified.
-- Branch: `fix/podcast-criteria-modal-compact-20261026`, baseline `main` merge `76045110bc332f24b9299dda9c5fd161581ce49e`. PR and merge identifiers to be associated when created.
+- Branch: `fix/podcast-criteria-modal-compact-20261026`, PR #26, baseline `main` merge `76045110bc332f24b9299dda9c5fd161581ce49e`. Merge SHA is verified separately after merge.
 
