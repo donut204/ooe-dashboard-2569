@@ -34,7 +34,7 @@ html.auth-check body{visibility:hidden}
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
 <script src="assets/ooe-i18n.js?v=20261025-reference-date"></script>
-<script defer src="assets/ooe-page-i18n.js?v=20261026-podcast-lab7"></script>
+<script defer src="assets/ooe-page-i18n.js?v=20261026-compact-criteria"></script>
 <script>OOEAuth.requireAuth();</script>
 
 <style>
@@ -471,25 +471,15 @@ html.auth-check body{visibility:hidden}
   font-size:13px;
   font-weight:700;
 }
-.criteria-highlight{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  margin-top:8px;
-  padding:0;
-  background:transparent;
+.criteria-profile-rules{
+  margin:6px 0 0;
+  padding-left:18px;
   color:#1769b0;
-  font-size:14px;
-  font-weight:800;
+  font-size:12px;
+  font-weight:650;
+  line-height:1.55;
 }
-.criteria-highlight::before{
-  content:"";
-  width:6px;
-  height:6px;
-  flex:0 0 6px;
-  border-radius:50%;
-  background:#2b78c5;
-}
+.criteria-profile-rules li+li{margin-top:2px}
 .criteria-copy .criteria-muted{
   margin:8px 0 0;
   color:#829ab1;
@@ -786,8 +776,11 @@ html.auth-check body{visibility:hidden}
         </div>
         <div class="criteria-copy">
           <h3>ตัวตั้ง</h3>
-          <p class="criteria-lead">จำนวนรายวิชา (ระดับปริญญาตรี)</p>
-          <div class="criteria-highlight">ต่อ 1 Profile: Lab (L) อย่างน้อย 7 Podcast · Theory (T) อย่างน้อย 15 Podcast</div>
+          <p class="criteria-lead">จำนวนรายวิชา (ระดับปริญญาตรี) โดยมีรายละเอียดดังนี้</p>
+          <ul class="criteria-profile-rules">
+            <li>Lab (L) ทำอย่างน้อย 7 Podcast</li>
+            <li>Theory (T) ทำอย่างน้อย 15 Podcast</li>
+          </ul>
         </div>
       </section>
 
