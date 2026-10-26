@@ -1627,3 +1627,29 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - **Change status: recommendation/formula provided only. The 4 new U/V fallback formulas have NOT yet been written to the live Google Sheet.** Prior exact-match formulas from the previous task remain until explicitly applied. The repository production JS and Handoff apart from this documentation change are untouched.
 - Follow-up verification after actual spreadsheet formula rollout: target 29 rows should resolve; preserve 13 source duplicate-shortname cases by exact faculty; verify U/V/W and public CSV/KPI consistency. Do not count this as implemented or production-verified until then.
 
+
+## 26/10/2569 — Podcast frontend Lab 7 / Theory 15 status + guidance fix
+
+### Requirement and verified root cause
+- User requested correcting Podcast frontend profile status badges and preparation advice, merging to main after QA. BBA31367 Lab (L) count 8 and HMM215 Lab (L) count 14 were wrongly presented as "จัดทำไม่ครบ" although upstream Podcast_Public gives ProfileScore 100% and "ทำครบ".
+- Previous podcast.html used a single PODCAST_REQUIRED_COUNT=15 for all profiles in normalizeStatus(v,count); numeric count took precedence over the valid source status. Advice modal and Podcast criteria dialog also hard-coded 15. The issue is **frontend presentation status logic**, not upstream ProfileScore.
+- Audited native Podcast_Public: 920 Profile rows; **15 Lab profiles** have Podcast counts 7–14 and source status ทำครบ but old frontend status จัดทำไม่ครบ. Counts are an audit snapshot, **not** a hard-coded KPI.
+
+### Implementation and data contract
+- Edited only podcast.html, assets/ooe-page-i18n.js and this Handoff MD. Shared assets/ooe-i18n.js, index.html, ai-tutor.html, Google Sheets, CSV URL, authentication, pagination and CSS layout left unchanged.
+- Added PODCAST_LAB_REQUIRED_COUNT=7 and centralized podcastRequiredCount(profileType), selecting 7 only for normalized exact (L) and retaining 15 for (T) and other types including (TT) (until their rule is independently confirmed).
+- normalizeStatus(v,count,profileType) now uses the type-specific required count. Passed profileType at all callers: refreshStatusLabels, statusBadge, adviceCell and openPodcastAdvice. Unknown source statuses remain pending if no numeric count can be used.
+- **No change to ProfileScore**: still read from published Google Sheet/CSV. **No change to CourseScore**: still AVERAGE(ProfileScore) grouped by faculty + courseCode. No KPI, chart, filter, grouping or pagination calculation changes.
+- Updated criteria modal highlight to requirements **per Profile** (Lab L 7 / Theory T 15). Updated advice modal checklist, label "จำนวน Podcast ตามเกณฑ์", per-profile required item total, missing-item computation, status/explanation. Checklist count is populated dynamically for selected Profile; other guidance retained.
+- Updated exact Thai-to-English dictionary and dynamic translation patterns in assets/ooe-page-i18n.js. Only podcast.html updates the page-i18n cache URL version to 20261026-podcast-lab7; shared reference-date and global i18n asset untouched.
+
+### Verification
+- JavaScript syntax-compiled all inline podcast.html scripts and the complete assets/ooe-page-i18n.js successfully.
+- Tested **17 cases** using the actual normalizeStatus/podcastRequiredCount functions (Lab 0/1/6/7/8/14/15, Theory 0/7/14/15/16, TT default, lowercase/whitespace, source not found/pending), all passed.
+- Executed actual openPodcastAdvice with stub DOM over **6 cases**: Lab 6→6/7, missing 1; Lab 0→missing 7; Theory 14→14/15, missing 1; complete Lab 7/8 and Theory 15 correctly do not open advice, all passed.
+- English translation checked for new criteria, dynamic Lab 6/7 message, selected Profile checklist, and notdone message.
+- Regression assertions confirm CSV source URL, course score average, 4-faculty pagination, status callsites and cache-busting.
+- HMM215 source has Lab 14→100% complete and Theory 14→93.33% partial; **CourseScore remains 0.966666… displayed 0.97/1 and course status partial**, as required.
+- Authenticated desktop/mobile visual QA not done in the isolated code test; verify after GitHub Pages publishes. No separate source mapping/snapshot update in this scope.
+- Branch: fix/podcast-lab7-status-advice-20261026; PR #25; baseline main 2beee3ce3372cea5461a330256ffa66a3ef2ac21.
+

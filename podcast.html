@@ -34,7 +34,7 @@ html.auth-check body{visibility:hidden}
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
 <script src="assets/ooe-i18n.js?v=20261025-reference-date"></script>
-<script defer src="assets/ooe-page-i18n.js?v=20261025-reference-date"></script>
+<script defer src="assets/ooe-page-i18n.js?v=20261026-podcast-lab7"></script>
 <script>OOEAuth.requireAuth();</script>
 
 <style>
@@ -787,7 +787,7 @@ html.auth-check body{visibility:hidden}
         <div class="criteria-copy">
           <h3>ตัวตั้ง</h3>
           <p class="criteria-lead">จำนวนรายวิชา (ระดับปริญญาตรี)</p>
-          <div class="criteria-highlight">หนึ่งรายวิชาต้องมี 15 Podcast</div>
+          <div class="criteria-highlight">ต่อ 1 Profile: Lab (L) อย่างน้อย 7 Podcast · Theory (T) อย่างน้อย 15 Podcast</div>
         </div>
       </section>
 
@@ -860,7 +860,7 @@ html.auth-check body{visibility:hidden}
 
       <div class="advice-metrics">
         <div class="advice-metric">
-          <span>จำนวนสัปดาห์ที่กำหนด</span>
+          <span>จำนวน Podcast ตามเกณฑ์</span>
           <strong id="adviceWeeks">0</strong>
         </div>
         <div class="advice-metric">
@@ -876,7 +876,7 @@ html.auth-check body{visibility:hidden}
       <div class="advice-section criteria">
         <h3>เกณฑ์การจัดทำ Podcast</h3>
         <ul>
-          <li>จัดทำ Podcast ให้ครบตามเกณฑ์คงที่ 15 สัปดาห์</li>
+          <li>จัดทำ Podcast ตามประเภท Profile: Lab (L) 7 รายการ / Theory (T) 15 รายการ</li>
           <li>Podcast อย่างน้อย 1 คลิปเสียง โดยความยาวรวมไม่น้อยกว่า 10 นาที</li>
           <li>บันทึกเนื้อหา podcast ตามรายละเอียด File PDF เอกสารประกอบการสอน</li>
         </ul>
@@ -888,7 +888,7 @@ html.auth-check body{visibility:hidden}
           <li>ใช้เนื้อหาจาก File PDF ของแต่ละสัปดาห์เป็นข้อมูลหลัก</li>
           <li>สามารถใช้เครื่องมือ AI เช่น Google NotebookLM ช่วยจัดทำ Podcast</li>
           <li>ตั้งชื่อ Label โดยระบุคำว่า “Podcast” เพื่อให้ง่ายต่อตรวจสอบ เช่น “Podcast Week 1”</li>
-          <li>ตรวจสอบจำนวน Podcast ให้ครบ 15 รายการตามเกณฑ์ก่อนส่งรายวิชา</li>
+          <li id="adviceChecklist">ตรวจสอบจำนวน Podcast ให้ครบตามเกณฑ์ของ Profile ก่อนส่งรายวิชา</li>
         </ul>
       </div>
 </div>
@@ -903,6 +903,8 @@ html.auth-check body{visibility:hidden}
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=149082930&single=true&output=csv';
 const PODCAST_REQUIRED_COUNT=15;
+const PODCAST_LAB_REQUIRED_COUNT=7;
+function podcastRequiredCount(profileType){return String(profileType??'').trim().toUpperCase()==='(L)'?PODCAST_LAB_REQUIRED_COUNT:PODCAST_REQUIRED_COUNT;}
 const DEFAULT_STATUS_LABELS={complete:'ทำครบ',partial:'จัดทำไม่ครบ',notdone:'ไม่ทำ',pending:'รอข้อมูล'};
 let STATUS_LABELS={...DEFAULT_STATUS_LABELS};
 let DATA=[]; const FACULTY_PAGE_SIZE=4; let currentPage=1;
@@ -964,11 +966,11 @@ function bindFacultyChartFilter(){
 }
 
 const natural=(a,b)=>String(a).localeCompare(String(b),'th',{numeric:true,sensitivity:'base'});
-function normalizeStatus(v,count){
+function normalizeStatus(v,count,profileType){
   const rawCount=String(count??'').trim().replace(/,/g,'');
   if(rawCount!==''&&!Number.isNaN(Number(rawCount))){
     const n=Math.max(0,Number(rawCount));
-    if(n>=PODCAST_REQUIRED_COUNT) return 'complete';
+    if(n>=podcastRequiredCount(profileType)) return 'complete';
     if(n>0) return 'partial';
     return 'notdone';
   }
@@ -981,7 +983,7 @@ function normalizeStatus(v,count){
 function refreshStatusLabels(){
   const buckets={complete:new Map(),partial:new Map(),notdone:new Map()};
   DATA.forEach(d=>{
-    const key=normalizeStatus(d.podcastStatus,d.podcastCount);
+    const key=normalizeStatus(d.podcastStatus,d.podcastCount,d.profileType);
     const label=String(d.podcastStatus||'').trim();
     if(!buckets[key]||!label)return;
     buckets[key].set(label,(buckets[key].get(label)||0)+1);
@@ -1156,15 +1158,15 @@ function courseBadge(score){
   if(key==='partial')return `<span class="badge amber">${esc(STATUS_LABELS.partial)}</span>`;
   return `<span class="badge red">${esc(STATUS_LABELS.notdone)}</span>`;
 }
-function statusBadge(s,count){
-  const key=normalizeStatus(s,count);
+function statusBadge(s,count,profileType){
+  const key=normalizeStatus(s,count,profileType);
   if(key==='complete') return `<span class="badge green">${esc(STATUS_LABELS.complete)}</span>`;
   if(key==='partial') return `<span class="badge amber">${esc(STATUS_LABELS.partial)}</span>`;
   if(key==='notdone') return `<span class="badge red">${esc(STATUS_LABELS.notdone)}</span>`;
   return `<span class="badge gray">${esc(STATUS_LABELS.pending)}</span>`;
 }
 function adviceCell(d){
-  const s=normalizeStatus(d.podcastStatus,d.podcastCount);
+  const s=normalizeStatus(d.podcastStatus,d.podcastCount,d.profileType);
   if(s==='complete') return '<span class="advice-dash">—</span>';
   if(s==='partial'||s==='notdone'){
     return `<button type="button" class="advice-btn" data-advice="${esc(d.courseProfile)}" aria-label="ดูคำแนะนำ" title="ดูคำแนะนำ"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 5.5c2.6-.8 4.9-.4 7 1.2v11.8c-2.1-1.6-4.4-2-7-1.2V5.5Zm15 0c-2.6-.8-4.9-.4-7 1.2v11.8c2.1-1.6 4.4-2 7-1.2V5.5Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></button>`;
@@ -1196,7 +1198,7 @@ function renderTable(rows){
       const id=fid+'_c'+courseIndex;
       html.push(`<tr class="course-group-row" data-faculty-parent="${fid}"><td class="tree-course-cell"><span class="course-group-main"><button type="button" class="tree-toggle course-toggle" data-group="${id}" aria-expanded="false" aria-label="ขยาย ${esc(g.courseCode)}">+</button><span class="course-title-cluster"><strong class="course-code">${esc(g.courseCode)}</strong><span class="profile-count-badge">${g.profileCount} Profile</span></span></span></td><td>—</td><td>${esc([...g.courseTypes].join(', ')||'—')}</td><td>—</td><td class="center"><span class="score-pill">${g.score.toFixed(2)} / 1</span></td><td class="center">${courseBadge(g.score)}</td><td class="center">—</td><td>—</td></tr>`);
       g.profiles.forEach(d=>{
-        html.push(`<tr class="profile-row" data-parent="${id}" data-faculty-parent="${fid}" hidden><td class="profile-tree-cell"></td><td class="profile-code-cell">${esc(d.courseProfile)}</td><td>${esc(d.courseType||'—')}</td><td>${esc(d.instructors||'—')}</td><td class="center">${`${esc(d.podcastCount||'0')} · ${formatPct(d.profileScore)}`}</td><td class="center">${statusBadge(d.podcastStatus,d.podcastCount)}</td><td class="center">${adviceCell(d)}</td><td>${d.courseLink?`<a href="${esc(d.courseLink)}" target="_blank" rel="noopener">เปิด ↗</a>`:'—'}</td></tr>`);
+        html.push(`<tr class="profile-row" data-parent="${id}" data-faculty-parent="${fid}" hidden><td class="profile-tree-cell"></td><td class="profile-code-cell">${esc(d.courseProfile)}</td><td>${esc(d.courseType||'—')}</td><td>${esc(d.instructors||'—')}</td><td class="center">${`${esc(d.podcastCount||'0')} · ${formatPct(d.profileScore)}`}</td><td class="center">${statusBadge(d.podcastStatus,d.podcastCount,d.profileType)}</td><td class="center">${adviceCell(d)}</td><td>${d.courseLink?`<a href="${esc(d.courseLink)}" target="_blank" rel="noopener">เปิด ↗</a>`:'—'}</td></tr>`);
       });
     });
   });
@@ -1231,10 +1233,10 @@ function closePodcastCriteria(){
 function openPodcastAdvice(courseProfile){
   const d=DATA.find(x=>x.courseProfile===courseProfile);
   if(!d)return;
-  const status=normalizeStatus(d.podcastStatus,d.podcastCount);
+  const status=normalizeStatus(d.podcastStatus,d.podcastCount,d.profileType);
   if(status==='complete')return;
 
-  const requiredWeeks=PODCAST_REQUIRED_COUNT;
+  const requiredWeeks=podcastRequiredCount(d.profileType);
   const count=Math.max(0,Number(String(d.podcastCount||'0').replace(/,/g,''))||0);
   const missing=Math.max(0,requiredWeeks-count);
 
@@ -1243,6 +1245,7 @@ function openPodcastAdvice(courseProfile){
   $('adviceWeeks').textContent=requiredWeeks.toLocaleString('th-TH');
   $('adviceCount').textContent=count.toLocaleString('th-TH');
   $('adviceMissing').textContent=missing.toLocaleString('th-TH');
+    $('adviceChecklist').textContent=`ตรวจสอบจำนวน Podcast ให้ครบ ${requiredWeeks} รายการตามเกณฑ์ก่อนส่งรายวิชา`;
   $('adviceStatus').textContent=`สถานะ: ${STATUS_LABELS[status]||STATUS_LABELS.pending}`;
 
   const alert=$('adviceAlert');
@@ -1250,7 +1253,7 @@ function openPodcastAdvice(courseProfile){
   alert.classList.add(status==='notdone'?'notdone':'partial');
 
   if(status==='partial'){
-    $('adviceMessage').textContent=`พบการจัดทำ Podcast แล้ว ${count} จาก ${requiredWeeks} รายการ กรุณาจัดทำเพิ่มเติมอีก ${missing} รายการให้ครบตามเกณฑ์ 15 สัปดาห์`;
+    $('adviceMessage').textContent=`พบการจัดทำ Podcast แล้ว ${count} จาก ${requiredWeeks} รายการ กรุณาจัดทำเพิ่มเติมอีก ${missing} รายการให้ครบตามเกณฑ์ของ Profile นี้`;
   }else{
     $('adviceMessage').textContent=`ยังไม่พบการจัดทำ Podcast จากเกณฑ์ที่กำหนด ${requiredWeeks} รายการ กรุณาจัดทำ Podcast ให้เป็นไปตามเกณฑ์ที่กำหนด`;
   }
