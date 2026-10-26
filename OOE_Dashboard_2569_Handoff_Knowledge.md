@@ -1,7 +1,7 @@
 # OOE Dashboard 2569 — Handoff & Knowledge Base
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 25/10/2569**  
+> **อัปเดตล่าสุด: 26/10/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -1573,3 +1573,39 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - **Scope:** Reference-date display metadata and i18n cache-busting only; no changes to Google Sheets/Public CSV source or source snapshot contents, KPI, `ProfileScore`/`CourseScore`, filters, charts, pagination, authentication, or desktop/mobile layout.
 - QA: verified only the expected literal substitutions for the 5 runtime files; date fallback/i18n/canonical values and cache-busting are consistent in TH/EN. Changes do not alter executable JS statements beyond constant string contents. Authenticated browser render and GitHub Pages publish verification should be reported separately.
 - Branch: `chore/reference-date-20261025`; PR #22. Baseline main: `39d8d7082a6528ebdd6c4b779309923a880fcb2b` (PR #21).
+
+
+## 26/10/2569 — Live Google Sheet source mapping and Lab 7 scoring correction
+
+> **Active upstream rule supersedes historical "15 Podcast for every Profile" documentation:** Lab (L) is complete at >=7 Podcast; Theory (T) and other types currently use >=15. Apply per Profile. Dashboard CourseScore continues to average ProfileScore per faculty + courseCode. Do not silently reverse the Lab rule.
+
+### Exact source and changed ranges
+
+- Google Sheet original: Report691_25_10_2569, spreadsheet ID 1q8Dfe2f79ehjk7NsefGGYP6UduajKJDV7E79w1_fKMg.
+- AI_Podcast_Result tab (sheetId 44821272) latest columns: A faculty, B shortname, C course profiles, D Max of AI_Tutor (numeric 0/1), E Sum of Podcast, F สถานะ Podcast, G สถานะ AI Tutor.
+- 691 AI Tutor (sheetId 539779177), populated rows 2-921: U fetches source D (formerly incorrect C); V fetches source G (formerly incorrect F). W retains the existing row formula IF(U2=1,1,0), which now receives correctly typed numeric counts.
+- 691 Podcast (sheetId 1979792174), populated rows 2-921: U fetches source E (formerly incorrect D); V fetches source F (formerly incorrect E); W now uses the new per-Profile score formula shown below, filled relatively through row 921.
+- Existing lookup conditions are deliberately unchanged: match faculty (source A to target A) and full shortname (source B to target E), with guard for target T=0 and IFNA fallback to "ไม่พบ". Source AI_Podcast_Result was not edited.
+- AI_Tutor_Public and Podcast_Public still derive their displayed rows from these sheets via the original FILTER(HSTACK(...)) mapping; the published data updates without changing CSV URLs or Dashboard JavaScript.
+
+### Podcast ProfileScore row formula (W2)
+
+~~~gs
+=IF(ISNUMBER(U2),MIN(MAX(U2,0),IF(TRIM(F2)="(L)",7,15))/IF(TRIM(F2)="(L)",7,15),"")
+~~~
+
+- Lab (L): MIN(podcastCount,7)/7; other types: MIN(podcastCount,15)/15, with lower bound 0 and ceiling 1.00.
+- Unmatched U/V cells preserve the explicit "ไม่พบ" state. Podcast W is blank when U is not numeric, rather than generating #VALUE! or fabricating a measured count. A source match failure must not be treated as verified zero.
+- The source has profile type (TT) too; it still uses the 15 default until an independently verified rule exists.
+- AI Tutor W unchanged. All non-target columns, existing cell formatting, validation, source and destination tabs, and Pivot control reports were preserved.
+
+### Live source QA and known follow-ups
+
+- Source audit on 26/10/2569: AI_Podcast_Result 1,436 keyed records, no duplicate faculty+shortname keys observed. Each target sheet has 920 populated records, 891 matched and **29 unmatched** under the existing two-key lookup. Do not hardcode these counts as KPI values.
+- Verified post-write cases in 691 Podcast: Lab 8 (row 57) = ทำครบ / 100%; Lab 7 (row 567) = ทำครบ / 100%; Lab 6 (row 648) = จัดทำไม่ครบ / 85.71%; Theory 8 (row 28) = จัดทำไม่ครบ / 53.33%; Theory 15 (row 8) = ทำครบ / 100%; unmatched row 555 = ไม่พบ / blank ProfileScore.
+- Verified AI_Tutor_Public row 2 = aiTutor 1, aiStatus ทำ, ProfileScore 100%. Verified Podcast_Public row 2 = podcastCount 17, podcastStatus ทำครบ, ProfileScore 100%.
+- First bulk write left 691 AI Tutor U2 temporarily stale; repaired U2 individually and verified its new numeric count and downstream AI_Tutor_Public result. Other sampled rows (3,4,5,555-557,920,921) had expected relative formulas.
+- Existing Podcast criteria and advice modals in podcast.html still historically mention a fixed 15-Podcast requirement and may calculate remaining count using 15. **This sheet-only task did not change those UI messages.** Reconcile their Lab advice with the new 7-item source scoring when a Dashboard UI update is requested; verify affected downstream KPI and charts.
+- Further investigate the 29 unmatched rows from the live source before interpreting their KPI treatment. No Dashboard runtime HTML, JS, CSS, authentication, pagination, faculty grouping or source CSV URL was changed in this task.
+- Knowledge handoff branch: docs/sheet-source-mapping-lab7-20261026. The live Google Sheet was edited in place through the Sheets connector; GitHub PR only updates this Markdown knowledge file.
+
