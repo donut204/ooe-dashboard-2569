@@ -1651,5 +1651,5 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Regression assertions confirm CSV source URL, course score average, 4-faculty pagination, status callsites and cache-busting.
 - HMM215 source has Lab 14→100% complete and Theory 14→93.33% partial; **CourseScore remains 0.966666… displayed 0.97/1 and course status partial**, as required.
 - Authenticated desktop/mobile visual QA not done in the isolated code test; verify after GitHub Pages publishes. No separate source mapping/snapshot update in this scope.
-- Branch: fix/podcast-lab7-status-advice-20261026; baseline main 2beee3ce3372cea5461a330256ffa66a3ef2ac21.
+- Branch: fix/podcast-lab7-status-advice-20261026; PR #25; baseline main 2beee3ce3372cea5461a330256ffa66a3ef2ac21.
 
