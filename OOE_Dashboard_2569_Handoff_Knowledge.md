@@ -1653,3 +1653,17 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Authenticated desktop/mobile visual QA not done in the isolated code test; verify after GitHub Pages publishes. No separate source mapping/snapshot update in this scope.
 - Branch: fix/podcast-lab7-status-advice-20261026; PR #25; baseline main 2beee3ce3372cea5461a330256ffa66a3ef2ac21.
 
+
+## 26/10/2569 — Podcast criteria modal compact Lab/Theory bullets
+
+- Owner request: in the **Podcast counting criteria modal** under **ตัวตั้ง**, replace the large single-line Lab/Theory statement with compact, easily readable wording, exactly:
+  - จำนวนรายวิชา (ระดับปริญญาตรี) โดยมีรายละเอียดดังนี้
+  - Lab (L) ทำอย่างน้อย 7 Podcast
+  - Theory (T) ทำอย่างน้อย 15 Podcast
+- In `podcast.html`, replaced the single `criteria-highlight` banner with a semantic two-item `ul.criteria-profile-rules`. Its text is **12px, weight 650, line-height 1.55**, with compact bullet spacing; originally the single highlight text was 14px, weight 800. The title, denominator card, exclusion list, close control, mobile grid, and other modal elements remain unchanged.
+- Added exact EN mapping for all three new strings in `assets/ooe-page-i18n.js`, respectively: "Undergraduate courses, with the following requirements:", "Lab (L): at least 7 Podcast items", and "Theory (T): at least 15 Podcast items".
+- Updated only Podcast page's page-i18n cache-busting query to `?v=20261026-compact-criteria` to avoid stale translations. Shared `assets/ooe-i18n.js` and all other Dashboard pages untouched.
+- Validation: reverse-substitution comparison against latest `main` confirmed only requested `podcast.html` HTML/CSS text and i18n version changed; i18n adapter only changed the exact relevant translation keys. Compiled all inline Podcast JavaScript and i18n JavaScript successfully; tested Thai→English lookup for all three displayed strings.
+- Regression guards: PODCAST_LAB_REQUIRED_COUNT=7, ProfileScore sourced from CSV, CourseScore average, `FACULTY_PAGE_SIZE=4`, table/grouping/filters, authentication and responsive rules unchanged. This is **presentation-only**; it does not modify Business Rules or Google Sheet. Desktop/mobile browser screenshots not independently verified.
+- Branch: `fix/podcast-criteria-modal-compact-20261026`, PR #26, baseline `main` merge `76045110bc332f24b9299dda9c5fd161581ce49e`. Merge SHA is verified separately after merge.
+
