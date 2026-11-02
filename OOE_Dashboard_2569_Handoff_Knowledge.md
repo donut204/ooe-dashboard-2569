@@ -1,7 +1,7 @@
 # OOE Dashboard 2569 — Handoff & Knowledge Base
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 26/10/2569**  
+> **อัปเดตล่าสุด: 02/11/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -1667,3 +1667,25 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Regression guards: PODCAST_LAB_REQUIRED_COUNT=7, ProfileScore sourced from CSV, CourseScore average, `FACULTY_PAGE_SIZE=4`, table/grouping/filters, authentication and responsive rules unchanged. This is **presentation-only**; it does not modify Business Rules or Google Sheet. Desktop/mobile browser screenshots not independently verified.
 - Branch: `fix/podcast-criteria-modal-compact-20261026`, PR #26, baseline `main` merge `76045110bc332f24b9299dda9c5fd161581ce49e`. Merge SHA is verified separately after merge.
 
+## 02/11/2569 — Change Dashboard reference date to 02/11/2569 (all pages)
+
+### Requirement and verified baseline
+
+- User requested changing the source reference date displayed in the header on all Dashboards from **25/10/2569** to **02/11/2569**.
+- Thai text: `ข้อมูลอ้างอิง ณ วันที่ 02/11/2569`; English text: `Data as of 02/11/2026`. The shared ISO canonical value is `REFERENCE_DATE='2026-11-02'`.
+- Baseline checked from `main` at commit `13fe451a5247bea8301558a3832224c433a47105` and relevant latest file blob SHAs. `index.html` hosts GR/GS; `ai-tutor.html` hosts AI Tutor; `podcast.html` hosts Podcast. `login.html` has no reference-date label and is excluded.
+
+### Implementation and scope
+
+- `assets/ooe-i18n.js`: change only `REFERENCE_DATE` from `2026-10-25` to `2026-11-02`. The existing Buddhist calendar conversion for Thai and Gregorian year for English is preserved.
+- `index.html`, `ai-tutor.html`, `podcast.html`: change only the Thai header fallback `ข้อมูลอ้างอิง ณ วันที่ 25/10/2569` → `ข้อมูลอ้างอิง ณ วันที่ 02/11/2569`, and i18n script query versions.
+- `assets/ooe-page-i18n.js`: update exact Thai-English static mapping to `02/11/2569` and `02/11/2026`.
+- Updated `assets/ooe-i18n.js` URLs in all three HTML files to `?v=20261102-reference-date`; updated `assets/ooe-page-i18n.js` URLs in AI Tutor and Podcast to the same version, including replacing the previously special Podcast `20261026-compact-criteria` cache tag **without changing its actual Podcast criteria translations or JavaScript**.
+- **Only display metadata / cache-busting**: Google Sheets/Public CSV source, snapshot dates or contents, KPI, ProfileScore, CourseScore, PDF links, filters, chart calculations, modal status rules, TH/EN toggling, authentication, pagination and desktop/mobile layout are unchanged.
+
+### QA / traceability
+
+- Checked exact substitutions against current source and parsed the existing JS in all three HTML files plus both i18n JS files. The only runtime changes are string literals, script query versions, and shared reference-date constant.
+- Regression expectations: all active pages display 02/11/2569 in Thai, 02/11/2026 in English. The central language helper must retain `+543` for the Thai year. No legacy 25/10/2569 source-date strings remain in active runtime files. No historical Handoff changelog entries were rewritten.
+- This date change is an **explicit display reference label request**, not confirmation that the upstream CSV / Google Sheets were refreshed on 02/11/2569.
+- Branch `chore/reference-date-20261102`; PR reference to be recorded on creation. Main merge SHA and GitHub Pages publication state must be verified after merge; no authenticated visual browser QA is claimed.
