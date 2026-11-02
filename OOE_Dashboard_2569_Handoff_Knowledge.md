@@ -1688,4 +1688,4 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Checked exact substitutions against current source and parsed the existing JS in all three HTML files plus both i18n JS files. The only runtime changes are string literals, script query versions, and shared reference-date constant.
 - Regression expectations: all active pages display 02/11/2569 in Thai, 02/11/2026 in English. The central language helper must retain `+543` for the Thai year. No legacy 25/10/2569 source-date strings remain in active runtime files. No historical Handoff changelog entries were rewritten.
 - This date change is an **explicit display reference label request**, not confirmation that the upstream CSV / Google Sheets were refreshed on 02/11/2569.
-- Branch `chore/reference-date-20261102`; PR reference to be recorded on creation. Main merge SHA and GitHub Pages publication state must be verified after merge; no authenticated visual browser QA is claimed.
+- Branch `chore/reference-date-20261102`; PR #27. Main merge SHA and GitHub Pages publication state must be verified after merge; no authenticated visual browser QA is claimed.
