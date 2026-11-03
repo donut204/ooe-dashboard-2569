@@ -1,7 +1,7 @@
 # OOE Dashboard 2569 — Handoff & Knowledge Base
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 02/11/2569**  
+> **อัปเดตล่าสุด: 03/11/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -1689,3 +1689,23 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Regression expectations: all active pages display 02/11/2569 in Thai, 02/11/2026 in English. The central language helper must retain `+543` for the Thai year. No legacy 25/10/2569 source-date strings remain in active runtime files. No historical Handoff changelog entries were rewritten.
 - This date change is an **explicit display reference label request**, not confirmation that the upstream CSV / Google Sheets were refreshed on 02/11/2569.
 - Branch `chore/reference-date-20261102`; PR #27. Main merge SHA and GitHub Pages publication state must be verified after merge; no authenticated visual browser QA is claimed.
+
+## 03/11/2569 — Set reference date to 03/11/2569 on every Dashboard
+
+### Requirement / latest baseline
+- Owner requested changing the Dashboard header reference date from `02/11/2569` to **`03/11/2569`** on every Dashboard. English display **`Data as of 03/11/2026`**.
+- Baseline `main` commit: `8972cbf7d626492cf97cdbe8311e865cad7f8e72` (PR #27); Handoff and relevant files were re-read from `main` before modifications.
+- The canonical shared date is `REFERENCE_DATE='2026-11-03'` in `assets/ooe-i18n.js`. Preserve the existing `referenceDate()` conversion: Thai year +543, English Gregorian.
+
+### Files / implementation
+- `index.html` (GR/GS), `ai-tutor.html` (AI Tutor), and `podcast.html` (Podcast): updated the Thai static fallback header to `ข้อมูลอ้างอิง ณ วันที่ 03/11/2569`.
+- `assets/ooe-page-i18n.js`: updated exact TH/EN translation mapping for the new reference-date text.
+- All 3 HTML pages now load `assets/ooe-i18n.js?v=20261103-reference-date`; AI Tutor and Podcast also load `assets/ooe-page-i18n.js?v=20261103-reference-date` for browser cache-busting.
+- `login.html` has no reference date and was not modified.
+- The date update is **display metadata only**: no change to source CSV/Google Sheets, KPI, CourseScore/ProfileScore, Podcast Lab 7/Theory 15, charts, filter/search, course grouping, responsive layout, pagination or authentication.
+
+### QA / documentation
+- Runtime code changes constrained to **5 files**: 3 HTML and 2 i18n JavaScript assets. A sixth file, this Handoff, contains the same-round requirement and test record.
+- Each source change verified as an exact literal substitution from the latest `main` blob; all existing inline JavaScript and both i18n assets syntax-compiled successfully. Confirm that old `02/11/2569`, `02/11/2026`, `2026-11-02` and `20261102-reference-date` no longer exist in active runtime source.
+- Preserve historical Handoff entries verbatim. The reference-date update is **not** evidence that upstream source data was actually refreshed on 03/11/2569; no Google Sheets/CSV snapshot update was performed.
+- Feature branch: `chore/reference-date-20261103`; PR #28. Merge SHA and GitHub Pages deployment are verified after merge; browser visual results must be reported separately.
