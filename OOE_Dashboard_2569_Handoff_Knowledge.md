@@ -1708,4 +1708,4 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Runtime code changes constrained to **5 files**: 3 HTML and 2 i18n JavaScript assets. A sixth file, this Handoff, contains the same-round requirement and test record.
 - Each source change verified as an exact literal substitution from the latest `main` blob; all existing inline JavaScript and both i18n assets syntax-compiled successfully. Confirm that old `02/11/2569`, `02/11/2026`, `2026-11-02` and `20261102-reference-date` no longer exist in active runtime source.
 - Preserve historical Handoff entries verbatim. The reference-date update is **not** evidence that upstream source data was actually refreshed on 03/11/2569; no Google Sheets/CSV snapshot update was performed.
-- Feature branch: `chore/reference-date-20261103`; PR and merge SHA to be recorded after verification; GitHub Pages deployment and browser visual results must be reported separately.
+- Feature branch: `chore/reference-date-20261103`; PR #28. Merge SHA and GitHub Pages deployment are verified after merge; browser visual results must be reported separately.
