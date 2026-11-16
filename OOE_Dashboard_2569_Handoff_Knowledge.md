@@ -1,7 +1,7 @@
 # OOE Dashboard 2569 — Handoff & Knowledge Base
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 03/11/2569**  
+> **อัปเดตล่าสุด: 16/11/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -1709,3 +1709,22 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Each source change verified as an exact literal substitution from the latest `main` blob; all existing inline JavaScript and both i18n assets syntax-compiled successfully. Confirm that old `02/11/2569`, `02/11/2026`, `2026-11-02` and `20261102-reference-date` no longer exist in active runtime source.
 - Preserve historical Handoff entries verbatim. The reference-date update is **not** evidence that upstream source data was actually refreshed on 03/11/2569; no Google Sheets/CSV snapshot update was performed.
 - Feature branch: `chore/reference-date-20261103`; PR #28. Merge SHA and GitHub Pages deployment are verified after merge; browser visual results must be reported separately.
+
+## 16/11/2569 — Update displayed Dashboard reference date to 16/11/2569
+
+### Owner decision / baseline
+- Owner explicitly requested changing the **displayed reference date on every Dashboard** from `03/11/2569` to **`16/11/2569`** (English: **`Data as of 16/11/2026`**).
+- Read this entire Handoff and fetched relevant source files from `main` prior to editing. Baseline `main` merge SHA: `a4f9f49f853a63dd882cd125f7bc0099af918e38` (PR #28).
+
+### Implementation
+- `assets/ooe-i18n.js`: updated shared canonical `REFERENCE_DATE` from `2026-11-03` to `2026-11-16`. Preserve existing Thai Buddhist year +543 conversion and English Gregorian year.
+- `index.html` (GR/GS), `ai-tutor.html` (AI Tutor), `podcast.html` (Podcast): changed header fallback to `ข้อมูลอ้างอิง ณ วันที่ 16/11/2569` and shared i18n version to `20261116-reference-date`.
+- `assets/ooe-page-i18n.js`: updated exact TH-to-EN date translation pair `16/11/2569` → `16/11/2026`.
+- AI Tutor and Podcast page adapter URLs updated to `?v=20261116-reference-date` to invalidate stale browser caches. `login.html` has no reference-date field and remains unchanged.
+- The change is **display metadata and cache-busting only**. No Google Sheet/Public CSV snapshot refresh has been performed. No KPI, ProfileScore, CourseScore, Podcast Lab 7/Theory 15 logic, status, faculty mapping, filter, pagination, charts, authentication or Desktop/Mobile UI layout changes.
+
+### Validation / knowledge for next handoff
+- Source transformations independently checked for exact substitutions and reversibility against latest code; syntax-checked inline JavaScript in all three HTML pages and both i18n JavaScript assets.
+- Verify no old active strings `03/11/2569`, `03/11/2026`, `2026-11-03`, or `20261103-reference-date` remain in runtime files; historic handoff entries are intentionally preserved.
+- TH expected: `ข้อมูลอ้างอิง ณ วันที่ 16/11/2569`; EN expected: `Data as of 16/11/2026`.
+- Branch: `chore/reference-date-20261116`; PR #29. Merge SHA and GitHub Pages deployment to be verified after merge; authenticated browser UI testing not claimed.
