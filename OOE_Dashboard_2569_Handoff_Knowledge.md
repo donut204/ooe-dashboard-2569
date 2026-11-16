@@ -1727,4 +1727,4 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Source transformations independently checked for exact substitutions and reversibility against latest code; syntax-checked inline JavaScript in all three HTML pages and both i18n JavaScript assets.
 - Verify no old active strings `03/11/2569`, `03/11/2026`, `2026-11-03`, or `20261103-reference-date` remain in runtime files; historic handoff entries are intentionally preserved.
 - TH expected: `ข้อมูลอ้างอิง ณ วันที่ 16/11/2569`; EN expected: `Data as of 16/11/2026`.
-- Branch: `chore/reference-date-20261116`. PR/merge/deployment IDs to be confirmed separately; authenticated browser UI testing not claimed.
+- Branch: `chore/reference-date-20261116`; PR #29. Merge SHA and GitHub Pages deployment to be verified after merge; authenticated browser UI testing not claimed.
