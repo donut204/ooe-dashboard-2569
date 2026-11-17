@@ -1,7 +1,7 @@
 # OOE Dashboard 2569 — Handoff & Knowledge Base
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 16/11/2569**  
+> **อัปเดตล่าสุด: 17/11/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -1728,3 +1728,35 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Verify no old active strings `03/11/2569`, `03/11/2026`, `2026-11-03`, or `20261103-reference-date` remain in runtime files; historic handoff entries are intentionally preserved.
 - TH expected: `ข้อมูลอ้างอิง ณ วันที่ 16/11/2569`; EN expected: `Data as of 16/11/2026`.
 - Branch: `chore/reference-date-20261116`; PR #29. Merge SHA and GitHub Pages deployment to be verified after merge; authenticated browser UI testing not claimed.
+
+## 17/11/2569 — Read-only GR/GS report vs Raw-data 69/1 audit
+
+### Scope and source of truth
+
+- Owner requested a **read-only audit** of what GR/GS report retains or excludes compared with `Raw-data 69/1`. No changes to spreadsheet data, filter settings, Dashboard runtime code, source CSV or business rules.
+- Live native Google Sheet: `Report691_16_11_2569`, spreadsheet ID `1q8Dfe2f79ehjk7NsefGGYP6UduajKJDV7E79w1_fKMg` (read 17/11/2569).
+- Compared populated source rows and exact course **URL** as the identity key in `Raw-data 69/1` (A:T), `69/1-GR` (A:X), `69/1-GS` (A:X), and `GRGS_Public` (A:R). Use URL instead of full shortname alone: source has two different `691GS-GEC10367(T)-(T)` courses, one i-Learning (International College) and one d-Learning (วิชาศึกษาทั่วไป). Only the i-Learning record is in the GS report; do not collapse the two into one.
+- Publication source in `GRGS_Public!A2` uses `VSTACK(FILTER(HSTACK(...), REGEXMATCH(courseProfile,"^691GR-") * MAP(ROW(...), LAMBDA(r,SUBTOTAL(103,OFFSET(...))))), FILTER(HSTACK(...), REGEXMATCH(courseProfile,"^691GS-") * MAP(ROW(...),LAMBDA(r,SUBTOTAL(103,OFFSET(...))))))`. That means it includes only the relevant GR/GS prefix **and currently visible rows in the two working sheets**. The formula does **not** itself hard-code teacher type, profile T/TT, zero-student exclusion, or faculty.
+- `index.html` later reads `GRGS_Public` as CSV and keeps only `group` GR/GS. The other interactive filters (faculty, progress, review status, text search) act on user selection, not fixed permanent exclusions.
+
+### Verified snapshot / reconciliation by course URL (Profile-level rows, NOT distinct courseCode)
+
+| Stage | GR | GS | Total |
+| --- | ---: | ---: | ---: |
+| `Raw-data 69/1`, all types: 1,521 populated rows; non-GR/GS: 1,323 | 145 | 53 | 198 |
+| Present in `69/1-GR` / `69/1-GS` (working tabs) | 130 | 48 | 178 |
+| Final published `GRGS_Public` | 125 | 40 | 165 |
+
+- Between Raw and working sheets: **25 Raw rows absent** (GR 20 are all Lab `(L)`; GS 5 = 4 Lab `(L)` plus 1 Theory `(T)` for d-Learning `691GS-GEC10367(T)-(T)`). **Five additional GR rows** occur in working tabs/final report but are absent from Raw: ASM320 (T), ENG118 (T), ENG217 (TT), IAI239 (T), MAT320 (T). This reconciles `198 - 25 + 5 = 178`.
+- From working sheets to final Public, **13 rows not published** (GR 5; GS 8). Their work-type data are `อาจารย์พิเศษ` in 10 rows and blank/missing in 3. By profile: Lab `(L)` 4, Theory `(T)` 8, `(TT)` 1. This reconciles `178 - 13 = 165`. These rows' visibility is controlled by source-sheet row visibility used by `SUBTOTAL(103,...)`; the exact human-created sheet filter configuration was not exposed by connector metadata.
+- Relative directly to Raw, **38 Raw rows absent from Public** (GR 25, GS 13): `(L)` 28, `(T)` 9, `(TT)` 1. Five additional GR rows in the report were not in Raw, so `198 - 38 + 5 = 165`.
+- `GRGS_Public` profile composition: **`(T)` 133, `(TT)` 32, `(L)` 0**. This refutes the claim that the published report retains *only T*. No Lab currently survives publication, but `(TT)` does.
+- All 165 published teacher-type strings contain `อาจารย์ประจำ` including subtypes. Exact single `อาจารย์ประจำ`: 148 rows; remaining 17 are combinations or subtypes such as `อาจารย์ประจำแบบมีเงื่อนไข` (3), `อาจารย์ประจำแบบพิเศษ (ไม่จ่ายเงินเดือน)` (4), or multiple permanent instructors. No pure `อาจารย์พิเศษ` or blank teacher-type is in Public; this is an **observed data result** from current visible sheet filters, not a separately hard-coded condition in the Public formula.
+- `GRGS_Public` includes **36 GR rows with students = 0** (none in the 40 GS rows). There is **no zero-student exclusion** at the GR/GS publication stage. Review-status composition was `ไม่ผ่าน` 105, `ผ่าน` 54, `ไม่พบเนื้อหา` 6. Thus failed/no-content rows are not removed solely because of status.
+- No faculty has a GR/GS Raw record and is entirely absent from Public under its exact label in this snapshot. No universal International College exclusion is applied here.
+
+### Interpretation and guardrails
+
+- Do **not** describe the result as strictly `teacherType="อาจารย์ประจำ"` plus `profileType="(T)"`. Effective selection is a **manual/source-sheet eligibility and row-visibility workflow** before the Public formula; it currently retains `(TT)` and multiple permanent-staff categories. Without the actual filter settings or human policy record, do not assert why each individual Lab or separate d-Learning GEC10367 entry was omitted.
+- Do not equate 165 published Profile records with 165 unique courseCodes, or 38 missing Raw rows with 38 deleted unique courses.
+- Formula/visibility based source rows may change when users toggle source sheet filters. If revisiting this audit, re-read actual sheet tabs, cell values and links rather than reusing these snapshot counts. **This audit did not modify anything except this Handoff documentation**.
