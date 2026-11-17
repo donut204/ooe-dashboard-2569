@@ -1786,4 +1786,4 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 ### Scope / handoff
 - This audit is an inspection and recommendation; Dashboard code, authentication, source URLs, Google Sheet cells/formulas/filters, KPI/chart logic, responsive styles and deployed app behavior are unchanged.
 - Do not make actual fixes until owner selects scope and business rules. If code changes, create feature branch, test SHA/diff/QA, update this Handoff in the same round, and merge only when authorized.
-- Docs-only branch: `docs/dashboard-audit-20261117`; PR and merge details recorded separately.
+- Docs-only branch: `docs/dashboard-audit-20261117`, PR #31. No production runtime code modifications; GitHub Pages publication status, if changed by docs-only merge, is separate from app QA.
