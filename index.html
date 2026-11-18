@@ -755,7 +755,10 @@ function render(reset=true){
   syncGsControls(activeType==='GS'?filtered(true):[]);
   if(activeType==='GS'&&gsViewMode==='course')renderGsCourseTable(rows);
   else {
-    if($('courseTableHead').innerHTML!==gsProfileTableHead)$('courseTableHead').innerHTML=gsProfileTableHead;
+    if($('courseTableHead').innerHTML!==gsProfileTableHead){
+      $('courseTableHead').innerHTML=gsProfileTableHead;
+      I18N.apply($('courseTableHead')); // restore TH/EN headings after leaving GS Course View
+    }
     const profileRows=activeType==='GS'&&gsProfileStatus!==null?GS_VIEW.filterProfiles(filtered(true),gsProfileStatus):rows;
     renderTable(profileRows);
     if(activeType==='GS')$('pageInfo').textContent=profileRows.length?gsText('profilePager')(fmt((currentPage-1)*PAGE_SIZE+1),fmt(Math.min(currentPage*PAGE_SIZE,profileRows.length)),fmt(profileRows.length)):t('pager.empty');
