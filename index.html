@@ -188,7 +188,7 @@ html.auth-check body{visibility:hidden}
 
 <script src="assets/ooe-progress.js"></script>
 <script>
-const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=131857057&single=true&output=csv';
+const CSV_URLS={GS:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=1655346225&single=true&output=csv',GR:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=1339443713&single=true&output=csv'};
 let DATA=[];
 let dashboardRevealDone=false;
 function revealDashboardOnce(){
@@ -375,28 +375,28 @@ function normalizeReviewStatus(value){
   return raw==='ไม่มีเนื้อหา'||raw==='ไม่พบเนื้อหา'?REVIEW.noContent:raw;
 }
 
-function mapRow(r){
-  const rawProgress=String(r.progress||'').trim();
+function mapRow(r,group){
+  const rawProgress=String(r['ปริมาณเนื้อหารายวิชา']||r['เนื้อหา']||'').trim();
   return {
-    'ประเภท':String(r.group||'').trim(),
-    'คณะ':String(r.faculty||'').trim(),
-    'รหัสวิชา':String(r.courseCode||'').trim(),
-    'หน่วยกิต':String(r.credits||'').trim(),
-    'Course Profile':String(r.courseProfile||'').trim(),
-    'รูปแบบ':String(r.profileType||'').trim(),
-    'วันที่สร้างรายวิชา':String(r.createdDate||'').trim(),
-    'ชื่อรายวิชา':String(r.courseName||'').trim(),
-    'ผู้สอน':String(r.instructors||'').trim(),
-    'ประเภทผู้ปฏิบัติงาน':String(r.teacherType||'').trim(),
-    'จำนวนผู้สอน':Number(String(r.teacherCount||'0').replace(/,/g,''))||0,
+    'ประเภท':group,
+    'คณะ':String(r.name||'').trim(),
+    'รหัสวิชา':String(r['รหัสวิชา']||'').trim(),
+    'หน่วยกิต':String(r['หน่วยกิต']||'').trim(),
+    'Course Profile':String(r.coursename||'').trim(),
+    'รูปแบบ':String(r['course profiles']||'').trim(),
+    'วันที่สร้างรายวิชา':String(r['วันที่สร้างรายวิชา']||'').trim(),
+    'ชื่อรายวิชา':String(r.fullname||'').trim(),
+    'ผู้สอน':String(r['อ.ผู้สอน']||'').trim(),
+    'ประเภทผู้ปฏิบัติงาน':String(r['ประเภทผู้ปฏิบัติงาน']||'').trim(),
+    'จำนวนผู้สอน':Number(String(r.teachers||'0').replace(/,/g,''))||0,
     'จำนวนนักศึกษา':Number(String(r.students||'0').replace(/,/g,''))||0,
-    'จำนวนสัปดาห์':Number(String(r.weeks||'0').replace(/,/g,''))||0,
-    'รวมเนื้อหาและกิจกรรม':Number(String(r.activities||'0').replace(/,/g,''))||0,
+    'จำนวนสัปดาห์':Number(String(r['จำนวน week ทั้งหมด']||'0').replace(/,/g,''))||0,
+    'รวมเนื้อหาและกิจกรรม':Number(String(r['จำนวนรวมเนื้อหาและกิจกรรม']||'0').replace(/,/g,''))||0,
     'ความคืบหน้าการทำ':PROGRESS.classify(rawProgress),
     'ข้อความความคืบหน้าต้นฉบับ':rawProgress,
-    'สถานะการตรวจสอบ':normalizeReviewStatus(r.reviewStatus),
-    'ลิงก์':String(r.courseLink||'').trim(),
-    'หลักฐานการตรวจ':String(r.evidence||'').trim()
+    'สถานะการตรวจสอบ':normalizeReviewStatus(r['สถานะการตรวจสอบ']),
+    'ลิงก์':String(r.link||'').trim(),
+    'หลักฐานการตรวจ':String(r['หลักฐานการตรวจ']||'').trim()
   };
 }
 
@@ -407,11 +407,13 @@ async function loadData(){
   $('refreshBtn').disabled=true;
   $('refreshBtn').textContent=t('filters.refreshing');
   try{
-    const url=CSV_URL+(CSV_URL.includes('?')?'&':'?')+'_='+Date.now();
-    const response=await fetch(url,{cache:'no-store'});
-    if(!response.ok) throw new Error('HTTP '+response.status);
-    const csv=await response.text();
-    DATA=parseCSV(csv).map(mapRow).filter(d=>d['ประเภท']==='GR'||d['ประเภท']==='GS');
+    const sources=await Promise.all(Object.entries(CSV_URLS).map(async([group,baseUrl])=>{
+      const url=baseUrl+(baseUrl.includes('?')?'&':'?')+'_='+Date.now();
+      const response=await fetch(url,{cache:'no-store'});
+      if(!response.ok) throw new Error(group+' HTTP '+response.status);
+      return parseCSV(await response.text()).map(row=>mapRow(row,group));
+    }));
+    DATA=sources.flat().filter(d=>d['รหัสวิชา']&&d['ลิงก์']);
     refreshFaculty();
     clearLoadingSkeleton();
     render();
