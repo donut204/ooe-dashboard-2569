@@ -34,7 +34,7 @@ html.auth-check body{visibility:hidden}
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
 <script src="assets/ooe-i18n.js?v=20261116-reference-date"></script>
-<script defer src="assets/ooe-page-i18n.js?v=20261118-cohort-v1"></script>
+<script defer src="assets/ooe-page-i18n.js?v=20261118-profile-view-v1"></script>
 <script>OOEAuth.requireAuth();</script>
 
 <style>
@@ -650,6 +650,18 @@ html.auth-check body{visibility:hidden}
 .profile-mini.complete strong{color:var(--green)}
 .profile-mini.partial strong{color:#b66f00}
 .profile-mini.notdone strong{color:var(--red)}
+.profile-mini[data-profile-status]{width:100%;font:inherit;text-align:left;cursor:pointer;position:relative;transition:background .16s ease,border-color .16s ease,box-shadow .16s ease}
+.profile-mini[data-profile-status]:hover{background:#eef5ff;border-color:#b8d2ef}
+.profile-mini[data-profile-status]:focus-visible{outline:3px solid rgba(47,111,214,.25);outline-offset:2px}
+.profile-mini[data-profile-status].is-active{background:#eaf2ff;border-color:#3478d8;box-shadow:0 0 0 2px rgba(47,111,214,.15)}
+.profile-mini.complete.is-active{border-color:var(--green);background:#ecfaf5}
+.profile-mini.partial.is-active{border-color:var(--amber);background:#fff8e8}
+.profile-mini.notdone.is-active{border-color:var(--red);background:#fff1f3}
+.table-panel.is-profile-view table{min-width:1550px}
+.profile-flat-row td{font-size:12.5px;background:#fff}
+.profile-flat-row:hover td{background:#f7fbff}
+.profile-flat-row td:first-child{color:#71869d}
+
 @media(max-width:1250px){.kpi-grid-v2{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:1150px){.right-summary-stack{height:auto;grid-template-rows:auto auto}.right-summary-stack>.chart-panel{height:auto}}
 @media(max-width:900px){.profile-mini-grid.podcast{grid-template-columns:repeat(2,1fr)}}
@@ -703,9 +715,9 @@ html.auth-check body{visibility:hidden}
   <div class="profile-summary-head"><strong>ข้อมูลระดับ Profile</strong><span>อัปเดตตามข้อมูล Google Sheet และตัวกรองปัจจุบัน</span></div>
   
 <div class="profile-mini-grid ai">
-  <div class="profile-mini"><span>Profile ทั้งหมด</span><strong id="profileTotalKpi">0</strong></div>
-  <div class="profile-mini complete"><span>Profile ที่ทำ</span><strong id="profileCompleteKpi">0</strong></div>
-  <div class="profile-mini notdone"><span>Profile ที่ไม่ทำ</span><strong id="profileNotdoneKpi">0</strong></div>
+  <button type="button" class="profile-mini" data-profile-status="" aria-pressed="false" aria-controls="courseRows" title="กรองดู Profile ทั้งหมด"><span>Profile ทั้งหมด</span><strong id="profileTotalKpi">0</strong></button>
+  <button type="button" class="profile-mini complete" data-profile-status="complete" aria-pressed="false" aria-controls="courseRows" title="กรองดู Profile ที่ทำ"><span>Profile ที่ทำ</span><strong id="profileCompleteKpi">0</strong></button>
+  <button type="button" class="profile-mini notdone" data-profile-status="notdone" aria-pressed="false" aria-controls="courseRows" title="กรองดู Profile ที่ไม่ทำ"><span>Profile ที่ไม่ทำ</span><strong id="profileNotdoneKpi">0</strong></button>
 </div>
 </article>
 </section>
@@ -732,7 +744,7 @@ html.auth-check body{visibility:hidden}
 <article class="panel chart-panel"><div class="section-head"><div><h2>ความคืบหน้า AI Tutor</h2><p>คะแนนเต็ม 1 คะแนนต่อรายวิชา โดยใช้ผลงานร่วมกันเฉพาะกลุ่มผู้เรียนเดียวกัน</p></div></div><div class="donut-body"><div class="donut-wrap"><div class="donut" id="donutChart"></div><div class="donut-center"><span class="donut-number" id="donutTotal">0%</span><span class="donut-label">ความคืบหน้า</span></div></div><div class="donut-list" id="donutLegend"></div></div></article>
 </div>
 </section>
-<section class="panel table-panel"><div class="table-tools"><div><h2>รายละเอียดรายวิชา AI Tutor 1/2569</h2><p>1 รหัสวิชา = 1 รายวิชา · กด + เพื่อดูผลแต่ละ Profile</p></div><div class="table-actions"><div class="count" id="resultCount" hidden aria-hidden="true"></div><a class="criteria-link" href="https://drive.google.com/drive/folders/1ROpp-UgUJHhUZ_e5OwFkJ5IUnu6a54FL?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="เกณฑ์การจัดทำรายวิชา"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3h7l3 3v15H7V3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v4h4M10 11h4M10 15h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>เกณฑ์การจัดทำรายวิชา</span><span aria-hidden="true">↗</span></a></div></div><div class="table-wrap"><table><thead><tr><th>คณะ / วิทยาลัย · รายวิชา</th><th>Course Profile</th><th>Course Type</th><th>อาจารย์ผู้สอน</th><th class="center">คะแนน / AI Tutor</th><th class="center">สถานะ</th><th class="center">คำแนะนำ</th><th>รายวิชา</th></tr></thead><tbody id="courseRows"></tbody></table></div><div class="pager"><div class="count" id="pageInfo"></div><div class="pager-controls"><button id="prevBtn">ก่อนหน้า</button><button id="nextBtn">ถัดไป</button></div></div></section>
+<section class="panel table-panel"><div class="table-tools"><div><h2 id="detailTableTitle">รายละเอียดรายวิชา AI Tutor 1/2569</h2><p id="detailTableDescription">1 รหัสวิชา = 1 รายวิชา · กด + เพื่อดูผลแต่ละ Profile</p></div><div class="table-actions"><div class="count" id="resultCount" hidden aria-hidden="true"></div><a class="criteria-link" href="https://drive.google.com/drive/folders/1ROpp-UgUJHhUZ_e5OwFkJ5IUnu6a54FL?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="เกณฑ์การจัดทำรายวิชา"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3h7l3 3v15H7V3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v4h4M10 11h4M10 15h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>เกณฑ์การจัดทำรายวิชา</span><span aria-hidden="true">↗</span></a></div></div><div class="table-wrap"><table><thead><tr><th>คณะ / วิทยาลัย · รายวิชา</th><th>Course Profile</th><th>Course Type</th><th>อาจารย์ผู้สอน</th><th class="center">คะแนน / AI Tutor</th><th class="center">สถานะ</th><th class="center">คำแนะนำ</th><th>รายวิชา</th></tr></thead><tbody id="courseRows"></tbody></table></div><div class="pager"><div class="count" id="pageInfo"></div><div class="pager-controls"><button id="prevBtn">ก่อนหน้า</button><button id="nextBtn">ถัดไป</button></div></div></section>
 <p class="note">ข้อมูลจะอัปเดตเมื่อเปิดหน้าเว็บหรือกด “อัปเดตข้อมูล” · ไม่มีการเผยแพร่อีเมลผู้สอนใน Dashboard</p>
 
 <div class="advice-modal" id="aiCriteriaModal" role="dialog" aria-modal="true" aria-labelledby="aiCriteriaTitle">
@@ -855,6 +867,7 @@ html.auth-check body{visibility:hidden}
 </main>
 <script src="assets/ooe-profile-count-filter.js"></script>
 <script src="assets/ooe-course-score.js?v=20261118-cohort-v1"></script>
+<script src="assets/ooe-profile-view.js?v=20261118-profile-view-v1"></script>
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=223035731&single=true&output=csv';
 let DATA=[]; const FACULTY_PAGE_SIZE=4; let currentPage=1;
@@ -866,6 +879,11 @@ function revealDashboardOnce(){
   window.setTimeout(()=>document.body.classList.remove('dashboard-reveal'),950);
 }
 const $=id=>document.getElementById(id);
+const PROFILE_MODE='ai';
+const PROFILE_PAGE_SIZE=20;
+let profileViewStatus=null; // null = course view, '' = all profiles, other = profile status
+const COURSE_TABLE_HEAD=$('courseRows').closest('table').querySelector('thead').innerHTML;
+const PROFILE_TABLE_HEAD="<tr><th class=\"num\">ลำดับ</th><th>รหัสวิชา</th><th>หน่วยกิต</th><th>Course Profile</th><th>วันที่ระบบสร้างรายวิชา</th><th>คณะ / วิทยาลัย</th><th>อาจารย์ผู้สอน</th><th class=\"center\">คะแนน / AI Tutor</th><th class=\"center\">สถานะ</th><th class=\"center\">คำแนะนำ</th><th>รายวิชา</th></tr>";
 const profileCountFilter=OOEProfileCountFilter.create($("profileCountFilter"),()=>render());
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -1088,6 +1106,88 @@ function adviceCell(d){
   }
   return '<span class="advice-dash">—</span>';
 }
+function profileRows(status=''){
+  return window.OOEProfileView.rows(groupCourses(DATA),{
+    mode:PROFILE_MODE,
+    faculty:$('facultyFilter').value,
+    type:$('typeFilter').value,
+    query:$('searchBox').value,
+    profileCountMatches:count=>profileCountFilter.matches(count),
+    status
+  });
+}
+
+function syncProfileTableMode(){
+  const isProfile=profileViewStatus!==null;
+  const table=$('courseRows').closest('table');
+  const thead=table.querySelector('thead');
+  const markup=isProfile?PROFILE_TABLE_HEAD:COURSE_TABLE_HEAD;
+  if(thead.innerHTML!==markup)thead.innerHTML=markup;
+  table.closest('.table-panel').classList.toggle('is-profile-view',isProfile);
+  const subject=PROFILE_MODE==='ai'?'AI Tutor':'Podcast';
+  $('detailTableTitle').textContent=isProfile?`รายละเอียด Profile ${subject} 1/2569`:`รายละเอียดรายวิชา ${subject} 1/2569`;
+  $('detailTableDescription').textContent=isProfile
+    ?'หนึ่งแถวต่อหนึ่ง Profile · สถานะตามข้อมูลต้นทาง'
+    :'1 รหัสวิชา = 1 รายวิชา · กด + เพื่อดูผลแต่ละ Profile';
+}
+
+function formatProfileCreatedDate(raw){
+  const value=String(raw||'').trim();
+  if(!value)return '—';
+  const match=value.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if(!match)return value;
+  const year=Number(match[1])+(window.OOEI18n?.getLanguage?.()==='th'?543:0);
+  return `${match[3]}/${match[2]}/${year}`;
+}
+
+function renderProfileTable(rows){
+  const pages=Math.max(1,Math.ceil(rows.length/PROFILE_PAGE_SIZE));
+  currentPage=Math.min(currentPage,pages);
+  const start=(currentPage-1)*PROFILE_PAGE_SIZE;
+  const pageRows=rows.slice(start,start+PROFILE_PAGE_SIZE);
+  $('courseRows').innerHTML=pageRows.map((d,i)=>{
+    const score=PROFILE_MODE==='ai'?d.aiTutor:d.podcastCount;
+    const badge=PROFILE_MODE==='ai'
+      ?statusBadge(d.aiStatus)
+      :statusBadge(d.podcastStatus,d.podcastCount,d.profileType);
+    const link=d.courseLink?`<a href="${esc(d.courseLink)}" target="_blank" rel="noopener noreferrer">เปิด ↗</a>`:'—';
+    return `<tr class="profile-flat-row">
+      ${td(start+i+1,'num')}
+      ${td(d.courseCode||'—','course nowrap')}
+      ${td(d.credits||'—','nowrap')}
+      ${td(d.courseProfile||'—','nowrap')}
+      ${td(formatProfileCreatedDate(d.createdDate),'nowrap')}
+      ${td(d.faculty||'—')}
+      ${td(d.instructors||'—')}
+      <td class="center nowrap">${esc(score||'0')} · ${formatPct(d.profileScore)}</td>
+      <td class="center">${badge}</td>
+      <td class="center">${adviceCell(d)}</td>
+      <td>${link}</td>
+    </tr>`;
+  }).join('')||'<tr class="profile-flat-row"><td colspan="11" class="empty">ไม่พบข้อมูลตามตัวกรอง</td></tr>';
+  $('resultCount').textContent=`แสดง ${rows.length.toLocaleString('th-TH')} Profile`;
+  $('pageInfo').textContent=rows.length
+    ?`แสดง Profile ${(start+1).toLocaleString('th-TH')}–${Math.min(start+PROFILE_PAGE_SIZE,rows.length).toLocaleString('th-TH')} จาก ${rows.length.toLocaleString('th-TH')} Profile`
+    :'ไม่พบข้อมูล';
+  $('prevBtn').disabled=currentPage===1;
+  $('nextBtn').disabled=currentPage===pages;
+}
+
+function syncProfileCardState(){
+  document.querySelectorAll('.profile-mini[data-profile-status]').forEach(card=>{
+    const on=profileViewStatus!==null&&(card.dataset.profileStatus||'')===profileViewStatus;
+    card.classList.toggle('is-active',on);
+    card.setAttribute('aria-pressed',String(on));
+  });
+}
+
+function applyProfileCardFilter(card){
+  const target=card.dataset.profileStatus||'';
+  profileViewStatus=profileViewStatus===target?null:target;
+  $('statusFilter').value='';
+  render();
+}
+
 function renderTable(rows){
   // rows already reflect all active filters/search.
   // Group filtered courses by faculty first, then paginate the faculty groups.
@@ -1158,7 +1258,28 @@ function closeAIAdvice(){
   $('aiAdviceModal').classList.remove('open');
   document.body.style.overflow='';
 }
-function render(reset=true){if(reset)currentPage=1;const rows=filtered();setKpis(rows);renderChart(rows);renderDonut(rows);renderTable(rows);syncKpiCardState();window.OOESingleSelect?.syncAll()}
+function render(reset=true){
+  if(reset)currentPage=1;
+  const rows=filtered();
+  setKpis(rows);
+  renderChart(rows);
+  renderDonut(rows);
+  syncProfileTableMode();
+  if(profileViewStatus===null){
+    renderTable(rows);
+  }else{
+    const allProfiles=profileRows('');
+    const counts=window.OOEProfileView.counts(allProfiles,PROFILE_MODE);
+    $('profileTotalKpi').textContent=counts.all.toLocaleString('th-TH');
+    $('profileCompleteKpi').textContent=counts.complete.toLocaleString('th-TH');
+    
+    $('profileNotdoneKpi').textContent=counts.notdone.toLocaleString('th-TH');
+    renderProfileTable(profileRows(profileViewStatus));
+  }
+  syncKpiCardState();
+  syncProfileCardState();
+  window.OOESingleSelect?.syncAll();
+}
 async function loadData(){
   showLoadingSkeleton();
   $('sourceSummary').textContent='กำลังโหลดข้อมูลออนไลน์...';$('refreshBtn').disabled=true;
@@ -1169,17 +1290,21 @@ async function loadData(){
 function syncKpiCardState(){
   const current=$('statusFilter').value;
   document.querySelectorAll('.kpi-filter-card[data-kpi-primary="true"]').forEach(card=>{
-    const active=(card.dataset.statusFilter||'')===current;
+    const active=profileViewStatus===null&&(card.dataset.statusFilter||'')===current;
     card.classList.toggle('is-active',active);
     card.setAttribute('aria-pressed',String(active));
   });
 }
 function applyKpiCardFilter(card){
+  profileViewStatus=null;
   const target=card.dataset.statusFilter||'';
   const current=$('statusFilter').value;
   $('statusFilter').value=target&&current===target?'':target;
   render();
 }
+document.querySelectorAll('.profile-mini[data-profile-status]').forEach(card=>{
+  card.addEventListener('click',()=>applyProfileCardFilter(card));
+});
 document.querySelectorAll('.kpi-filter-card[data-status-filter]').forEach(card=>{
   card.addEventListener('click',()=>applyKpiCardFilter(card));
   card.addEventListener('keydown',e=>{
@@ -1188,9 +1313,10 @@ document.querySelectorAll('.kpi-filter-card[data-status-filter]').forEach(card=>
     applyKpiCardFilter(card);
   });
 });
-['facultyFilter','typeFilter','statusFilter'].forEach(id=>$(id).addEventListener('change',()=>render()));
+['facultyFilter','typeFilter'].forEach(id=>$(id).addEventListener('change',()=>render()));
+$('statusFilter').addEventListener('change',()=>{profileViewStatus=null;render()});
 $('searchBox').addEventListener('input',()=>render());
-$('resetBtn').addEventListener('click',()=>{$('facultyFilter').value='';$('typeFilter').value='';$('statusFilter').value='';profileCountFilter.clear();$('searchBox').value='';render()});
+$('resetBtn').addEventListener('click',()=>{$('facultyFilter').value='';$('typeFilter').value='';$('statusFilter').value='';profileCountFilter.clear();$('searchBox').value='';profileViewStatus=null;render()});
 $('refreshBtn').addEventListener('click',loadData);$('prevBtn').addEventListener('click',()=>{currentPage--;render(false)});$('nextBtn').addEventListener('click',()=>{currentPage++;render(false)});
 $('courseRows').addEventListener('click',e=>{
   const facultyToggle=e.target.closest('.faculty-toggle[data-faculty-group]');
