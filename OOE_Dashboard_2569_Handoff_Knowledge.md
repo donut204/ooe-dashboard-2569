@@ -1855,3 +1855,10 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Validated with V8 JavaScript syntax checks for the new GS helper and the complete `index.html` inline dashboard script; both **PASS**. Five helper test cases **5/5 PASS** (status buckets, same/different faculty grouping, zero students, mixed statuses, missing codes). Static integration assertions verified five GS Profile cards, two view buttons, GS-only render guard, retained legacy Profile rendering and unchanged CSV source. Real authenticated desktop/mobile browser testing and GitHub Pages Production verification **NOT YET RUN**.
 - Guardrails: keep `faculty + courseCode` as the exact course identity; no inferred GR/GS status rule for multiple Profile statuses; keep original Profile evidence/links, including 0-student records; always check source and handoff again before future GR changes.
 
+### 18/11/2569 — OWNER: approved Dashboard edits must reach main (no Preview workflow)
+
+- OWNER explicitly directed that, when the assistant implements approved OOE Dashboard changes, **finish the work by publishing them to `main` within the same work cycle**, because the OWNER has no usable Preview to inspect. Do not stop with an unmerged PR and call the task finished.
+- Keep preflight (read current main Handoff and source), scoped implementation, regression checks, same-cycle Handoff and exact SHA verification. A branch/PR can be used as an intermediate safety/review step, but the intended delivery target for OWNER-approved edits is the live GitHub Pages `main`; do not require the OWNER to manually inspect an unavailable Preview.
+- Do not claim GitHub Pages is deployed solely because GitHub accepted the merge. Verify actual Pages workflow/rendered asset when access is available, and explicitly distinguish the GitHub `main` status from the web deployment status.
+- For GS pilot PR #34, confirmed merged to `main@bf66b409352e5a70f1579ed67ee570c834013f0f`. GitHub verified `index.html`, the new GS helper and this Handoff on `main`; external Pages live verification was unavailable from the current tools.
+
