@@ -23,7 +23,8 @@ for(const [name,expectedStatuses,subject] of [
   assert.match(html,/data-profile-status="complete"/);
   assert.match(html,/profileViewStatus===null/);
   assert.match(html,/src="assets\/ooe-profile-view\.js\?v=20261118-profile-view-v1"/);
-  assert.match(html,new RegExp('รายละเอียด Profile '+subject));
+  assert.match(html,/รายละเอียด Profile \$\{subject\} 1\/2569/);
+  assert.match(html,/id="detailTableTitle"/);
   assert.equal((html.match(/<button type="button" class="profile-mini/g)||[]).length,expectedStatuses.length);
   for(const block of html.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)){
     if(block[1].trim())assert.doesNotThrow(()=>new Function(block[1]),name+' inline script compiles');
