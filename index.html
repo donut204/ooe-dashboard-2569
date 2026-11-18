@@ -193,24 +193,38 @@ html.auth-check body{visibility:hidden}
 .gs-profile-card[data-gs-status="อยู่ระหว่างการตรวจสอบ"] strong{color:#b7791f}
 .gs-profile-card[data-gs-status="ไม่พบเนื้อหา"] strong{color:var(--violet)}
 .gs-profile-card:hover{border-color:#a5bddf;transform:translateY(-1px)}
-.gs-profile-card:focus-visible,.gs-mode:focus-visible,.gs-course-expand:focus-visible{outline:3px solid #7da5ed;outline-offset:2px}
+.gs-profile-card:focus-visible,.gs-mode:focus-visible{outline:3px solid #7da5ed;outline-offset:2px}
 .gs-profile-card[aria-pressed="true"]{border-color:var(--blue);box-shadow:0 0 0 2px rgba(36,93,204,.13);background:#edf4ff}
 .gs-view-tools{display:flex;gap:4px;padding:3px;border:1px solid #dce6f1;background:#f4f7fb;border-radius:10px}
 .gs-mode{height:32px;padding:0 13px;background:transparent;color:var(--muted);font-size:12px;border-radius:7px}
 .gs-mode[aria-pressed="true"]{background:var(--blue);color:white;box-shadow:0 2px 7px rgba(36,93,204,.2)}
-.gs-course-expand{height:31px;display:inline-flex;align-items:center;gap:7px;padding:0 10px;background:#edf3fd;border:1px solid #c8d9ef;color:var(--blue);font-size:12px;border-radius:8px;white-space:nowrap}
-.gs-course-expand[aria-expanded="true"]{background:#dae8fd}
-.gs-course-count{font-size:12px;color:var(--muted);font-weight:700}
-.gs-course-statuses{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.gs-course-statuses small{color:var(--muted);font-size:11px;margin-left:-4px}
-.gs-subrow>td{background:#f7faff!important;padding:10px 16px!important}
-.gs-nested-wrap{overflow:auto;max-width:100%}
-.gs-nested-table{width:100%;min-width:790px;border-collapse:collapse;font-size:12px}
-.gs-nested-table th,.gs-nested-table td{padding:10px 11px!important;text-align:left;border-bottom:1px solid #dce7f3;vertical-align:middle}
-.gs-nested-table th{color:var(--muted);background:#eaf1fb}
-.gs-nested-table tr:last-child td{border-bottom:0}
+.gs-tree-toggle{width:23px;height:23px;flex:0 0 23px;padding:0;display:inline-grid;place-items:center;border:0;border-radius:6px;background:#2f6fd6;color:#fff;font-weight:900;font-size:16px;line-height:1;box-shadow:0 1px 2px rgba(16,42,67,.12)}
+.gs-tree-toggle:hover{background:#245dcc}
+.gs-tree-toggle:focus-visible{outline:3px solid rgba(47,111,214,.23);outline-offset:2px}
+.gs-faculty-group-row td{padding:12px 14px!important;background:linear-gradient(90deg,#e4eefb,#eef5fc)!important;border-top:1px solid #cbdced;border-bottom:1px solid #cbdced;border-left:4px solid #2f6fd6;color:#14345f}
+.gs-faculty-line{display:flex;align-items:center;gap:10px;min-width:max-content}
+.gs-faculty-name{color:#14345f;font-weight:800;font-size:14px}
+.gs-faculty-count{padding:4px 9px;border-radius:999px;background:#fff;border:1px solid #c9dcef;color:#486581;font-size:11px;font-weight:800;line-height:1}
+.gs-course-row td{background:#f8fbff!important;border-bottom:1px solid #e1eaf4;color:#486581}
+.gs-course-row td:first-child{box-shadow:inset 3px 0 0 #bfd1e8}
+.gs-course-first{position:relative;padding-left:42px!important;white-space:nowrap}
+.gs-course-first::before{content:"";position:absolute;left:28px;top:-1px;bottom:50%;width:1px;background:#cbd8e6}
+.gs-course-first::after{content:"";position:absolute;left:28px;top:50%;width:10px;height:1px;background:#cbd8e6}
+.gs-course-line{display:inline-flex;align-items:center;gap:15px}
+.gs-course-title{display:inline-flex;align-items:center;gap:7px}
+.gs-course-code{font-size:14px;font-weight:800;color:#153e68}
+.gs-profile-count{display:inline-flex;align-items:center;padding:3px 8px;border:1px solid #d7e3f1;border-radius:999px;background:#eef4fb;color:#627d98;font-size:11px;font-weight:800;line-height:1}
+.gs-parent-placeholder{color:#7b8794;text-align:center}
+.gs-profile-row td{background:#fff!important;color:#52667d;font-size:12.5px}
+.gs-profile-row:hover td{background:#fbfdff!important}
+.gs-profile-first{position:relative;min-width:70px}
+.gs-profile-first::before{content:"";position:absolute;left:68px;top:-1px;bottom:50%;width:1px;background:#cbd8e6}
+.gs-profile-first::after{content:"";position:absolute;left:68px;right:-1px;top:50%;height:1px;background:#cbd8e6}
+.gs-profile-code{position:relative;padding-left:14px!important;color:#486581;font-weight:700;white-space:nowrap}
+.gs-profile-code::after{content:"";position:absolute;left:-1px;top:50%;width:10px;height:1px;background:#cbd8e6}
+.gs-tree-table{min-width:1100px}
 @media(max-width:1100px){.gs-profile-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:650px){.gs-profile-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gs-profile-card{min-height:61px}.gs-profile-card strong{font-size:19px}.gs-view-tools{width:100%;justify-content:stretch}.gs-mode{flex:1}}
+@media(max-width:650px){.gs-profile-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.gs-profile-card{min-height:61px}.gs-profile-card strong{font-size:19px}.gs-view-tools{width:100%;justify-content:stretch}.gs-mode{flex:1}.gs-course-first{padding-left:38px!important}.gs-course-first::before,.gs-course-first::after{left:24px}.gs-profile-first::before,.gs-profile-first::after{left:64px}}
 @media(prefers-reduced-motion:reduce){.gs-profile-card{transition:none}}
 </style>
 </head><body>
@@ -258,6 +272,8 @@ let activeType=location.hash.replace('#','').toUpperCase()==='GS'?'GS':'GR';
 let gsViewMode='profile'; // Preserve the current GS flat Profile table as the default.
 let gsProfileStatus=null; // null: no secondary Profile filter; '' is all Profiles.
 const gsExpandedCourses=new Set();
+const gsCollapsedFaculties=new Set();
+const GS_FACULTY_PAGE_SIZE=4;
 const GS_VIEW=window.OOEGSCourseView;
 const gsProfileTableHead=document.getElementById('courseTableHead').innerHTML;
 const GS_WORDING={
@@ -265,6 +281,14 @@ const GS_WORDING={
   en:{heading:'GS Profile Summary',hint:'Updated from Google Sheets and current filters',all:'All Profiles',pass:'Passed Profiles',reviewing:'Profiles under review',fail:'Failed Profiles',noContent:'Profiles with no content',course:'Courses',profile:'Profiles',profiles:'Profile count',details:'Profile details',view:'View Profiles',hide:'Hide Profiles',coursePager:(a,b,n)=>`Courses ${a}–${b} of ${n}`,profilePager:(a,b,n)=>`Profiles ${a}–${b} of ${n}`,empty:'No courses match these filters',unknown:'No review result'}
 };
 function gsText(key){return GS_WORDING[window.OOEI18n.getLanguage()][key];}
+function gsFacultyPager(start,end,total,count){
+  if(I18N.getLanguage()==='th')return `แสดงคณะ ${fmt(start)}–${fmt(end)} จาก ${fmt(total)} คณะ · ${fmt(count)} รายวิชา`;
+  return `Faculties ${fmt(start)}–${fmt(end)} of ${fmt(total)} · ${fmt(count)} courses`;
+}
+function gsFacultyToggleLabel(collapsed,faculty){
+  return (I18N.getLanguage()==='th'?(collapsed?'ขยายคณะ ':'ย่อคณะ '):(collapsed?'Expand faculty ':'Collapse faculty '))+faculty;
+}
+
 
 
 const $=id=>document.getElementById(id);
@@ -688,52 +712,65 @@ function syncGsControls(baseRows){
     btn.setAttribute('aria-pressed',String(selected));
   }
 }
-function gsCourseStatuses(group){
-  const chunks=[];
-  for(const status of GS_VIEW.STATUSES){
-    const count=group.counts[status]||0;
-    if(count)chunks.push(`${reviewBadge(status)}${group.counts.all>1?`<small>× ${fmt(count)}</small>`:''}`);
-  }
-  const counted=GS_VIEW.STATUSES.reduce((sum,status)=>sum+(group.counts[status]||0),0);
-  if(group.counts.all>counted)chunks.push(`<span class="review-badge wait">${esc(gsText('unknown'))}</span><small>× ${fmt(group.counts.all-counted)}</small>`);
-  return `<div class="gs-course-statuses">${chunks.join('')}</div>`;
-}
-function gsNestedProfileRows(profiles){
-  const header=[t('table.courseProfile'),t('table.createdDate'),t('table.instructors'),t('table.reviewStatus'),t('table.note'),t('table.course'),t('table.evidence')];
-  const body=profiles.map(profile=>`<tr>
-    ${td(profile['Course Profile']||'—','nowrap')}
-    ${td(formatCreatedDate(profile['วันที่สร้างรายวิชา']),'nowrap')}
-    ${td(profile['ผู้สอน']||'—')}
-    <td>${reviewBadge(profile['สถานะการตรวจสอบ'])}</td>
-    ${td(note(profile['ความคืบหน้าการทำ'],profile['สถานะการตรวจสอบ']))}
-    <td>${profile['ลิงก์']?`<a href="${esc(profile['ลิงก์'])}" target="_blank" rel="noopener">${t('table.open')}</a>`:'—'}</td>
-    <td>${profile['หลักฐานการตรวจ']?`<a href="${esc(profile['หลักฐานการตรวจ'])}" target="_blank" rel="noopener">${t('table.viewEvidence')}</a>`:'—'}</td>
-  </tr>`).join('');
-  return `<div class="gs-nested-wrap"><table class="gs-nested-table"><thead><tr>${header.map(x=>`<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`;
-}
 function renderGsCourseTable(rows){
-  const headers=[t('table.order'),t('table.courseCode'),t('table.credits'),t('table.faculty'),gsText('profiles'),t('table.reviewStatus'),gsText('details')];
-  $('courseTableHead').innerHTML=`<tr>${headers.map(x=>`<th>${esc(x)}</th>`).join('')}</tr>`;
-  const courses=GS_VIEW.groupCourses(rows);
-  const pages=Math.max(1,Math.ceil(courses.length/PAGE_SIZE));
+  const headers=[
+    I18N.getLanguage()==='th'?'คณะ / วิทยาลัย · รายวิชา':'Faculty / College · Course',
+    t('table.courseProfile'),t('table.credits'),t('table.createdDate'),t('table.instructors'),
+    t('table.reviewStatus'),t('table.note'),t('table.course'),t('table.evidence')
+  ];
+  $('courseTableHead').innerHTML=`<tr>${headers.map(label=>`<th>${esc(label)}</th>`).join('')}</tr>`;
+  $('courseTableHead').closest('table').classList.add('gs-tree-table');
+  const courses=GS_VIEW.groupCourses(rows); // 1 course = exact faculty + courseCode
+  const facultyGroups=new Map();
+  courses.forEach(course=>{
+    const faculty=course.faculty||t('faculty.unspecified');
+    if(!facultyGroups.has(faculty))facultyGroups.set(faculty,[]);
+    facultyGroups.get(faculty).push(course);
+  });
+  const faculties=[...facultyGroups.entries()];
+  const pages=Math.max(1,Math.ceil(faculties.length/GS_FACULTY_PAGE_SIZE));
   currentPage=Math.min(currentPage,pages);
-  const start=(currentPage-1)*PAGE_SIZE;
-  const visible=courses.slice(start,start+PAGE_SIZE);
-  $('courseRows').innerHTML=visible.map((course,i)=>{
-    const first=course.profiles[0],expanded=gsExpandedCourses.has(course.key);
-    const actionLabel=gsText(expanded?'hide':'view');
-    return `<tr class="gs-course-row">
-      ${td(fmt(start+i+1),'num')}
-      ${td(course.courseCode||'—','course nowrap')}
-      ${td(first['หน่วยกิต']||'—','nowrap')}
-      ${td(I18N.faculty(course.faculty))}
-      <td><span class="gs-course-count">${fmt(course.profiles.length)} Profile</span></td>
-      <td>${gsCourseStatuses(course)}</td>
-      <td><button type="button" class="gs-course-expand" data-gs-course-key="${esc(course.key)}" aria-expanded="${expanded}" aria-label="${esc(actionLabel+' '+course.courseCode)}"><span aria-hidden="true">${expanded?'−':'+'}</span>${esc(actionLabel)}</button></td>
-    </tr>${expanded?`<tr class="gs-subrow"><td colspan="7">${gsNestedProfileRows(course.profiles)}</td></tr>`:''}`;
-  }).join('')||`<tr><td colspan="7" class="empty">${esc(gsText('empty'))}</td></tr>`;
-  $('pageInfo').textContent=courses.length?gsText('coursePager')(fmt(start+1),fmt(Math.min(start+PAGE_SIZE,courses.length)),fmt(courses.length)):t('pager.empty');
+  const start=(currentPage-1)*GS_FACULTY_PAGE_SIZE;
+  const visibleFaculties=faculties.slice(start,start+GS_FACULTY_PAGE_SIZE);
+  const html=[];
+  let shownCourses=0;
+  visibleFaculties.forEach(([faculty,items])=>{
+    shownCourses+=items.length;
+    const facultyClosed=gsCollapsedFaculties.has(faculty);
+    html.push(`<tr class="gs-faculty-group-row"><td colspan="9">
+      <div class="gs-faculty-line"><button type="button" class="gs-tree-toggle gs-faculty-toggle" data-gs-faculty="${esc(faculty)}" aria-expanded="${!facultyClosed}" aria-label="${esc(gsFacultyToggleLabel(facultyClosed,faculty))}">${facultyClosed?'+':'−'}</button>
+      <span class="gs-faculty-name">${esc(I18N.faculty(faculty))}</span><span class="gs-faculty-count">${fmt(items.length)} ${esc(gsText('course'))}</span></div>
+    </td></tr>`);
+    if(facultyClosed)return;
+    items.forEach(course=>{
+      const expanded=gsExpandedCourses.has(course.key);
+      const actionLabel=gsText(expanded?'hide':'view')+' '+course.courseCode;
+      html.push(`<tr class="gs-course-row">
+        <td class="gs-course-first"><span class="gs-course-line">
+          <button type="button" class="gs-tree-toggle gs-course-toggle" data-gs-course-key="${esc(course.key)}" aria-expanded="${expanded}" aria-label="${esc(actionLabel)}">${expanded?'−':'+'}</button>
+          <span class="gs-course-title"><strong class="gs-course-code">${esc(course.courseCode||'—')}</strong><span class="gs-profile-count">${fmt(course.profiles.length)} Profile</span></span>
+        </span></td>
+        ${Array.from({length:8},()=>'<td class="gs-parent-placeholder">—</td>').join('')}
+      </tr>`);
+      if(!expanded)return;
+      course.profiles.forEach(profile=>{
+        html.push(`<tr class="gs-profile-row">
+          <td class="gs-profile-first"></td>
+          <td class="gs-profile-code">${esc(profile['Course Profile']||'—')}</td>
+          ${td(profile['หน่วยกิต']||'—','nowrap')}
+          ${td(formatCreatedDate(profile['วันที่สร้างรายวิชา']),'nowrap')}
+          ${td(profile['ผู้สอน']||'—')}
+          <td>${reviewBadge(profile['สถานะการตรวจสอบ'])}</td>
+          ${td(note(profile['ความคืบหน้าการทำ'],profile['สถานะการตรวจสอบ']))}
+          <td>${profile['ลิงก์']?`<a href="${esc(profile['ลิงก์'])}" target="_blank" rel="noopener">${t('table.open')}</a>`:'—'}</td>
+          <td>${profile['หลักฐานการตรวจ']?`<a href="${esc(profile['หลักฐานการตรวจ'])}" target="_blank" rel="noopener">${t('table.viewEvidence')}</a>`:'—'}</td>
+        </tr>`);
+      });
+    });
+  });
+  $('courseRows').innerHTML=html.join('')||`<tr><td colspan="9" class="empty">${esc(gsText('empty'))}</td></tr>`;
   $('resultCount').textContent=t('result.showing',{shown:fmt(courses.length),total:fmt(GS_VIEW.groupCourses(typeRows()).length)});
+  $('pageInfo').textContent=faculties.length?gsFacultyPager(start+1,Math.min(start+GS_FACULTY_PAGE_SIZE,faculties.length),faculties.length,shownCourses):t('pager.empty');
   $('prevBtn').disabled=currentPage===1;
   $('nextBtn').disabled=currentPage===pages;
 }
@@ -755,6 +792,7 @@ function render(reset=true){
   syncGsControls(activeType==='GS'?filtered(true):[]);
   if(activeType==='GS'&&gsViewMode==='course')renderGsCourseTable(rows);
   else {
+    $('courseTableHead').closest('table').classList.remove('gs-tree-table');
     if($('courseTableHead').innerHTML!==gsProfileTableHead){
       $('courseTableHead').innerHTML=gsProfileTableHead;
       I18N.apply($('courseTableHead')); // restore TH/EN headings after leaving GS Course View
@@ -824,20 +862,29 @@ $('gsViewTools').addEventListener('click',event=>{
   render();
 });
 $('courseRows').addEventListener('click',event=>{
+  if(activeType!=='GS'||gsViewMode!=='course')return;
+  const facultyButton=event.target.closest('button[data-gs-faculty]');
+  if(facultyButton){
+    const faculty=facultyButton.dataset.gsFaculty;
+    if(gsCollapsedFaculties.has(faculty))gsCollapsedFaculties.delete(faculty);
+    else gsCollapsedFaculties.add(faculty);
+    render(false);
+    [...$('courseRows').querySelectorAll('button[data-gs-faculty]')].find(b=>b.dataset.gsFaculty===faculty)?.focus();
+    return;
+  }
   const button=event.target.closest('button[data-gs-course-key]');
-  if(!button||activeType!=='GS'||gsViewMode!=='course')return;
+  if(!button)return;
   const key=button.dataset.gsCourseKey;
   if(gsExpandedCourses.has(key))gsExpandedCourses.delete(key);
   else gsExpandedCourses.add(key);
   render(false);
-  const matching=[...$('courseRows').querySelectorAll('button[data-gs-course-key]')].find(b=>b.dataset.gsCourseKey===key);
-  matching?.focus();
+  [...$('courseRows').querySelectorAll('button[data-gs-course-key]')].find(b=>b.dataset.gsCourseKey===key)?.focus();
 });
 
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
   if(activeType===b.dataset.type) return;
   activeType=b.dataset.type;
-  gsViewMode='profile';gsProfileStatus=null;gsExpandedCourses.clear();
+  gsViewMode='profile';gsProfileStatus=null;gsExpandedCourses.clear();gsCollapsedFaculties.clear();
   location.hash=activeType;
   $('facultyFilter').value='';
   $('statusFilter').value='';
@@ -851,7 +898,7 @@ window.addEventListener('hashchange',()=>{
   const t=location.hash.replace('#','').toUpperCase();
   if((t==='GR'||t==='GS')&&t!==activeType){
     activeType=t;
-    gsViewMode='profile';gsProfileStatus=null;gsExpandedCourses.clear();
+    gsViewMode='profile';gsProfileStatus=null;gsExpandedCourses.clear();gsCollapsedFaculties.clear();
     refreshFaculty();
     render();
   }
@@ -862,7 +909,7 @@ $('searchBox').addEventListener('input',()=>render());
 $('resetBtn').addEventListener('click',()=>{
   ['facultyFilter','statusFilter','reviewFilter'].forEach(id=>$(id).value='');
   $('searchBox').value='';
-  if(activeType==='GS'){gsViewMode='profile';gsProfileStatus=null;gsExpandedCourses.clear();}
+  if(activeType==='GS'){gsViewMode='profile';gsProfileStatus=null;gsExpandedCourses.clear();gsCollapsedFaculties.clear();}
   render();
 });
 $('refreshBtn').addEventListener('click',()=>loadData());
