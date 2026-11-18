@@ -188,7 +188,7 @@ html.auth-check body{visibility:hidden}
 
 <script src="assets/ooe-progress.js"></script>
 <script>
-const CSV_URLS={GS:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=1655346225&single=true&output=csv',GR:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=1339443713&single=true&output=csv'};
+const CSV_URLS={GS:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=131857057&single=true&output=csv',GR:'https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=1339443713&single=true&output=csv'};
 let DATA=[];
 let dashboardRevealDone=false;
 function revealDashboardOnce(){
@@ -400,6 +400,31 @@ function mapRow(r,group){
   };
 }
 
+function mapOriginalGsRow(r){
+  const rawProgress=String(r.progress||'').trim();
+  return {
+    'ประเภท':String(r.group||'').trim(),
+    'คณะ':String(r.faculty||'').trim(),
+    'รหัสวิชา':String(r.courseCode||'').trim(),
+    'หน่วยกิต':String(r.credits||'').trim(),
+    'Course Profile':String(r.courseProfile||'').trim(),
+    'รูปแบบ':String(r.profileType||'').trim(),
+    'วันที่สร้างรายวิชา':String(r.createdDate||'').trim(),
+    'ชื่อรายวิชา':String(r.courseName||'').trim(),
+    'ผู้สอน':String(r.instructors||'').trim(),
+    'ประเภทผู้ปฏิบัติงาน':String(r.teacherType||'').trim(),
+    'จำนวนผู้สอน':Number(String(r.teacherCount||'0').replace(/,/g,''))||0,
+    'จำนวนนักศึกษา':Number(String(r.students||'0').replace(/,/g,''))||0,
+    'จำนวนสัปดาห์':Number(String(r.weeks||'0').replace(/,/g,''))||0,
+    'รวมเนื้อหาและกิจกรรม':Number(String(r.activities||'0').replace(/,/g,''))||0,
+    'ความคืบหน้าการทำ':PROGRESS.classify(rawProgress),
+    'ข้อความความคืบหน้าต้นฉบับ':rawProgress,
+    'สถานะการตรวจสอบ':normalizeReviewStatus(r.reviewStatus),
+    'ลิงก์':String(r.courseLink||'').trim(),
+    'หลักฐานการตรวจ':String(r.evidence||'').trim()
+  };
+}
+
 async function loadData(){
   showLoadingSkeleton();
   $('sourceSummary').dataset.state='loading';
@@ -411,9 +436,11 @@ async function loadData(){
       const url=baseUrl+(baseUrl.includes('?')?'&':'?')+'_='+Date.now();
       const response=await fetch(url,{cache:'no-store'});
       if(!response.ok) throw new Error(group+' HTTP '+response.status);
-      return parseCSV(await response.text()).map(row=>mapRow(row,group));
+      const rows=parseCSV(await response.text());
+      if(group==='GS')return rows.map(mapOriginalGsRow).filter(d=>d['ประเภท']==='GS');
+      return rows.map(row=>mapRow(row,group)).filter(d=>d['รหัสวิชา']&&d['ลิงก์']&&d['Course Profile'].startsWith('691GR-')&&d['ประเภทผู้ปฏิบัติงาน']);
     }));
-    DATA=sources.flat().filter(d=>d['รหัสวิชา']&&d['ลิงก์']&&d['Course Profile'].startsWith('691'+d['ประเภท']+'-')&&d['ประเภทผู้ปฏิบัติงาน']);
+    DATA=sources.flat();
     refreshFaculty();
     clearLoadingSkeleton();
     render();
