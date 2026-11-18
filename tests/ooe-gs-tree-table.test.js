@@ -86,10 +86,10 @@ test("Faculty pagination displays remaining groups and never splits a faculty",(
   assert.equal(nodes.prevBtn.disabled,false);
   assert.equal(nodes.nextBtn.disabled,true);
 });
-test("GR renderer remains flat and GS source/KPI stay unchanged",()=>{
-  assert.match(html,/if\(activeType==='GS'&&gsViewMode==='course'\)renderGsCourseTable\(rows\)/);
+test("GR now shares GS tree rendering; GS Profile-row source and KPI path stays unchanged",()=>{
+  assert.match(html,/if\(gsViewMode==='course'\)renderGsCourseTable\(rows\)/);
   assert.match(html,/else\s*\{\s*\$\('courseTableHead'\).closest\('table'\).classList.remove\('gs-tree-table'\)/);
   assert.match(html,/gid=131857057&single=true&output=csv/);
   assert.match(html,/let gsViewMode='profile'/);
-  assert.match(html,/setKpis\(rows\);\s*renderChart\(rows\);\s*renderDonut\(rows\);/);
+  assert.match(html,/setKpis\(grCourses\|\|rows\);\s*renderChart\(grCourses\|\|rows\);\s*renderDonut\(rows\);/);
 });

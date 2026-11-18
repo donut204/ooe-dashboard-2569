@@ -235,7 +235,7 @@ html.auth-check body{visibility:hidden}
 <section class="kpis"><article class="panel kpi kpi-filter-card" data-review-filter="" role="button" tabindex="0" aria-pressed="false" data-i18n-title="kpi.titleAll" title="แสดงทุกสถานะการตรวจสอบ"><div class="kpi-mainline"><span class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4.5 5.5c2.6-.8 4.9-.4 7 1.2v11.8c-2.1-1.6-4.4-2-7-1.2V5.5Zm15 0c-2.6-.8-4.9-.4-7 1.2v11.8c2.1-1.6 4.4-2 7-1.2V5.5Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span><div class="kpi-copy"><div class="kpi-label" data-i18n="kpi.total">รายวิชาทั้งหมด</div><div class="kpi-value" id="totalKpi">0</div><div class="kpi-note" id="totalNote"></div></div></div></article><article class="panel kpi green kpi-filter-card" data-review-filter="ผ่าน" role="button" tabindex="0" aria-pressed="false" data-i18n-title="kpi.titlePass" title="กรองเฉพาะรายวิชาที่ผ่าน"><div class="kpi-mainline"><span class="kpi-icon green"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12.5 4.2 4.2L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div class="kpi-copy"><div class="kpi-label" data-i18n="kpi.pass">ผ่าน</div><div class="kpi-value" id="passKpi">0</div><div class="kpi-note" id="passNote"></div></div></div></article><article class="panel kpi amber kpi-filter-card" data-review-filter="อยู่ระหว่างการตรวจสอบ" role="button" tabindex="0" aria-pressed="false" data-i18n-title="kpi.titleReviewing" title="กรองเฉพาะรายวิชาที่อยู่ระหว่างการตรวจสอบ"><div class="kpi-mainline"><span class="kpi-icon amber"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 6.5v7.2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="17.2" r="1" fill="currentColor"/></svg></span><div class="kpi-copy"><div class="kpi-label" data-i18n="kpi.reviewing">อยู่ระหว่างการตรวจสอบ</div><div class="kpi-value" id="reviewingKpi">0</div><div class="kpi-note" id="reviewingNote"></div></div></div></article><article class="panel kpi red kpi-filter-card" data-review-filter="ไม่ผ่าน" role="button" tabindex="0" aria-pressed="false" data-i18n-title="kpi.titleFail" title="กรองเฉพาะรายวิชาที่ไม่ผ่าน"><div class="kpi-mainline"><span class="kpi-icon red"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m7 7 10 10M17 7 7 17" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg></span><div class="kpi-copy"><div class="kpi-label" data-i18n="kpi.fail">ไม่ผ่าน</div><div class="kpi-value" id="failKpi">0</div><div class="kpi-note" id="failNote"></div></div></div></article><article class="panel kpi violet kpi-filter-card" data-review-filter="ไม่พบเนื้อหา" role="button" tabindex="0" aria-pressed="false" data-i18n-title="kpi.titleNoContent" title="กรองเฉพาะรายวิชาที่ไม่พบเนื้อหา"><div class="kpi-mainline"><span class="kpi-icon violet"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6.5 4.5h8l3 3v12h-11v-15Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14.5 4.5v3h3M9.5 12h5M9.5 15.5h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span><div class="kpi-copy"><div class="kpi-label" data-i18n="review.noContent">ไม่พบเนื้อหา</div><div class="kpi-value" id="noContentKpi">0</div><div class="kpi-note" id="noContentNote"></div></div></div></article></section>
 <section id="gsProfileSummary" class="panel gs-profile-summary" aria-label="ข้อมูลระดับ Profile — GS" hidden>
   <div class="gs-profile-head"><strong id="gsProfileHeading">ข้อมูลระดับ Profile — GS</strong><small id="gsProfileHint">อัปเดตตามข้อมูล Google Sheet และตัวกรองปัจจุบัน</small></div>
-  <div class="gs-profile-grid" role="group" aria-label="ตัวกรอง Profile GS">
+  <div class="gs-profile-grid" role="group" id="profileCardGroup" aria-label="ตัวกรอง Profile GS">
     <button type="button" class="gs-profile-card" data-gs-status="" aria-pressed="false"><span data-gs-label="all">Profile ทั้งหมด</span><strong data-gs-count="all">0</strong></button>
     <button type="button" class="gs-profile-card" data-gs-status="ผ่าน" aria-pressed="false"><span data-gs-label="pass">Profile ผ่าน</span><strong data-gs-count="ผ่าน">0</strong></button>
     <button type="button" class="gs-profile-card" data-gs-status="อยู่ระหว่างการตรวจสอบ" aria-pressed="false"><span data-gs-label="reviewing">Profile อยู่ระหว่างตรวจสอบ</span><strong data-gs-count="อยู่ระหว่างการตรวจสอบ">0</strong></button>
@@ -243,11 +243,12 @@ html.auth-check body{visibility:hidden}
     <button type="button" class="gs-profile-card" data-gs-status="ไม่พบเนื้อหา" aria-pressed="false"><span data-gs-label="noContent">Profile ไม่พบเนื้อหา</span><strong data-gs-count="ไม่พบเนื้อหา">0</strong></button>
   </div>
 </section>
-<section class="charts-grid"><article class="panel chart-panel"><div class="section-head"><div><h2 id="chartTitle"></h2><p data-i18n="chart.description">แสดงผลการตรวจ “ผ่าน / ไม่ผ่าน / ไม่พบเนื้อหา” แยกตามคณะ · รายวิชาที่อยู่ระหว่างการตรวจสอบยังไม่รวมในแท่งกราฟ</p></div><div class="legend"><span><i class="dot green"></i><b data-i18n="chart.pass">ผ่าน</b></span><span><i class="dot red"></i><b data-i18n="chart.fail">ไม่ผ่าน</b></span><span><i class="dot violet"></i><b data-i18n="review.noContent">ไม่พบเนื้อหา</b></span></div></div><div class="chart" id="facultyChart"></div></article><article class="panel chart-panel"><div class="section-head"><div><h2 id="donutTitle">สัดส่วนความคืบหน้าของเนื้อหา</h2><p data-i18n="donut.description">คำนวณตามตัวกรองที่เลือก</p></div></div><div class="donut-body"><div class="donut-wrap"><div class="donut" id="donutChart"></div><div class="donut-center"><span class="donut-number" id="donutTotal">0</span><span class="donut-label" data-i18n="donut.centerLabel">รายวิชา</span></div></div><div class="donut-list" id="donutLegend"></div></div><div class="source-qr"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVYAAAFWAQAAAAAa1IguAAAEBUlEQVR4nO2bQW4jOQxFX0UFZEkDOUCOIt9gjtSYI/UBGpCPkgMEkJcBaPxZkCpn2ZsCalSplWxwoaJJfv5PehF/+zxe/toUfmz/n7aoAxTJQVJRc2ulgzUHpxZFyFQ/wn139EON15eEKR6sYQ1qUcNUJPX5/QC19Orx4r26tYgBt+ZUN5VOmdwP63Z6dYDHe39Q/X7xt9/cr0W318/rznc4gu36/YPuF1+X8rkAK7/+gAPW1n3vcBRbqQEOy3tbrTlVvTqs1PV+BTD5znc4gO1tWRZgvV/Lx6/y8WuFFV47pQOV+/WxLMvlMPfdxZZEiI46ktRr6VUdqTlValDDZOo6GXhB4GaRwgmAJKBIEAbT+wFMbi2bqNFTlV6lpg4WndXcuImkAIVoJLaeyuP1M1NOEA+jjfSM/+agjkPEBhbN9ux+6Li1jAeTQ5bKzJGMk/n5hRQ/vXotaoGVCR+9ZspI8/uhVzcVyU2BlW6ZC0BRg4rpBHlRI/iTTJkc3BRngm3ZKfimB80MqcGaJKm5taDkgZ5nwAs3bdpLtE+jLDQnyMUp6mRUg+ir3ZrUBkwQzsmO4gj33RcvajQMRXKqg9RKr1Eko6M4QZ0Eokhm+7QFBoC1koExe170JBRA6YN+Bs3sSC34xRnwIkhlhETpNbIAsjJEkWTyvHgBvpZF/RYY8fXeSq+l38IhjwsrSP/OrkeR4BitoykluI195/DiFPUhBEnIViqlGFNSsESTuf3wgum1syaVuH0tV0LFvi9Q1/tVnZWKtYPcdy/b+xWIUoAJbkE/oa55wLmVj+tB7ruPbbRMcUz9Id/d5KOJAmbHi5xvxvBOUnRNMdxMSarXMn99ePILrDEG3Dn87ZVg3NQz8IuYXwzKGecIjKqU8ev8/EKt9CHPjsetYdrk6zhP7oceilPbNGp/itgpR0RgTO6HYBCmklx7tE9DrpeGlH2E++6JF/HTD9yMj8qdEGDw0Mn9EKApsS0AWEZICrZqp5jzqoUsnxTDcjnq+3zzBLybTY7eWFVRG19GfdAp+oeeK4LEcNNalIuyrUDkjO8EeLFJkYrsIKdauVEZisTsfng2Udu2Q4hyTw3fqfPHQ39ObTZtdmwE5Z7MOeZZLcYWG8Xe5hcDKaJszh4PUgy4AY/RVSdeP/TJ8XH6eBj7chqFcXDMTJlch5g7Hl64L8uyrNZWbk59XG4Oocgtl5TmTqBPskkusRVWctxZtyWZDIzp82Ls25cgEUOfTM3h2WKdxA8QotzYEAt9Urkk02bvo5779uXzH+Bx4fHWF+vAAxb4evtdPi573uEIts//44zNh1yPGfWBsSY0fV5AKi2tdEKYjVzwgImNZRzhvnvZLj//W/yx/fb8B0LsUH8eWOpnAAAAAElFTkSuQmCC" data-i18n-alt="sourceQr.alt" alt="QR Code สำหรับเปิดข้อมูลออนไลน์"><div><h3 data-i18n="sourceQr.title">ข้อมูลออนไลน์จาก Google Sheets</h3><p data-i18n="sourceQr.description">สแกน QR Code เพื่อเปิดข้อมูลที่เผยแพร่สำหรับ Dashboard โดยตรง</p></div></div></article></section>
-<section class="panel table-panel"><div class="table-tools"><div><h2 id="detailTitle"></h2><p data-i18n="detail.description">รายวิชาใน d-Learning / i-Learning · ดึงข้อมูลออนไลน์จาก Google Sheets</p></div><div class="table-actions"><div id="gsViewTools" class="gs-view-tools" role="group" aria-label="มุมมองข้อมูล GS" hidden><button type="button" class="gs-mode" data-gs-mode="course" aria-pressed="false">รายวิชา</button><button type="button" class="gs-mode" data-gs-mode="profile" aria-pressed="true">Profile</button></div><div class="count" id="resultCount" hidden aria-hidden="true"></div><a class="criteria-link" href="https://drive.google.com/drive/folders/1ROpp-UgUJHhUZ_e5OwFkJ5IUnu6a54FL?usp=sharing" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="detail.criteriaAnnouncement" aria-label="เกณฑ์การจัดทำรายวิชา"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3h7l3 3v15H7V3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v4h4M10 11h4M10 15h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span data-i18n="detail.criteriaAnnouncement">เกณฑ์การจัดทำรายวิชา</span><span aria-hidden="true">↗</span></a></div></div><div class="table-wrap"><table><thead id="courseTableHead"><tr><th data-i18n="table.order">ลำดับ</th><th data-i18n="table.courseCode">รหัสวิชา</th><th data-i18n="table.credits">หน่วยกิต</th><th data-i18n="table.courseProfile">รหัสรายวิชาในระบบ</th><th data-i18n="table.createdDate">วันที่ระบบสร้างรายวิชา</th><th data-i18n="table.faculty">คณะ / วิทยาลัย</th><th data-i18n="table.instructors">อาจารย์ผู้สอน</th><th data-i18n="table.reviewStatus">สถานะการตรวจสอบ</th><th data-i18n="table.note">หมายเหตุ</th><th data-i18n="table.course">รายวิชา</th><th data-i18n="table.evidence">หลักฐานการตรวจ</th></tr></thead><tbody id="courseRows"></tbody></table></div><div class="pager"><div class="count" id="pageInfo"></div><div class="pager-controls"><button id="prevBtn" type="button" data-i18n="pager.prev">ก่อนหน้า</button><button id="nextBtn" type="button" data-i18n="pager.next">ถัดไป</button></div></div></section><p class="note" data-i18n="footer.note">หน้าข้อมูล GR และ GS แยกจากกันโดยสมบูรณ์ · ข้อมูลโหลดจาก Google Sheets เมื่อเปิดหน้าเว็บหรือกด “อัปเดตข้อมูล” · ตัวเลขทั้งหมดเป็นจำนวนรายวิชา</p></main>
+<section class="charts-grid"><article class="panel chart-panel"><div class="section-head"><div><h2 id="chartTitle"></h2><p data-i18n="chart.description">แสดงผลการตรวจ “ผ่าน / ไม่ผ่าน / ไม่พบเนื้อหา” แยกตามคณะ · รายวิชาที่อยู่ระหว่างการตรวจสอบยังไม่รวมในแท่งกราฟ</p></div><div class="legend"><span><i class="dot green"></i><b data-i18n="chart.pass">ผ่าน</b></span><span><i class="dot red"></i><b data-i18n="chart.fail">ไม่ผ่าน</b></span><span><i class="dot violet"></i><b data-i18n="review.noContent">ไม่พบเนื้อหา</b></span></div></div><div class="chart" id="facultyChart"></div></article><article class="panel chart-panel"><div class="section-head"><div><h2 id="donutTitle">สัดส่วนความคืบหน้าของเนื้อหา</h2><p id="donutUnitDescription" data-i18n="donut.description">คำนวณตามตัวกรองที่เลือก</p></div></div><div class="donut-body"><div class="donut-wrap"><div class="donut" id="donutChart"></div><div class="donut-center"><span class="donut-number" id="donutTotal">0</span><span class="donut-label" id="donutUnitLabel" data-i18n="donut.centerLabel">รายวิชา</span></div></div><div class="donut-list" id="donutLegend"></div></div><div class="source-qr"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAVYAAAFWAQAAAAAa1IguAAAEBUlEQVR4nO2bQW4jOQxFX0UFZEkDOUCOIt9gjtSYI/UBGpCPkgMEkJcBaPxZkCpn2ZsCalSplWxwoaJJfv5PehF/+zxe/toUfmz/n7aoAxTJQVJRc2ulgzUHpxZFyFQ/wn139EON15eEKR6sYQ1qUcNUJPX5/QC19Orx4r26tYgBt+ZUN5VOmdwP63Z6dYDHe39Q/X7xt9/cr0W318/rznc4gu36/YPuF1+X8rkAK7/+gAPW1n3vcBRbqQEOy3tbrTlVvTqs1PV+BTD5znc4gO1tWRZgvV/Lx6/y8WuFFV47pQOV+/WxLMvlMPfdxZZEiI46ktRr6VUdqTlValDDZOo6GXhB4GaRwgmAJKBIEAbT+wFMbi2bqNFTlV6lpg4WndXcuImkAIVoJLaeyuP1M1NOEA+jjfSM/+agjkPEBhbN9ux+6Li1jAeTQ5bKzJGMk/n5hRQ/vXotaoGVCR+9ZspI8/uhVzcVyU2BlW6ZC0BRg4rpBHlRI/iTTJkc3BRngm3ZKfimB80MqcGaJKm5taDkgZ5nwAs3bdpLtE+jLDQnyMUp6mRUg+ir3ZrUBkwQzsmO4gj33RcvajQMRXKqg9RKr1Eko6M4QZ0Eokhm+7QFBoC1koExe170JBRA6YN+Bs3sSC34xRnwIkhlhETpNbIAsjJEkWTyvHgBvpZF/RYY8fXeSq+l38IhjwsrSP/OrkeR4BitoykluI195/DiFPUhBEnIViqlGFNSsESTuf3wgum1syaVuH0tV0LFvi9Q1/tVnZWKtYPcdy/b+xWIUoAJbkE/oa55wLmVj+tB7ruPbbRMcUz9Id/d5KOJAmbHi5xvxvBOUnRNMdxMSarXMn99ePILrDEG3Dn87ZVg3NQz8IuYXwzKGecIjKqU8ev8/EKt9CHPjsetYdrk6zhP7oceilPbNGp/itgpR0RgTO6HYBCmklx7tE9DrpeGlH2E++6JF/HTD9yMj8qdEGDw0Mn9EKApsS0AWEZICrZqp5jzqoUsnxTDcjnq+3zzBLybTY7eWFVRG19GfdAp+oeeK4LEcNNalIuyrUDkjO8EeLFJkYrsIKdauVEZisTsfng2Udu2Q4hyTw3fqfPHQ39ObTZtdmwE5Z7MOeZZLcYWG8Xe5hcDKaJszh4PUgy4AY/RVSdeP/TJ8XH6eBj7chqFcXDMTJlch5g7Hl64L8uyrNZWbk59XG4Oocgtl5TmTqBPskkusRVWctxZtyWZDIzp82Ls25cgEUOfTM3h2WKdxA8QotzYEAt9Urkk02bvo5779uXzH+Bx4fHWF+vAAxb4evtdPi573uEIts//44zNh1yPGfWBsSY0fV5AKi2tdEKYjVzwgImNZRzhvnvZLj//W/yx/fb8B0LsUH8eWOpnAAAAAElFTkSuQmCC" data-i18n-alt="sourceQr.alt" alt="QR Code สำหรับเปิดข้อมูลออนไลน์"><div><h3 data-i18n="sourceQr.title">ข้อมูลออนไลน์จาก Google Sheets</h3><p data-i18n="sourceQr.description">สแกน QR Code เพื่อเปิดข้อมูลที่เผยแพร่สำหรับ Dashboard โดยตรง</p></div></div></article></section>
+<section class="panel table-panel"><div class="table-tools"><div><h2 id="detailTitle"></h2><p data-i18n="detail.description">รายวิชาใน d-Learning / i-Learning · ดึงข้อมูลออนไลน์จาก Google Sheets</p></div><div class="table-actions"><div id="gsViewTools" class="gs-view-tools" role="group" aria-label="มุมมองข้อมูล GS" hidden><button type="button" class="gs-mode" data-gs-mode="course" aria-pressed="false">รายวิชา</button><button type="button" class="gs-mode" data-gs-mode="profile" aria-pressed="true">Profile</button></div><div class="count" id="resultCount" hidden aria-hidden="true"></div><a class="criteria-link" href="https://drive.google.com/drive/folders/1ROpp-UgUJHhUZ_e5OwFkJ5IUnu6a54FL?usp=sharing" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="detail.criteriaAnnouncement" aria-label="เกณฑ์การจัดทำรายวิชา"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3h7l3 3v15H7V3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v4h4M10 11h4M10 15h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span data-i18n="detail.criteriaAnnouncement">เกณฑ์การจัดทำรายวิชา</span><span aria-hidden="true">↗</span></a></div></div><div class="table-wrap"><table><thead id="courseTableHead"><tr><th data-i18n="table.order">ลำดับ</th><th data-i18n="table.courseCode">รหัสวิชา</th><th data-i18n="table.credits">หน่วยกิต</th><th data-i18n="table.courseProfile">รหัสรายวิชาในระบบ</th><th data-i18n="table.createdDate">วันที่ระบบสร้างรายวิชา</th><th data-i18n="table.faculty">คณะ / วิทยาลัย</th><th data-i18n="table.instructors">อาจารย์ผู้สอน</th><th data-i18n="table.reviewStatus">สถานะการตรวจสอบ</th><th data-i18n="table.note">หมายเหตุ</th><th data-i18n="table.course">รายวิชา</th><th data-i18n="table.evidence">หลักฐานการตรวจ</th></tr></thead><tbody id="courseRows"></tbody></table></div><div class="pager"><div class="count" id="pageInfo"></div><div class="pager-controls"><button id="prevBtn" type="button" data-i18n="pager.prev">ก่อนหน้า</button><button id="nextBtn" type="button" data-i18n="pager.next">ถัดไป</button></div></div></section><p class="note" id="footerNote" data-i18n="footer.note">หน้าข้อมูล GR และ GS แยกจากกันโดยสมบูรณ์ · ข้อมูลโหลดจาก Google Sheets เมื่อเปิดหน้าเว็บหรือกด “อัปเดตข้อมูล” · ตัวเลขทั้งหมดเป็นจำนวนรายวิชา</p></main>
 
 <script src="assets/ooe-progress.js"></script>
 <script src="assets/ooe-gs-course-view.js?v=20261118-gs-view"></script>
+<script src="assets/ooe-gr-course-view.js?v=20261118-gr-course"></script>
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=131857057&single=true&output=csv';
 let DATA=[];
@@ -275,12 +276,16 @@ const gsExpandedCourses=new Set();
 const gsCollapsedFaculties=new Set();
 const GS_FACULTY_PAGE_SIZE=4;
 const GS_VIEW=window.OOEGSCourseView;
+const GR_VIEW=window.OOEGRView;
 const gsProfileTableHead=document.getElementById('courseTableHead').innerHTML;
 const GS_WORDING={
   th:{heading:'ข้อมูลระดับ Profile — GS',hint:'อัปเดตตามข้อมูล Google Sheet และตัวกรองปัจจุบัน',all:'Profile ทั้งหมด',pass:'Profile ผ่าน',reviewing:'Profile อยู่ระหว่างตรวจสอบ',fail:'Profile ไม่ผ่าน',noContent:'Profile ไม่พบเนื้อหา',course:'รายวิชา',profile:'Profile',profiles:'จำนวน Profile',details:'รายละเอียด Profile',view:'ดู Profile',hide:'ซ่อน Profile',coursePager:(a,b,n)=>`แสดงรายวิชา ${a}–${b} จาก ${n} รายวิชา`,profilePager:(a,b,n)=>`แสดง Profile ${a}–${b} จาก ${n} Profile`,empty:'ไม่พบรายวิชาตามตัวกรอง',unknown:'ยังไม่มีผลตรวจ'},
   en:{heading:'GS Profile Summary',hint:'Updated from Google Sheets and current filters',all:'All Profiles',pass:'Passed Profiles',reviewing:'Profiles under review',fail:'Failed Profiles',noContent:'Profiles with no content',course:'Courses',profile:'Profiles',profiles:'Profile count',details:'Profile details',view:'View Profiles',hide:'Hide Profiles',coursePager:(a,b,n)=>`Courses ${a}–${b} of ${n}`,profilePager:(a,b,n)=>`Profiles ${a}–${b} of ${n}`,empty:'No courses match these filters',unknown:'No review result'}
 };
-function gsText(key){return GS_WORDING[window.OOEI18n.getLanguage()][key];}
+function gsText(key){
+  if(key==='heading'&&activeType==='GR')return I18N.getLanguage()==='th'?'ข้อมูลระดับ Profile — GR':'GR Profile Summary';
+  return GS_WORDING[window.OOEI18n.getLanguage()][key];
+}
 function gsFacultyPager(start,end,total,count){
   if(I18N.getLanguage()==='th')return `แสดงคณะ ${fmt(start)}–${fmt(end)} จาก ${fmt(total)} คณะ · ${fmt(count)} รายวิชา`;
   return `Faculties ${fmt(start)}–${fmt(end)} of ${fmt(total)} · ${fmt(count)} courses`;
@@ -528,6 +533,18 @@ function refreshFaculty(){
   if([...$('facultyFilter').options].some(o=>o.value===old)) $('facultyFilter').value=old;
 }
 
+function filteredGrCourses(ignoreReview=false){
+  const criteria={
+    faculty:$('facultyFilter').value,
+    progress:$('statusFilter').value,
+    review:ignoreReview?'':$('reviewFilter').value,
+    search:$('searchBox').value
+  };
+  // Compute course status on ALL original published Profiles before filtering.
+  // Matching a T/L Profile must not remove its sibling from the expanded course.
+  return GR_VIEW.filterCourses(GR_VIEW.groupCourses(typeRows()),criteria);
+}
+
 function filtered(ignoreReview=false){
   const f=$('facultyFilter').value;
   const s=$('statusFilter').value;
@@ -542,11 +559,13 @@ function filtered(ignoreReview=false){
 }
 
 function setKpis(rows){
-  const total=rows.length,all=typeRows().length;
-  const pass=rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.pass).length;
-  const reviewing=rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.reviewing).length;
-  const fail=rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.fail).length;
-  const noContent=rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.noContent).length;
+  const isGr=activeType==='GR';
+  const courseCounts=isGr?GR_VIEW.countCourses(rows):null;
+  const total=rows.length,all=isGr?GR_VIEW.groupCourses(typeRows()).length:typeRows().length;
+  const pass=isGr?courseCounts[REVIEW.pass]:rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.pass).length;
+  const reviewing=isGr?courseCounts[REVIEW.reviewing]:rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.reviewing).length;
+  const fail=isGr?courseCounts[REVIEW.fail]:rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.fail).length;
+  const noContent=isGr?courseCounts[REVIEW.noContent]:rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.noContent).length;
 
   $('totalKpi').textContent=fmt(total);
   $('passKpi').textContent=fmt(pass);
@@ -565,18 +584,19 @@ function setKpis(rows){
 function renderChart(rows){
   const groups={};
   rows.forEach(d=>{
-    const f=d['คณะ']||t('faculty.unspecified');
+    const f=(activeType==='GR'?d.faculty:d['คณะ'])||t('faculty.unspecified');
+    const status=activeType==='GR'?d.courseStatus:d['สถานะการตรวจสอบ'];
     groups[f]??={pass:0,fail:0,reviewing:0,noContent:0,total:0,reviewed:0};
     groups[f].total++;
-    if(d['สถานะการตรวจสอบ']===REVIEW.pass){
+    if(status===REVIEW.pass){
       groups[f].pass++;
       groups[f].reviewed++;
-    }else if(d['สถานะการตรวจสอบ']===REVIEW.fail){
+    }else if(status===REVIEW.fail){
       groups[f].fail++;
       groups[f].reviewed++;
-    }else if(d['สถานะการตรวจสอบ']===REVIEW.reviewing){
+    }else if(status===REVIEW.reviewing){
       groups[f].reviewing++;
-    }else if(d['สถานะการตรวจสอบ']===REVIEW.noContent){
+    }else if(status===REVIEW.noContent){
       groups[f].noContent++;
       groups[f].reviewed++;
     }
@@ -617,7 +637,7 @@ function renderDonut(rows){
     ?`conic-gradient(var(--green) 0 ${gp}%,var(--amber) ${gp}% ${gp+lp}%,var(--violet) ${gp+lp}% ${gp+lp+np}%,var(--gray) ${gp+lp+np}% 100%)`
     :'#e8eef5';
   $('donutTotal').textContent=fmt(total);
-  const item=(label,n,p,cls)=>`<div class="donut-item"><i class="dot ${cls}"></i><span>${label}</span><strong>${t('progress.item',{count:fmt(n),pct:p.toFixed(1)})}</strong></div>`;
+  const item=(label,n,p,cls)=>`<div class="donut-item"><i class="dot ${cls}"></i><span>${label}</span><strong>${activeType==='GR'?`${fmt(n)} Profile (${p.toFixed(1)}%)`:t('progress.item',{count:fmt(n),pct:p.toFixed(1)})}</strong></div>`;
   $('donutLegend').innerHTML=
     item(esc(progressLabel(STATUS.good)),good,gp,'green')+
     item(esc(progressLabel(STATUS.low)),low,lp,'amber')+
@@ -687,10 +707,11 @@ function renderTable(rows){
 
 
 function syncGsControls(baseRows){
-  const isGs=activeType==='GS';
-  $('gsProfileSummary').hidden=!isGs;
-  $('gsViewTools').hidden=!isGs;
-  if(!isGs)return;
+  // Reuse GS-approved Profile Summary and mode toggle for GR without cloning UI.
+  $('gsProfileSummary').hidden=false;
+  $('gsViewTools').hidden=false;
+  $('gsViewTools').setAttribute('aria-label',I18N.getLanguage()==='th'?'มุมมองข้อมูล '+activeType:activeType+' data views');
+  $('profileCardGroup').setAttribute('aria-label','Profile '+activeType);
   $('gsProfileSummary').setAttribute('aria-label',gsText('heading'));
   $('gsProfileHeading').textContent=gsText('heading');
   $('gsProfileHint').textContent=gsText('hint');
@@ -784,22 +805,31 @@ function render(reset=true){
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.type===activeType));
   $('chartTitle').textContent=t('chart.title',{type:activeType});
   $('donutTitle').textContent=t('donut.title',{type:activeType});
+  $('donutUnitLabel').textContent=activeType==='GR'?'Profile':t('donut.centerLabel');
+  $('donutUnitDescription').textContent=activeType==='GR'
+    ?(I18N.getLanguage()==='th'?'คำนวณจาก Profile ของรายวิชาที่ตรงตามตัวกรอง':'Calculated from Profiles within matching courses')
+    :t('donut.description');
+  $('footerNote').textContent=activeType==='GR'
+    ?(I18N.getLanguage()==='th'?'การ์ด KPI และกราฟรายคณะนับเป็นรายวิชา · การ์ด Profile และกราฟวงกลมนับเป็น Profile · ข้อมูลอ่านจาก Google Sheets':'KPI cards and faculty chart count courses; Profile cards and donut count Profiles. Read-only data from Google Sheets.')
+    :t('footer.note');
   $('detailTitle').textContent=t('detail.title',{type:activeType,semester:t('table.semesterValue')});
-  const rows=filtered();
-  setKpis(rows);
-  renderChart(rows);
+  const grCourses=activeType==='GR'?filteredGrCourses():null;
+  const rows=grCourses?grCourses.flatMap(course=>course.profiles):filtered();
+  setKpis(grCourses||rows);
+  renderChart(grCourses||rows);
   renderDonut(rows);
-  syncGsControls(activeType==='GS'?filtered(true):[]);
-  if(activeType==='GS'&&gsViewMode==='course')renderGsCourseTable(rows);
+  syncGsControls(activeType==='GR'?filteredGrCourses(true).flatMap(course=>course.profiles):filtered(true));
+  if(gsViewMode==='course')renderGsCourseTable(rows);
   else {
     $('courseTableHead').closest('table').classList.remove('gs-tree-table');
     if($('courseTableHead').innerHTML!==gsProfileTableHead){
       $('courseTableHead').innerHTML=gsProfileTableHead;
       I18N.apply($('courseTableHead')); // restore TH/EN headings after leaving GS Course View
     }
-    const profileRows=activeType==='GS'&&gsProfileStatus!==null?GS_VIEW.filterProfiles(filtered(true),gsProfileStatus):rows;
+    const sourceProfiles=activeType==='GR'?filteredGrCourses(true).flatMap(course=>course.profiles):filtered(true);
+    const profileRows=gsProfileStatus!==null?GS_VIEW.filterProfiles(sourceProfiles,gsProfileStatus):rows;
     renderTable(profileRows);
-    if(activeType==='GS')$('pageInfo').textContent=profileRows.length?gsText('profilePager')(fmt((currentPage-1)*PAGE_SIZE+1),fmt(Math.min(currentPage*PAGE_SIZE,profileRows.length)),fmt(profileRows.length)):t('pager.empty');
+    $('pageInfo').textContent=profileRows.length?gsText('profilePager')(fmt((currentPage-1)*PAGE_SIZE+1),fmt(Math.min(currentPage*PAGE_SIZE,profileRows.length)),fmt(profileRows.length)):t('pager.empty');
   }
   syncKpiCardState();
   renderProgressNotice();
@@ -828,7 +858,7 @@ function applyKpiCardFilter(card){
   const target=card.dataset.reviewFilter||'';
   const current=$('reviewFilter').value;
   $('reviewFilter').value=target&&current===target?'':target;
-  if(activeType==='GS'){gsViewMode='course';gsProfileStatus=null;}
+  gsViewMode='course';gsProfileStatus=null;
   render();
 }
 document.querySelector('.kpis').addEventListener('click',e=>{
@@ -846,7 +876,7 @@ document.querySelector('.kpis').addEventListener('keydown',e=>{
 
 $('gsProfileSummary').addEventListener('click',event=>{
   const card=event.target.closest('button[data-gs-status]');
-  if(!card||activeType!=='GS')return;
+  if(!card)return;
   const target=card.dataset.gsStatus;
   const wasSelected=gsViewMode==='profile'&&gsProfileStatus===target;
   gsViewMode=wasSelected?'course':'profile';
@@ -856,13 +886,13 @@ $('gsProfileSummary').addEventListener('click',event=>{
 });
 $('gsViewTools').addEventListener('click',event=>{
   const button=event.target.closest('button[data-gs-mode]');
-  if(!button||activeType!=='GS')return;
+  if(!button)return;
   gsViewMode=button.dataset.gsMode;
   gsProfileStatus=null;
   render();
 });
 $('courseRows').addEventListener('click',event=>{
-  if(activeType!=='GS'||gsViewMode!=='course')return;
+  if(gsViewMode!=='course')return;
   const facultyButton=event.target.closest('button[data-gs-faculty]');
   if(facultyButton){
     const faculty=facultyButton.dataset.gsFaculty;
@@ -909,7 +939,7 @@ $('searchBox').addEventListener('input',()=>render());
 $('resetBtn').addEventListener('click',()=>{
   ['facultyFilter','statusFilter','reviewFilter'].forEach(id=>$(id).value='');
   $('searchBox').value='';
-  if(activeType==='GS'){gsViewMode='profile';gsProfileStatus=null;gsExpandedCourses.clear();gsCollapsedFaculties.clear();}
+  gsViewMode='profile';gsProfileStatus=null;gsExpandedCourses.clear();gsCollapsedFaculties.clear();
   render();
 });
 $('refreshBtn').addEventListener('click',()=>loadData());

@@ -20,17 +20,19 @@ test("five GS Profile filter buttons and two view switches are present",()=>{
  assert.match(page,/gsProfileSummary[^>]*hidden/);
  assert.match(page,/gsViewTools[^>]*hidden/);
 });
-test("new rendering remains limited to GS; old Profile rendering is retained",()=>{
- assert.match(script,/if\(activeType==='GS'&&gsViewMode==='course'\)renderGsCourseTable\(rows\)/);
+test("GS and GR share the approved tree and preserve the flat Profile table",()=>{
+ assert.match(script,/if\(gsViewMode==='course'\)renderGsCourseTable\(rows\)/);
  assert.match(script,/let gsViewMode='profile'/);
  assert.match(script,/renderTable\(profileRows\)/);
  assert.match(script,/gsViewMode='profile';gsProfileStatus=null;gsExpandedCourses.clear\(\)/);
  assert.match(script,/I18N\.apply\(\$\('courseTableHead'\)\)/);
 });
-test("GS source and all-page course KPI rules outside this scope stay untouched",()=>{
+test("GS remains Profile-row based; GR course KPI is separate and source stays untouched",()=>{
  assert.match(page,/gid=131857057&single=true&output=csv/);
- assert.match(script,/const rows=filtered\(\);\s*setKpis\(rows\);\s*renderChart\(rows\);\s*renderDonut\(rows\);/);
+ assert.match(script,/const grCourses=activeType==='GR'\?filteredGrCourses\(\):null/);
+ assert.match(script,/const rows=grCourses\?grCourses.flatMap\(course=>course.profiles\):filtered\(\)/);
+ assert.match(script,/setKpis\(grCourses\|\|rows\);\s*renderChart\(grCourses\|\|rows\);\s*renderDonut\(rows\)/);
  assert.match(script,/function syncGsControls\(baseRows\)/);
- assert.match(script,/GS_VIEW\.filterProfiles\(filtered\(true\),gsProfileStatus\)/);
+ assert.match(script,/GS_VIEW\.filterProfiles\(sourceProfiles,gsProfileStatus\)/);
  assert.doesNotMatch(script,/ProfileScore|OOECourseScore/);
 });
