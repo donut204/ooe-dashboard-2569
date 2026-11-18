@@ -413,7 +413,7 @@ async function loadData(){
       if(!response.ok) throw new Error(group+' HTTP '+response.status);
       return parseCSV(await response.text()).map(row=>mapRow(row,group));
     }));
-    DATA=sources.flat().filter(d=>d['รหัสวิชา']&&d['ลิงก์']&&d['Course Profile'].startsWith('691'+d['ประเภท']+'-'));
+    DATA=sources.flat().filter(d=>d['รหัสวิชา']&&d['ลิงก์']&&d['Course Profile'].startsWith('691'+d['ประเภท']+'-')&&d['ประเภทผู้ปฏิบัติงาน']);
     refreshFaculty();
     clearLoadingSkeleton();
     render();
