@@ -3,7 +3,7 @@
 > **ACTIVE RULE (18/11/2569):** AI Tutor/Podcast CourseScore ใช้ MAX เฉพาะ Profile ที่เป็น `courseType` เดียวกันและกลุ่มผู้เรียนเดียวกัน; ถ้ามี instructor suffix ใน Course Profile ให้ถือเป็นกลุ่มผู้สอนแยก; เฉลี่ยคะแนนระหว่างกลุ่มผู้สอน แล้วเฉลี่ยระหว่าง `courseType` ที่ต่างกัน โดยยังเต็ม 1 คะแนนต่อ `faculty + courseCode`. ดูรายละเอียดท้ายเอกสารหัวข้อ 18/11/2569; ข้อความเก่าเรื่อง AVERAGE ทุก Profile เป็นประวัติเดิมเท่านั้น
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 17/11/2569**  
+> **อัปเดตล่าสุด: 18/11/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -1804,7 +1804,7 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 
 ### Implementation and verification
 
-- Baseline: `main@37ef14273898cb6d86b3d22e25f031b8350e0159` (Merge PR #31 after owner rollback). Feature branch `feat/ai-podcast-learner-cohort-scoring-20261118`.
+- Baseline: `main@37ef14273898cb6d86b3d22e25f031b8350e0159` (Merge PR #31 after owner rollback). Feature branch `feat/ai-podcast-learner-cohort-scoring-20261118`. PR #32 (AI Tutor / Podcast cohort scoring; no Google Sheet changes).
 - Edited `ai-tutor.html` and `podcast.html`: common `groupCourses` now calls `window.OOECourseScore.courseScore(g.profiles)`; status/KPI/graphs/filters consume the recomputed score through their existing pathways. UI structure, filters, count and pagination unchanged.
 - Added `assets/ooe-course-score.js`: standalone browser/Node-compatible deterministic shared scoring helper. Uses exact `courseType`, parses explicit trailing instructor suffix (case-insensitive), never infers from display name. Added `tests/ooe-course-score.test.js` with control cases. Updated `assets/ooe-page-i18n.js` for two-language criteria and tooltip/labels. Added cache-busting version only for page i18n and shared score helper (reference date stays owner-controlled).
 - Current source verified read-only: Native Google Sheet `Report691_18_11_2569`, spreadsheet ID `1q8Dfe2f79ehjk7NsefGGYP6UduajKJDV7E79w1_fKMg`, `AI_Tutor_Public` / `Podcast_Public`. Each **913 Profile / 762 courses**. No missing or invalid current ProfileScore found in previous source audit; these snapshots are not hard-coded.
