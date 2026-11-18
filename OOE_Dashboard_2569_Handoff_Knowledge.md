@@ -1878,3 +1878,8 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - Scoped change: `index.html` replaces the GS-only Course View row renderer with faculty/course/Profile three-level rows, adds faculty-collapse state and AI Tutor-style course-view faculty pagination. Adds `tests/ooe-gs-tree-table.test.js` to check 9-column rows, parent placeholders, expanded two-Profile source rows, collapsed faculty, pagination and GR isolation. Existing GS helper, source sheet, AI Tutor/Podcast and authentication are unchanged.
 - Validation via V8/JavaScript evaluation: `index.html` inline JS PASS; combined GS helper + page integration + new tree tests **14/14 PASS**, including mixed-Profile statuses and zero-student eligibility. Full authenticated desktop/mobile Browser E2E and live GitHub Pages visual validation have NOT been claimed.
 - OWNER instructed direct delivery to `main`, not an unmerged Preview. Branch `feat/gs-tree-table-ai-style-20261118`; PR/merge SHA to be confirmed separately after GitHub merge. This is a visual/UI implementation, **not** a new GS/GR business scoring rule.
+
+### Post-merge evidence — 18/11/2569
+- OWNER-approved GS Tree Table delivered through **PR #35 (merged)** to `main@d18e4b42fc4747518877553f4ad75380ad81411a`.
+- GitHub Actions **pages build and deployment** run [#44290323952](https://github.com/donut204/ooe-dashboard-2569/actions/runs/44290323952), head SHA `d18e4b42fc4747518877553f4ad75380ad81411a`, finished **completed/success**. This confirms the Pages workflow, not an authenticated visual Browser E2E.
+- The original GS course layout is replaced only for GS Course View. Main GR table, GS default Profile table, KPIs/charts, Google Sheets and scoring rules remain outside the change.
