@@ -394,7 +394,7 @@ function mapRow(r,group){
     'รวมเนื้อหาและกิจกรรม':Number(String(r['จำนวนรวมเนื้อหาและกิจกรรม']||'0').replace(/,/g,''))||0,
     'ความคืบหน้าการทำ':PROGRESS.classify(rawProgress),
     'ข้อความความคืบหน้าต้นฉบับ':rawProgress,
-    'สถานะการตรวจสอบ':normalizeReviewStatus(r['สถานะการตรวจสอบ']),
+    'สถานะการตรวจสอบ':normalizeReviewStatus((r['สถานะการตรวจสอบ']??r['สถานะการ\nตรวจสอบ'])),
     'ลิงก์':String(r.link||'').trim(),
     'หลักฐานการตรวจ':String(r['หลักฐานการตรวจ']||'').trim()
   };
@@ -413,7 +413,7 @@ async function loadData(){
       if(!response.ok) throw new Error(group+' HTTP '+response.status);
       return parseCSV(await response.text()).map(row=>mapRow(row,group));
     }));
-    DATA=sources.flat().filter(d=>d['รหัสวิชา']&&d['ลิงก์']);
+    DATA=sources.flat().filter(d=>d['รหัสวิชา']&&d['ลิงก์']&&d['Course Profile'].startsWith('691'+d['ประเภท']+'-'));
     refreshFaculty();
     clearLoadingSkeleton();
     render();
