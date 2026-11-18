@@ -1883,3 +1883,10 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - OWNER-approved GS Tree Table delivered through **PR #35 (merged)** to `main@d18e4b42fc4747518877553f4ad75380ad81411a`.
 - GitHub Actions **pages build and deployment** run [#44290323952](https://github.com/donut204/ooe-dashboard-2569/actions/runs/44290323952), head SHA `d18e4b42fc4747518877553f4ad75380ad81411a`, finished **completed/success**. This confirms the Pages workflow, not an authenticated visual Browser E2E.
 - The original GS course layout is replaced only for GS Course View. Main GR table, GS default Profile table, KPIs/charts, Google Sheets and scoring rules remain outside the change.
+
+## 18/11/2569 — OWNER confirmation — GS Tree Table is the approved GR template (implementation deferred)
+
+- OWNER reviewed the **deployed GS Course View Tree Table** from PR #35 and explicitly confirmed: **“นี่แหละที่ผมต้องการ หน้า gr ก็ทำแบบนี้แหละ แต่เดี๋ยวค่อย”**. The current GS design is now the **accepted visual and interaction reference for a future GR Course View**.
+- When OWNER later authorizes GR work, mirror the approved **Faculty → Course → Course Profile** hierarchy and AI Tutor-family styling: expandable/collapsible faculty and course rows, course-count and Profile-count pills, child Profile rows retaining the actual source fields, and **all Profile-specific course-parent cells as `—`**. Preserve exact `faculty + courseCode` identity, multiple Profiles under one course, per-Profile results/evidence links, and zero-student inclusion. Review the latest GS implementation and Handoff again at that time.
+- **GR implementation is explicitly deferred. Do not modify the GR page now**, do not assume permission to change GR KPIs or derive a mixed-Profile course status, and do not infer/transfer the AI Tutor/Podcast scoring policy. Retain current GR behavior until a separate OWNER request.
+- This round is **documentation only**: update `OOE_Dashboard_2569_Handoff_Knowledge.md` on `main` without changing `index.html`, scripts, Google Sheets, source CSV, data, filters or live UI.
