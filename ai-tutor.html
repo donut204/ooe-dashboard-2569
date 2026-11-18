@@ -34,7 +34,7 @@ html.auth-check body{visibility:hidden}
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
 <script src="assets/ooe-i18n.js?v=20261116-reference-date"></script>
-<script defer src="assets/ooe-page-i18n.js?v=20261116-reference-date"></script>
+<script defer src="assets/ooe-page-i18n.js?v=20261118-cohort-v1"></script>
 <script>OOEAuth.requireAuth();</script>
 
 <style>
@@ -667,7 +667,7 @@ html.auth-check body{visibility:hidden}
 <section class="panel filters">
 <div class="field"><label>คณะ / วิทยาลัย</label><select id="facultyFilter"><option value="">ทั้งหมด</option></select></div>
 <div class="field"><label>ประเภทรายวิชา</label><select id="typeFilter"><option value="">ทั้งหมด</option></select></div>
-<div class="field"><label>สถานะ AI Tutor</label><select id="statusFilter"><option value="">ทั้งหมด</option><option value="complete">ทำครบทุก Profile</option><option value="partial">จัดทำไม่ครบ</option><option value="notdone">ไม่ทำ</option></select></div>
+<div class="field"><label>สถานะ AI Tutor</label><select id="statusFilter"><option value="">ทั้งหมด</option><option value="complete">ทำครบ</option><option value="partial">จัดทำไม่ครบ</option><option value="notdone">ไม่ทำ</option></select></div>
 <div class="field profile-count-field"><label id="profileCountLabel">จำนวน Profile</label><div id="profileCountFilter" class="profile-count-filter"></div></div>
 <div class="field"><label>ค้นหารหัสวิชาหรือรหัสรายวิชาในระบบ</label><input id="searchBox" type="search" placeholder="เช่น ICT112 หรือ 691GN..."></div>
 <div class="filter-actions"><button class="refresh" id="refreshBtn">อัปเดตข้อมูล</button><button class="reset" id="resetBtn">ล้างตัวกรอง</button></div>
@@ -680,10 +680,10 @@ html.auth-check body{visibility:hidden}
       <div class="kpi-card-copy"><div class="kpi-label">รายวิชาทั้งหมด</div><div class="kpi-status-value"><span class="kpi-value" id="totalKpi">0</span><span class="kpi-unit">รายวิชา</span></div><div class="kpi-note" id="totalNote">จาก 0 Profile</div></div>
     </div>
   </article>
-  <article class="panel kpi-card-v2 complete kpi-filter-card" data-status-filter="complete" data-kpi-primary="true" role="button" tabindex="0" aria-pressed="false" title="กรองเฉพาะรายวิชาที่ครบทุก Profile">
+  <article class="panel kpi-card-v2 complete kpi-filter-card" data-status-filter="complete" data-kpi-primary="true" role="button" tabindex="0" aria-pressed="false" title="กรองเฉพาะรายวิชาที่ทำครบ">
     <div class="kpi-card-mainline">
       <span class="kpi-icon-v2 green"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12.5 4.2 4.2L19 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <div class="kpi-card-copy"><div class="kpi-label">ครบทุก Profile</div><div class="kpi-status-value"><span class="kpi-value" id="completeCourseKpi">0</span><span class="kpi-unit">รายวิชา</span></div><div class="kpi-note" id="completeCourseNote">0.00%</div></div>
+      <div class="kpi-card-copy"><div class="kpi-label">ทำครบ</div><div class="kpi-status-value"><span class="kpi-value" id="completeCourseKpi">0</span><span class="kpi-unit">รายวิชา</span></div><div class="kpi-note" id="completeCourseNote">0.00%</div></div>
     </div>
   </article>
   <article class="panel kpi-card-v2 partial kpi-filter-card" data-status-filter="partial" data-kpi-primary="true" role="button" tabindex="0" aria-pressed="false" title="กรองเฉพาะรายวิชาที่จัดทำไม่ครบ">
@@ -710,7 +710,7 @@ html.auth-check body{visibility:hidden}
 </article>
 </section>
 <section class="charts-grid">
-<article class="panel chart-panel"><div class="section-head"><div><h2>จำนวนรายวิชา AI Tutor แยกตามคณะ</h2><p>แสดงจำนวนรายวิชาในแต่ละสถานะตามคณะจากผลตามตัวกรองปัจจุบัน</p></div><div class="legend"><span><i class="dot green"></i>ครบทุก Profile</span><span><i class="dot amber"></i>จัดทำไม่ครบ</span><span><i class="dot red"></i>ไม่ทำ</span></div></div><div class="chart" id="facultyChart"></div></article>
+<article class="panel chart-panel"><div class="section-head"><div><h2>จำนวนรายวิชา AI Tutor แยกตามคณะ</h2><p>แสดงจำนวนรายวิชาในแต่ละสถานะตามคณะจากผลตามตัวกรองปัจจุบัน</p></div><div class="legend"><span><i class="dot green"></i>ทำครบ</span><span><i class="dot amber"></i>จัดทำไม่ครบ</span><span><i class="dot red"></i>ไม่ทำ</span></div></div><div class="chart" id="facultyChart"></div></article>
 <div class="right-summary-stack">
 <article class="panel kpi-card-v2 kpi-score-card kpi-filter-card" data-status-filter="" data-kpi-reset="true" role="button" tabindex="0" title="แสดงทุกสถานะ">
   <div class="kpi-score-head">
@@ -729,7 +729,7 @@ html.auth-check body{visibility:hidden}
   </div>
   <div class="kpi-progress-track" aria-hidden="true"><span class="kpi-progress-bar" id="kpiProgressBar"></span></div>
 </article>
-<article class="panel chart-panel"><div class="section-head"><div><h2>ความคืบหน้า AI Tutor</h2><p>คะแนนเต็ม 1 คะแนนต่อรายวิชา และหารตามจำนวน Profile</p></div></div><div class="donut-body"><div class="donut-wrap"><div class="donut" id="donutChart"></div><div class="donut-center"><span class="donut-number" id="donutTotal">0%</span><span class="donut-label">ความคืบหน้า</span></div></div><div class="donut-list" id="donutLegend"></div></div></article>
+<article class="panel chart-panel"><div class="section-head"><div><h2>ความคืบหน้า AI Tutor</h2><p>คะแนนเต็ม 1 คะแนนต่อรายวิชา โดยใช้ผลงานร่วมกันเฉพาะกลุ่มผู้เรียนเดียวกัน</p></div></div><div class="donut-body"><div class="donut-wrap"><div class="donut" id="donutChart"></div><div class="donut-center"><span class="donut-number" id="donutTotal">0%</span><span class="donut-label">ความคืบหน้า</span></div></div><div class="donut-list" id="donutLegend"></div></div></article>
 </div>
 </section>
 <section class="panel table-panel"><div class="table-tools"><div><h2>รายละเอียดรายวิชา AI Tutor 1/2569</h2><p>1 รหัสวิชา = 1 รายวิชา · กด + เพื่อดูผลแต่ละ Profile</p></div><div class="table-actions"><div class="count" id="resultCount" hidden aria-hidden="true"></div><a class="criteria-link" href="https://drive.google.com/drive/folders/1ROpp-UgUJHhUZ_e5OwFkJ5IUnu6a54FL?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="เกณฑ์การจัดทำรายวิชา"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 3h7l3 3v15H7V3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v4h4M10 11h4M10 15h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>เกณฑ์การจัดทำรายวิชา</span><span aria-hidden="true">↗</span></a></div></div><div class="table-wrap"><table><thead><tr><th>คณะ / วิทยาลัย · รายวิชา</th><th>Course Profile</th><th>Course Type</th><th>อาจารย์ผู้สอน</th><th class="center">คะแนน / AI Tutor</th><th class="center">สถานะ</th><th class="center">คำแนะนำ</th><th>รายวิชา</th></tr></thead><tbody id="courseRows"></tbody></table></div><div class="pager"><div class="count" id="pageInfo"></div><div class="pager-controls"><button id="prevBtn">ก่อนหน้า</button><button id="nextBtn">ถัดไป</button></div></div></section>
@@ -759,6 +759,7 @@ html.auth-check body{visibility:hidden}
           <h3>ตัวตั้ง</h3>
           <p class="criteria-lead">จำนวนรายวิชา (ระดับปริญญาตรี)</p>
           <div class="criteria-highlight">หนึ่งรายวิชาต้องมี 1 AI Tutor</div>
+          <p class="criteria-muted">Profile ประเภทรายวิชาเดียวกันในกลุ่มผู้เรียนเดียวกันใช้ผลงานร่วมกันได้ ส่วนต่างประเภทหรือแยกกลุ่มผู้สอนต้องนับแยกกัน</p>
         </div>
       </section>
 
@@ -853,6 +854,7 @@ html.auth-check body{visibility:hidden}
 
 </main>
 <script src="assets/ooe-profile-count-filter.js"></script>
+<script src="assets/ooe-course-score.js?v=20261118-cohort-v1"></script>
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=223035731&single=true&output=csv';
 let DATA=[]; const FACULTY_PAGE_SIZE=4; let currentPage=1;
@@ -972,7 +974,7 @@ function courseStatus(score){
 }
 function courseStatusLabel(score){
   const s=courseStatus(score);
-  return s==='complete'?'ทำครบทุก Profile':s==='partial'?'จัดทำไม่ครบ':'ไม่ทำ';
+  return s==='complete'?'ทำครบ':s==='partial'?'จัดทำไม่ครบ':'ไม่ทำ';
 }
 function groupCourses(rows){
   const map=new Map();
@@ -983,7 +985,7 @@ function groupCourses(rows){
   });
   return [...map.values()].map(g=>{
     const scores=g.profiles.map(d=>d.profileScore);
-    g.score=scores.length?scores.reduce((a,b)=>a+b,0)/scores.length:0;
+    g.score=window.OOECourseScore.courseScore(g.profiles);
     g.points=g.score;g.profileCount=g.profiles.length;g.profileComplete=scores.filter(v=>v>=0.999999).length;
     return g;
   }).sort((a,b)=>natural(a.faculty,b.faculty)||natural(a.courseCode,b.courseCode));
@@ -1068,7 +1070,7 @@ function renderDonut(rows){
 const td=(v,c='')=>`<td class="${c}">${esc(v)}</td>`;
 function courseBadge(score){
   const s=courseStatus(score);
-  if(s==='complete')return '<span class="badge green">ทำครบทุก Profile</span>';
+  if(s==='complete')return '<span class="badge green">ทำครบ</span>';
   if(s==='partial')return '<span class="badge amber">จัดทำไม่ครบ</span>';
   return '<span class="badge red">ไม่ทำ</span>';
 }

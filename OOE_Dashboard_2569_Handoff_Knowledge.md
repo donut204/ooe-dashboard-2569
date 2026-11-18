@@ -1,7 +1,9 @@
 # OOE Dashboard 2569 — Handoff & Knowledge Base
 
+> **ACTIVE RULE (18/11/2569):** AI Tutor/Podcast CourseScore ใช้ MAX เฉพาะ Profile ที่เป็น `courseType` เดียวกันและกลุ่มผู้เรียนเดียวกัน; ถ้ามี instructor suffix ใน Course Profile ให้ถือเป็นกลุ่มผู้สอนแยก; เฉลี่ยคะแนนระหว่างกลุ่มผู้สอน แล้วเฉลี่ยระหว่าง `courseType` ที่ต่างกัน โดยยังเต็ม 1 คะแนนต่อ `faculty + courseCode`. ดูรายละเอียดท้ายเอกสารหัวข้อ 18/11/2569; ข้อความเก่าเรื่อง AVERAGE ทุก Profile เป็นประวัติเดิมเท่านั้น
+
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 17/11/2569**  
+> **อัปเดตล่าสุด: 18/11/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -1787,3 +1789,30 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - This audit is an inspection and recommendation; Dashboard code, authentication, source URLs, Google Sheet cells/formulas/filters, KPI/chart logic, responsive styles and deployed app behavior are unchanged.
 - Do not make actual fixes until owner selects scope and business rules. If code changes, create feature branch, test SHA/diff/QA, update this Handoff in the same round, and merge only when authorized.
 - Docs-only branch: `docs/dashboard-audit-20261117`, PR #31. No production runtime code modifications; GitHub Pages publication status, if changed by docs-only merge, is separate from app QA.
+
+## 18/11/2569 — AI Tutor / Podcast learner-cohort-aware CourseScore (Owner-approved)
+
+### Owner-approved decisions, overriding historical scoring text
+
+- Scope: **AI Tutor and Podcast only**, all course types GN/GR/GS/GU, keeping **one course = one point** at `faculty + courseCode` grain; fixed source remains `AI_Tutor_Public` / `Podcast_Public`. No edits to the native Google Sheet, upstream formulas, source ProfileScore/links, `index.html` (GR/GS), authentication, reference-date policy, or existing denominator/filter eligibility.
+- **Same courseType, same learner cohort:** use `MAX(ProfileScore)` (e.g. GN (T)=1, GN (L)=0 => 1; similarly GR, GS, GU). A lone Profile uses its own source score, including GN (L) 6/7=0.857142..., 7/7=1.
+- **Different courseType:** independently score each type, then `AVERAGE` type scores (e.g. GN=1, GS=0 => 0.5). Do not borrow evidence between GN/GR/GS/GU.
+- **Different explicitly instructor-suffixed cohort within same courseType:** keep separate and `AVERAGE` cohort scores; within each instructor cohort T/L may still share. Instructor suffix is read only from the `courseProfile` name pattern `(TL)-(T)-liting.pe` or `(T)-(T)-jiraporn.am`; otherwise default `shared` cohort. Never split solely by display instructor names or student counts. `XHM32267` GN two separate cohorts with Podcast scores 1 and 7/15 => **0.733333/1** (not 1). `BBA31367` has both default and suffixed T/L cohort pairs; each pair can share the higher ProfileScore and the group average applies.
+- **CourseScore** = `AVERAGE` across course types of [`AVERAGE` across cohorts of (`MAX` ProfileScore within cohort)]; `TotalPoints = SUM(CourseScore)`; `Progress = TotalPoints / uniqueCourses * 100`.
+- Keep **profile rows, scores, item counts, source statuses, source links, and profile-level KPI cards unchanged**, even if a course with incomplete Profile(s) is complete under shared-course scoring. Updated Thai/English course-level wording to `ทำครบ` (not `ครบทุก Profile`) and updated criteria modals to explain evidence-sharing.
+- Source Podcast thresholds remain **exact (L)=7**, and **(T)/(TT)/other=15**, decided upstream in Google Sheets. Frontend Podcast status/advice still applies this per-Profile threshold; no recalc of ProfileScore or evidence count in Dashboard.
+
+### Implementation and verification
+
+- Baseline: `main@37ef14273898cb6d86b3d22e25f031b8350e0159` (Merge PR #31 after owner rollback). Feature branch `feat/ai-podcast-learner-cohort-scoring-20261118`. PR #32 (AI Tutor / Podcast cohort scoring; no Google Sheet changes).
+- Edited `ai-tutor.html` and `podcast.html`: common `groupCourses` now calls `window.OOECourseScore.courseScore(g.profiles)`; status/KPI/graphs/filters consume the recomputed score through their existing pathways. UI structure, filters, count and pagination unchanged.
+- Added `assets/ooe-course-score.js`: standalone browser/Node-compatible deterministic shared scoring helper. Uses exact `courseType`, parses explicit trailing instructor suffix (case-insensitive), never infers from display name. Added `tests/ooe-course-score.test.js` with control cases. Updated `assets/ooe-page-i18n.js` for two-language criteria and tooltip/labels. Added cache-busting version only for page i18n and shared score helper (reference date stays owner-controlled).
+- Current source verified read-only: Native Google Sheet `Report691_18_11_2569`, spreadsheet ID `1q8Dfe2f79ehjk7NsefGGYP6UduajKJDV7E79w1_fKMg`, `AI_Tutor_Public` / `Podcast_Public`. Each **913 Profile / 762 courses**. No missing or invalid current ProfileScore found in previous source audit; these snapshots are not hard-coded.
+- Verified scoring on all current source rows using the **actual new helper**: AI Tutor **495 → 506** total points (+11), progress **64.9606% → 66.4042%**, **22** courses increase, **22** additional completed, none decrease. Podcast **381.469048 → 390.552381** points (+9.083333), progress **50.0616% → 51.2536%**, **30** courses increase, **15** additional completed, none decrease. (The earlier 391.62 projection incorrectly combined all instructor cohorts and must not be used.)
+- Verified fixtures 18 assertions: GN/GR/GS/GU shared cohorts, L-only 6/7 and 7/7, GN vs GS separation, XHM32267 instructor cohorts, BBA31367 group pairs, partial scores, clamping and no rows. Both page inline JS scripts compile; both page `groupCourses` functions pass six integration scenarios; Thai and English labels and owner-manual reference date checked; no legacy `ครบทุก Profile` wording remains in changed pages.
+- Important: Browser authenticated desktop/mobile visual QA not yet claimed at this snapshot; do not call GitHub Pages deployment success equivalent to complete UI acceptance testing.
+
+### Remaining guardrails
+
+- Explicit instructor suffix currently identifies the 8 International College multi-Profile course cohorts. If future sources add a **genuinely separate learner cohort without a suffix**, do not silently infer separation by instructor display names; seek an explicit stable cohort identifier or owner decision. Never modify score source to hide missing evidence.
+- Do not change Google Sheets, source CSV gid, CourseScore denominator, manual as-of date, GR/GS publication flow, authentication or layout while working on this scoring requirement.
