@@ -2203,3 +2203,9 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 
 ### Release evidence
 - Owner's standing instruction is release to `main` after tests and Handoff. Fill PR number, merge SHA and GitHub Pages exact-status proof only after verified.
+
+### PR #44 — merged GR learner-cohort policy and verified Pages deployment
+- [PR #44](https://github.com/donut204/ooe-dashboard-2569/pull/44) **merged** into `main` at exact code SHA `f6c3ac5b55a324cdf2ecfe587d408321cb4d67b5`. Directly checked `main` Handoff and GR helper and confirmed the approved `cohortKey` and cohort-level statuses are present. This supersedes the all-Profiles-must-pass legacy GR rule in PR #38/#43.
+- GitHub Pages [workflow #44564417055](https://github.com/donut204/ooe-dashboard-2569/actions/runs/44564417055) for exact code SHA `f6c3ac5b55a324cdf2ecfe587d408321cb4d67b5` finished **completed/success**, with build and deploy successful. This confirms publication pipeline, not an actual authenticated browser visual E2E.
+- Actual published `GRGS_Public` 19 Nov source read: **138 GR courses / 149 Profiles**, exactly **3** parent courses moved from fail to pass (**HMM221 / ICT203 / ENG112**), producing **49 pass / 0 pending / 80 fail / 9 no content**. Original Profile review statuses remain unchanged. **65/65 relevant isolated JS tests passed**; independent AI/Podcast standalone test files passed. No Google Sheet or Score changes.
+- The doc-only release-evidence commit immediately after PR #44 advances `main`; agent must fetch latest SHA live on new task. No future numeric course/status total should be hard-coded.
