@@ -103,7 +103,7 @@ Snapshot GR 19/11: **138 รายวิชา = 17 ผ่าน + 0 รอต�
 
 ### 0.8 งานที่ทำเสร็จ — Audit Trail PR #34–#41
 
-PR ทั้งหมดด้านล่าง **Merged บน `main`** และเคยตรวจ GitHub Pages deployment ของ code merge ผ่าน (รายละเอียด workflow ใน Section ตามวันที่ด้านล่าง). อ่าน Diff/Commit จริงก่อนแก้ซ้ำ:
+PR ทั้งหมดด้านล่าง **Merged บน `main`**. ตรวจยืนยัน GitHub Pages code deployment ของ **#35–#41** ตามหลักฐานในส่วนประวัติ; สำหรับ **#34** ยืนยัน Merge แล้วแต่ไม่ได้ยืนยัน Pages workflow ของ PR นั้นแยกต่างหากในรอบนั้น. อ่าน Diff/Commit จริงก่อนแก้ซ้ำ:
 
 | PR | งานหลัก | Merge SHA |
 |---|---|---|
