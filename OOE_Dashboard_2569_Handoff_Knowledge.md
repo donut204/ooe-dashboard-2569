@@ -3,8 +3,139 @@
 > **ACTIVE RULE (18/11/2569):** AI Tutor/Podcast CourseScore ใช้ MAX เฉพาะ Profile ที่เป็น `courseType` เดียวกันและกลุ่มผู้เรียนเดียวกัน; ถ้ามี instructor suffix ใน Course Profile ให้ถือเป็นกลุ่มผู้สอนแยก; เฉลี่ยคะแนนระหว่างกลุ่มผู้สอน แล้วเฉลี่ยระหว่าง `courseType` ที่ต่างกัน โดยยังเต็ม 1 คะแนนต่อ `faculty + courseCode`. ดูรายละเอียดท้ายเอกสารหัวข้อ 18/11/2569; ข้อความเก่าเรื่อง AVERAGE ทุก Profile เป็นประวัติเดิมเท่านั้น
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 18/11/2569**  
+> **อัปเดตล่าสุด: 19/11/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
+
+---
+
+## 0. CURRENT STATE — Agent Handoff ฉบับรวม (19/11/2569; อ่านส่วนนี้ก่อนประวัติด้านล่าง)
+
+> **เอกสารนี้เป็น Canonical Summary ของสิ่งที่ OWNER อนุมัติและ Merge แล้วถึง PR #41** สำหรับ AI Agent ที่รับช่วงงานต่อ ใช้ร่วมกับไฟล์โค้ดจริงบน `main` ล่าสุด ไม่ใช่ใช้แทนการตรวจ GitHub/Google Sheets สด  
+> **ลำดับเมื่อข้อมูลไม่ตรงกัน:** ข้อมูลจริงของ Environment/Google Sheets ที่ตรวจใหม่ → โค้ดปัจจุบันบน Target Branch → Automated Tests → ข้อตกลง OWNER ล่าสุดใน Handoff → บันทึกประวัติเก่า → บทสนทนา/ความจำ  
+> บันทึกช่วงก่อนที่ขัดกับส่วนนี้ถือเป็น **historical** ไม่ใช่ business rule ที่ใช้อยู่ เช่น GR ยังไม่แก้, Mixed Status ทั้งหมดต้องรอตรวจ, GS กด Profile Card แล้วล้าง Review Filter, การ์ดรายวิชาทั้งหมดเปลี่ยนตาม Filter หรือ CourseScore เฉลี่ย Profile ทุกตัว
+
+### 0.1 ข้อมูลเริ่มต้นและกฎก่อนทำงาน
+
+| หัวข้อ | ค่าปัจจุบัน / สิ่งที่ต้องทำ |
+|---|---|
+| Repository | `donut204/ooe-dashboard-2569` — https://github.com/donut204/ooe-dashboard-2569 |
+| Production | GitHub Pages: https://donut204.github.io/ooe-dashboard-2569/ |
+| Production branch | `main` (ใช้จริง) — **fetch HEAD SHA สดก่อนทำทุกครั้ง**; SHA ที่บันทึกใน MD เป็นเพียง snapshot |
+| Source of Truth ภายใน Repo | `OOE_Dashboard_2569_Handoff_Knowledge.md` (ไฟล์นี้) + โค้ดจริงบน Target Branch |
+| ข้อบังคับ | **READ FIRST EVERY TASK:** อ่าน MD นี้ทั้งหมด, ตรวจ HEAD/SHA, PR ค้าง, source files, dependencies และการเปลี่ยนแปลงล่าสุดก่อนแก้ |
+| Workflow OWNER | **งานแก้ที่อนุมัติให้เสร็จบน `main` ในรอบงานเดียวกัน** ไม่ทิ้งไว้แค่ Preview ซึ่ง OWNER มองไม่เห็น; แยก branch/PR เพื่อ review ได้ แล้ว Merge เมื่อผ่าน gate |
+| ความปลอดภัย | Google Sheets/CSV เป็น read-only สำหรับการแก้ Dashboard เว้นแต่ OWNER สั่งแก้ชีทอย่างชัดเจน; ไม่แก้ Score/KPI/Source/Auth/Responsive นอกขอบเขต |
+| Documentation | ทุก Logic, UI, Wording, Data Mapping, Decision, QA และ Release ต้องลง Handoff รอบเดียวกัน พร้อมบอกสิ่งที่ไม่ได้ทำ |
+| QA/Release | ตรวจ Diff, JS syntax, regression, source reconciliation, TH/EN, keyboard/responsive ตามขอบเขต; verify Exact Merge SHA, `main` files, GitHub Pages Actions `completed/success`; แยก CI/Deploy จาก Browser E2E จริง |
+
+**Implementation baseline ตรวจล่าสุดก่อนสร้าง Agent Handoff นี้:** `main@b7624428fbf99b9761b3b709932ae682ce8e3d6b` (19/11/2569), PR #41 Merged และ Pages code deployment #44488283146 ผ่าน; **ห้ามถือ SHA นี้เป็น HEAD ตลอดไป**. ณ baseline นี้ไม่พบ Open PR.
+
+### 0.2 หน้าระบบ / ไฟล์สำคัญ / Data flow
+
+| หน้า | Path / Module ที่ต้องอ่าน | ข้อมูลที่เผยแพร่ (Native Google Sheet → Public CSV) |
+|---|---|---|
+| GR — **Dashboard รายวิชานอกแผน GR** | `index.html#GR`, `assets/ooe-gr-course-view.js`, `assets/ooe-gs-course-view.js` | `GRGS_Public` (group = `GR`; gid `131857057`) |
+| GS — **Dashboard รายวิชา Fully Online GS** | `index.html#GS`, `assets/ooe-gs-course-view.js` | `GRGS_Public` (group = `GS`; gid เดียวกัน) |
+| AI Tutor | `ai-tutor.html`, `assets/ooe-course-score.js`, `assets/ooe-profile-view.js` | `AI_Tutor_Public` (gid `223035731`) |
+| Podcast | `podcast.html`, `assets/ooe-course-score.js`, `assets/ooe-profile-view.js` | `Podcast_Public` (gid `149082930`) |
+| TH/EN, date | `assets/ooe-i18n.js`, `assets/ooe-page-i18n.js` | Date label เป็น metadata owner-controlled ไม่ใช่ update timestamp |
+
+Native spreadsheet ที่ตรวจจริง: `Report691_18_11_2569` — `https://docs.google.com/spreadsheets/d/1q8Dfe2f79ehjk7NsefGGYP6UduajKJDV7E79w1_fKMg/edit`. ไม่อาศัย Raw-data มาแทน `GRGS_Public`; การแสดงผล GR/GS ยึดรายการที่เผยแพร่จริงใน `GRGS_Public` เท่านั้น ห้ามเพิ่ม eligibility/exclusion เอง รวม Profiles ที่นักศึกษา **0 คน** ด้วย
+
+ทั้งสาม HTML shell อ่าน Published CSV ตอนเปิดหน้าและกด **อัปเดตข้อมูล** โดยมี cache-busting query + `fetch(...,{cache:'no-store'})`; KPI และจำนวนคำนวณใหม่จากแถวที่โหลด **ไม่ Hard-code** ตัวเลขในตารางนี้ แต่ไม่ใช่ WebSocket/Realtime Push และไม่ดึงข้อมูลต่อเนื่องถ้าเปิดหน้าทิ้งไว้โดยไม่กด Refresh. แหล่งข้อมูลต้อง publish ลง Public sheet ก่อน Dashboard จึงเห็น
+
+### 0.3 หน่วยนับ / จำนวนอ้างอิง ณ การตรวจ 19/11/2569
+
+**กฎสูงสุด: 1 รายวิชา = 1 คู่ `faculty + courseCode`**; หากรหัสเดียวกันอยู่ต่างคณะให้นับต่างรายวิชา; Profile เป็นแต่ละแถว `courseProfile` (อาจมี T, TT, L หรือผู้สอนแยก) ห้ามเรียกยอด Profile ว่า “รายวิชา”
+
+| หน้า | รายวิชา (ไม่ซ้ำ) | Profile | สิ่งที่ควรตรวจเมื่อข้อมูลต้นทางเพิ่ม |
+|---|---:|---:|---|
+| GR | 138 | 149 | มี 11 รายวิชาที่หลาย Profile ใน snapshot; อย่าแยกเป็น 149 รายวิชา |
+| GS | 46 | 46 | ตอนนี้เท่ากัน แต่ต้องรองรับอนาคตที่หลาย Profile ต่อ 1 รายวิชา |
+| AI Tutor | 762 | 913 | นับรายวิชาจาก group `faculty + courseCode` |
+| Podcast | 762 | 913 | นับรายวิชาจาก group `faculty + courseCode` |
+
+**Header Source Summary** ของ GR/GS หลัง PR #38 = `N รายวิชา (M Profile)` โดยเรียก `GS_VIEW.groupCourses(typeRows())` แล้วนับ Profile ด้วย `typeRows().length`; AI Tutor/Podcast มี `allCourseCount()` + `DATA.length` ถูกต้องอยู่แล้วจึงไม่แก้สองหน้านั้น
+
+**การ์ด “รายวิชาทั้งหมด” ตาม OWNER (PR #40):** **คงยอดรวมจาก Public Source ของหน้าปัจจุบัน** แม้กรองสถานะ, คณะ, ประเภท, ความคืบหน้า หรือค้นหา; การ์ดสถานะ, กราฟ, ตาราง และยอดกำลังแสดงยังตอบสนองตัวกรองปกติ. การคลิกการ์ด Total ยังคงทำหน้าที่ล้างตัวกรองสถานะหลักตาม Event เดิม ไม่ใช่ Reset ตัวกรองทุกช่อง. AI Tutor/Podcast ใช้ `allCourseCount()` และหมายเหตุ `จาก DATA.length Profile` แบบ global. GR ใช้จำนวน group ที่ไม่ซ้ำ
+
+**ข้อควรระวังเชิงเทคนิค (ยังไม่สั่งแก้):** `index.html > setKpis()` ของ **GS** ยังคำนวณ Total จาก `typeRows().length` เพราะข้อมูลที่เผยแพร่ปัจจุบัน GS มี 1 Profile ต่อ 1 รายวิชา (46=46); หากอนาคต GS มีหลาย Profile ในรายวิชาเดียว การ์ด Total จะไม่เท่ากับจำนวนรายวิชาจริง แม้ Header Source Summary จะนับถูกด้วย group แล้ว. **Agent ต้องตรวจเงื่อนไขนี้เมื่อมี Profile ใหม่ และขออนุมัติ/กำหนด Status roll-up ของ GS ก่อนเปลี่ยน Logic สถานะ**; ห้ามคัดลอก GR status precedence ให้ GS โดยไม่ได้รับคำสั่ง
+
+### 0.4 GR: กฎสรุปสถานะรายวิชา — Current, OWNER-approved
+
+Source ของแต่ละ Profile คงสถานะจริง; การตัดสินระดับรายวิชาอยู่ใน `assets/ooe-gr-course-view.js > courseStatus()`:
+
+1. **มี Profile ใดว่าง / ยังรอตรวจ / unknown ⇒ รายวิชา “อยู่ระหว่างการตรวจสอบ”**
+2. **ทุก Profile เป็น “ผ่าน” ⇒ รายวิชา “ผ่าน”**
+3. **ทุก Profile เป็น “ไม่พบเนื้อหา” ⇒ รายวิชา “ไม่พบเนื้อหา”**
+4. **ตรวจครบทุก Profile แล้ว และไม่เข้าข้อ 2/3 ⇒ รายวิชา “ไม่ผ่าน”** รวมกรณีผสม “ไม่ผ่าน” กับ “ไม่พบเนื้อหา” หรือ “ผ่าน” กับ “ไม่ผ่าน”
+
+**Control cases:** ENG112 และ ICT203 แต่ละรายวิชามี (T)=ไม่ผ่าน + (L)=ไม่พบเนื้อหา ทั้งสองเป็น **รายวิชา “ไม่ผ่าน” ไม่ใช่ “อยู่ระหว่างการตรวจสอบ”**. HMM215 กรณีประวัติเคยมี T=ผ่าน และ L=blank ต้อง “รอตรวจ” จนมีผลของ L; อย่าใช้สถานะประวัตินั้นแทนข้อมูลใหม่
+
+Snapshot GR 19/11: **138 รายวิชา = 17 ผ่าน + 0 รอตรวจ + 112 ไม่ผ่าน + 9 ไม่พบเนื้อหา**. Profile GR = **149 = 18 ผ่าน + 0 รอตรวจ + 118 ไม่ผ่าน + 13 ไม่พบเนื้อหา**. ตัวเลขนี้เป็น **ข้อมูลที่ตรวจวันนั้น** ไม่ใช่ assertion ถาวรหรือ Constant ใน Code. GR top KPI และ bar chart รายคณะนับ **รายวิชา**, Profile Summary และ donut นับ **Profile**
+
+**GS:** ไม่มี Owner-approved course-level mixed-status precedence ที่เทียบเท่า GR; ยังคง KPI/สถานะจากแถว Profile ใน `index.html` สำหรับแผงหลักตาม Logic เดิม ไม่ย้าย GR precedence ไป GS เอง
+
+### 0.5 GR/GS UI — 2 Views, Tree Table และ Main Filter
+
+- ทั้ง **GR และ GS** มีการ์ด Profile Summary คลิกได้ 5 สถานะ: `Profile ทั้งหมด`, `Profile ผ่าน`, `Profile อยู่ระหว่างตรวจสอบ`, `Profile ไม่ผ่าน`, `Profile ไม่พบเนื้อหา`. บางสถานะเป็น 0 ให้แสดงไว้
+- ปุ่มสลับ `รายวิชา / Profile` เหนือตาราง; ค่าเริ่มต้นของ GR/GS คือ **Profile View** ตารางแบน 1 แถวต่อ 1 Profile, **20 Profile ต่อหน้า**. คลิกการ์ด Profile เพื่อดูเฉพาะสถานะใน Profile View; กดการ์ดเดิมซ้ำสลับกลับ Course View; คลิก KPI รายวิชาหลักสลับ Course View
+- **Course View** เป็น Tree Table 3 ระดับเหมือน AI Tutor: **คณะ/วิทยาลัย → รายวิชา → Profile**; คณะเริ่มขยาย, รายวิชาเริ่มย่อ; มีปุ่ม +/- พร้อม Keyboard focus/ARIA, Profile-count pill และเส้นเชื่อม Tree. หน้า Course View แบ่ง **4 คณะเต็มต่อหน้า** ไม่ใช่ 20 รายวิชา. แถวรายวิชาแม่แสดงเพียงรหัสวิชา + จำนวน Profile; คอลัมน์อื่น **แสดง —** (Profile, หน่วยกิต, วันที่สร้าง, ผู้สอน, สถานะการตรวจสอบ, หมายเหตุ, รายวิชา, หลักฐาน) จนกด Expand. เมื่อขยายต้องแสดงข้อมูลจริงของ **ทุก Profile ลูก** พร้อมลิงก์รายวิชาและหลักฐาน โดยไม่แก้ Source และไม่เอาสถานะ Profile แรกไปแทนรายวิชาทั้งหมด
+- **ตัวกรองหลัก** ของ GR ที่เป็น Review Status ทำงานระดับ **รายวิชา** และต้อง group ทุก Profile ก่อนสรุปสถานะ; การค้นหา/ความคืบหน้าที่ Match Profile ใดต้องเก็บ sibling Profiles ของรายวิชาเดิมไว้ใน Course View; ห้ามให้ (L) ทำให้ (T) หาย. Filter `faculty + courseCode` ตามกฎหน่วยนับ. GS ไม่แอบเปลี่ยน KPI level เป็น CourseStatus GR
+- **Current filter consistency หลัง PR #39 และ #40**: ในทั้ง GR และ GS, **Profile Summary + กราฟวงกลม + Flat Profile View ต้องใช้ Profile rows ชุดเดียวกันหลัง Main Filters**; คำสั่งใน `render()` คือ `renderDonut(rows)`, `syncGsControls(rows)`, และ `const sourceProfiles=rows` ก่อน Profile-card filter. การกด Profile-card ต้อง **คง Main reviewStatus filter** ไว้ ไม่ล้างโดยอัตโนมัติ (กฎเก่า “GS ล้าง filter” ถูกยกเลิก)
+- ตัวอย่างควบคุม: GR เลือก Main Filter “ไม่พบเนื้อหา” = **9 รายวิชา / 11 Profile**. Profile Summary ต้องแสดง Total = 11 และ Profile ไม่พบเนื้อหา = 11; Donut = 11 Profile. แต่ข้อมูล GR ไม่กรองเป็น 149 Profile และ 13 Profile ไม่พบเนื้อหา. **อีก 2 Profile ไม่พบเนื้อหาอยู่ในรายวิชา ENG112/ICT203 ที่สรุปเป็น “ไม่ผ่าน”** จึงไม่อยู่ในผล Main Filter “ไม่พบเนื้อหา”. ห้ามใช้ `filteredGrCourses(true)` ให้การ์ด Profile ข้าม Main Filter อีก
+
+### 0.6 AI Tutor/Podcast — ต่างจาก GR/GS อย่างไร
+
+- ใช้ `AI_Tutor_Public` / `Podcast_Public` และ `ProfileScore` จาก Source โดย 1 รายวิชาเต็ม **1 คะแนน** (group `faculty + courseCode`). อย่านำ `GR courseStatus()` มาคำนวณ `CourseScore`.
+- **Current CourseScore หลัง PR #32 (override AVERAGE(Profile) แบบเก่า):** ในกลุ่ม `courseType` เดียว + **learner cohort เดียว** ใช้ `MAX(ProfileScore)`; ถ้ามี instructor suffix ที่ชี้ cohort แยกใน `courseProfile` เช่น `(TL)-(T)-liting.pe` ให้แยก cohort แล้วเฉลี่ยคะแนน cohort; จากนั้นเฉลี่ยข้าม `courseType` (GN/GR/GS/GU) ที่ต่างกัน. จึงเป็น `AVERAGE(courseType-level AVERAGE(cohort-level MAX(ProfileScore)))`. ไม่แยก cohort ด้วยชื่ออาจารย์ที่แสดงหรือ student count โดยเดาเอง
+- AI Tutor/Profile: สถานะ Profile ทำครบ vs ไม่ทำ; Podcast/Profile: ทำครบ vs จัดทำไม่ครบ vs ไม่ทำ. Score/status ราย Profile คงตาม Source แม้ผลระดับรายวิชาอาจผ่านจากการแชร์หลักฐานใน cohort เดียวกัน
+- Podcast เกณฑ์หลักฐานต้นทาง: `(L)` ต้อง **7**; `(T)`/`(TT)` และอื่น ๆ **15**. ไม่แก้สูตรใน Sheet หรือคำนวณ `ProfileScore` ใหม่ใน Frontend โดยไม่มีคำสั่ง
+- AI Tutor/Podcast **เริ่มต้นที่ Course View** (ต่างจาก GR/GS). เมื่อกด Profile Summary card จะเปิด Flat Profile View, ตาราง **20 Profile/หน้า**, และคงหลักการกรองระดับ Profile ตาม code ปัจจุบัน
+- การ์ด Total Courses ในทั้งสองหน้า **Global 762 ณ snapshot** แม้กรอง ขณะที่ผล/สถานะ/คะแนนการ์ดอื่นใช้รายการตาม Filters; อย่านำ `DATA.length` (913 Profile ณ snapshot) มาแทน Total Courses
+
+### 0.7 Header, คำศัพท์, ภาษา และวันที่
+
+- หัว GR ตามคำสั่ง OWNER ล่าสุด: **Dashboard รายวิชานอกแผน GR**; หัว GS: **Dashboard รายวิชา Fully Online GS** (PR #41). `index.html > syncPageIdentity()` ใช้ `page.dashboardCourse.GR` / `.GS` และ title ของแท็บ browser ใช้ `page.documentTitle.GR` / `.GS`, อยู่ใน `assets/ooe-i18n.js`. English: `Non-Plan GR Course Dashboard`, `Fully Online GS Course Dashboard`. HTML fallback ของหน้า GR ต้องเป็นชื่อใหม่ด้วย
+- Subtitle เดิม **ปีการศึกษา 2569 · ภาคการศึกษา 1** ห้ามแก้โดยไม่ได้รับคำสั่ง
+- **Reference date ทุกหน้าแสดง 18/11/2569** (EN **18/11/2026**) จาก `assets/ooe-i18n.js > REFERENCE_DATE = '2026-11-18'` และ fallback/page translation. เป็น **วันที่ OWNER กำหนดเอง** ไม่ใช่ timestamp การโหลด Source หรือวันที่ระบบปัจจุบัน. การเพิ่มข้อมูลใน Google Sheets ไม่เปลี่ยน label นี้อัตโนมัติ
+- เมื่อแก้ i18n ต้องตรวจ TH/EN และ bump asset `?v=` ในหน้า HTML ที่ใช้ไฟล์นั้นเพื่อป้องกัน Browser cache. ไม่แก้ `ai-tutor.html`/ `podcast.html` จากงาน Wording ของ GR/GS ถ้าไม่จำเป็น
+
+### 0.8 งานที่ทำเสร็จ — Audit Trail PR #34–#41
+
+PR ทั้งหมดด้านล่าง **Merged บน `main`** และเคยตรวจ GitHub Pages deployment ของ code merge ผ่าน (รายละเอียด workflow ใน Section ตามวันที่ด้านล่าง). อ่าน Diff/Commit จริงก่อนแก้ซ้ำ:
+
+| PR | งานหลัก | Merge SHA |
+|---|---|---|
+| [#34](https://github.com/donut204/ooe-dashboard-2569/pull/34) | GS Profile Summary 5 ปุ่ม + View Switch + helper | `bf66b409352e5a70f1579ed67ee570c834013f0f` |
+| [#35](https://github.com/donut204/ooe-dashboard-2569/pull/35) | GS 3-level Tree Table ต้นแบบ AI Tutor | `d18e4b42fc4747518877553f4ad75380ad81411a` |
+| [#36](https://github.com/donut204/ooe-dashboard-2569/pull/36) | GR KPI Course-grain, Profile Summary, shared Tree Table | `170eede97f024c013346ca10b76b8f7081289461` |
+| [#37](https://github.com/donut204/ooe-dashboard-2569/pull/37) | วันที่อ้างอิง 18/11/2569 ทั้ง 4 หน้า + i18n/cache | `aacd3ef5f9562f6c589e886e6c1f7b2701072c52` |
+| [#38](https://github.com/donut204/ooe-dashboard-2569/pull/38) | GR Mixed Completed Status ⇒ ไม่ผ่าน; แก้ Source Header GR/GS Course vs Profile | `1d9462b9d369b88652988089e14c896c9748abb2` |
+| [#39](https://github.com/donut204/ooe-dashboard-2569/pull/39) | GR Profile Summary/Donut ใช้ Main Filter เดียวกัน | `4e8664bcba17438ab80e5da596a314a3703b661b` |
+| [#40](https://github.com/donut204/ooe-dashboard-2569/pull/40) | Total Courses คงยอด Global ทั้ง 4 หน้า + GS Profile Filter sync กับ Donut | `fdff2ffe444ef79790fd91eeaeee67c2f6a0ec5c` |
+| [#41](https://github.com/donut204/ooe-dashboard-2569/pull/41) | เปลี่ยนชื่อหน้า GR / GS ทั้ง TH/EN และ Browser Title | `7eab9f3c135ec2e14b8c4b8b9e56816fdce4efb5` |
+
+**Tests/QA ที่เคยผ่านและต้องรันซ้ำเมื่อกระทบส่วนเดียวกัน:** `tests/ooe-gs-course-view.test.js`, `tests/ooe-gs-view-pages.test.js`, `tests/ooe-gs-tree-table.test.js`, `tests/ooe-gr-course-view.test.js`, `tests/ooe-gr-page-integration.test.js`, `tests/ooe-gr-profile-filter-sync.test.js`, `tests/ooe-source-summary-course-count.test.js`, `tests/ooe-reference-date-20261118.test.js`, `tests/ooe-stable-total-kpi-all-pages.test.js`, `tests/ooe-grgs-dashboard-title.test.js`, `tests/ooe-course-score.test.js`, `tests/ooe-profile-view.test.js`, `tests/ooe-profile-view-pages.test.js`. ชุด JS ที่ตรวจล่าสุดในงาน PR #41 **55/55 PASS** ใน isolated V8 runner; ไม่ได้ยืนยัน Desktop/Mobile Browser E2E แบบ authenticated. **อย่านำจำนวน 55 ไปอ้างเป็น CI test-suite ทั้งหมดของ Repo** โดยไม่รันจริง
+
+### 0.9 Known risks / สิ่งที่ Agent ถัดไปห้ามคาดเดาเอง
+
+1. **GS future multi-Profile:** การ์ด Total ระดับ GS ใช้ `typeRows().length` ใน code ปัจจุบัน แม้ Grouping ของ Tree/Header ถูกแล้ว. หากข้อมูล GS เพิ่ม Profile ซ้ำรหัส ต้องตรวจหน่วยนับและสอบถาม OWNER ก่อนเปลี่ยน KPI roll-up; ห้ามอ้างว่า GS รองรับ Course-level status แบบ GR แล้ว
+2. **ค่าจำนวน/สถานะเก่า:** วันที่ 17–18/11 มี 130 vs 125, 149/138, GR 19/20/94/5 ฯลฯ เป็น snapshots คนละวัน/สถานะการคัดกรอง ไม่ใช่ constants. ห้ามนำข้อมูลจากแชทหรือ Handoff snapshot เก่าไปแทนแถว `GRGS_Public` สด
+3. **Scoring ของ AI/Podcast:** ประวัติ “AVERAGE ทุก Profile” ถูกแทนด้วย cohort MAX แล้ว; ห้ามแก้ `OOECourseScore.courseScore()` จากตัวอย่างสั้น ๆ โดยไม่ตรวจ suffix/cohort และทุก courseType
+4. **GR unknown/pending:** หากค่าที่แหล่งข้อมูลส่งเป็นสถานะใหม่/ไม่รู้จัก ให้ถือรายวิชารอตรวจ ไม่เดาเป็นผ่าน/ไม่ผ่าน; ห้ามแก้ Profile statuses/links ใน source
+5. **Visual QA:** Merge + Pages Workflow success ไม่เท่ากับตรวจภาพจริงแบบ Browser ผ่าน; แยกรายงานให้ชัด
+6. **Release handoff:** เวลาแก้ต่อให้บันทึก `What/Why/Where/Before-After/Test/Source/PR/SHA/Pages/Remaining` ใน MD เดียวกัน และยึดคำสั่ง OWNER ให้ขึ้น `main` หลังผ่าน QA ไม่หยุดงานที่ Draft PR
+
+### 0.10 Checklist สำหรับ AI Agent ที่เข้ามารับงานทันที
+
+1. เปิด `OOE_Dashboard_2569_Handoff_Knowledge.md` บน `main` **อ่านฉบับเต็ม** รวม Section 0 และประวัติการตัดสินใจล่าสุด แล้วเปิด PR ที่ยังค้าง/ตรวจ HEAD SHA
+2. อ่าน `index.html`, `ai-tutor.html`, `podcast.html` และ helper ตามฟีเจอร์ที่จะทำ; ห้ามใช้ Memory แทน Code/Source
+3. ถ้าแตะ KPI, Status, Filter, Count หรือ Score: อ่าน Published Sheet/CSV สดด้วย Read-only access ตรวจ Field, Grain, missing status, 0-student, จำนวน Course/Profile และ control cases
+4. สรุป Owner-approved scope/ambiguity ก่อนลงมือเมื่อมี rule ที่ยังไม่ตกลง; ห้ามออกกฎเอง
+5. แก้เฉพาะจุด, ตรวจ Source Binding/Cache/i18n; รัน JS tests + regression relevant และเช็กการแสดงผล TH/EN, mobile/keyboard ถ้าเครื่องมือรองรับ
+6. อัปเดต MD รอบงานเดียวกัน, ตรวจ diff/PR/Exact SHA, Merge เข้า `main` ตามคำสั่ง OWNER และยืนยัน GitHub Pages deployment `completed/success`
+7. สรุปงานจริง/สิ่งที่ยังไม่ตรวจ; **อย่ารายงานว่าขึ้น Production แล้วเพียงเพราะ PR Mergeable หรือ Merge สำเร็จ**
 
 ---
 
