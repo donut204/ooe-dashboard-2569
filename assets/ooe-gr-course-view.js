@@ -11,9 +11,12 @@
     const states=profiles.map(GS.profileStatus);
     // All Profiles must be reviewed before a course can receive a completed status.
     if(states.some(s=>s===REVIEWING||!STATUS_ORDER.includes(s)))return REVIEWING;
-    const unique=new Set(states);
-    // Different reviewed outcomes need an explicit policy, not a guessed pass/fail priority.
-    return unique.size===1?states[0]:REVIEWING;
+    // A course passes only when every Profile passes; "no content" applies only
+    // when every Profile has no content. Any other fully reviewed combination
+    // (including fail + no-content) is a completed, non-passing course.
+    if(states.every(s=>s===PASS))return PASS;
+    if(states.every(s=>s===NO_CONTENT))return NO_CONTENT;
+    return FAIL;
   }
   function groupCourses(rows){
     return GS.groupCourses(rows).map(group=>({...group,courseStatus:courseStatus(group)}));
