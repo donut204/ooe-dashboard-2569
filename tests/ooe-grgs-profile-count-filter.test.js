@@ -48,10 +48,10 @@ test("GR parent count filter selects original 2-Profile courses, including mixed
  assert.equal(groups.length,2);
  assert.deepEqual(groups.map(g=>g.courseCode),["HMM221","ICT203"]);
  assert.equal(groups.reduce((n,g)=>n+g.profiles.length,0),4);
- assert.deepEqual(groups.map(g=>g.courseStatus),["ไม่ผ่าน","ไม่ผ่าน"]);
+ assert.deepEqual(groups.map(g=>g.courseStatus),["ผ่าน","ผ่าน"]);
 });
 test("GR count filter composes with parent review-status and keeps source siblings",()=>{
- const filters={reviewFilter:"ไม่ผ่าน",searchBox:"ICT203-L"};
+ const filters={reviewFilter:"ผ่าน",searchBox:"ICT203-L"};
  const groups=runFilter(GR_ROWS,[2],filters).filteredGrCourses();
  assert.equal(groups.length,1);
  assert.equal(groups[0].courseCode,"ICT203");

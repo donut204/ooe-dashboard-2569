@@ -39,25 +39,30 @@ test("homogeneous completed Profile outcomes become course outcomes",()=>{
  assert.equal(grouped[3].courseStatus,GR.NO_CONTENT);
  assert.equal(grouped[4].courseStatus,GR.REVIEWING);
 });
-test("fully reviewed mixed Profile outcomes are completed failures, not pending",()=>{
- const completedPairs=[["ไม่ผ่าน","ไม่พบเนื้อหา"],["ผ่าน","ไม่ผ่าน"],["ผ่าน","ไม่พบเนื้อหา"]];
- for(const [first,second] of completedPairs){
-   assert.equal(GR.courseStatus({profiles:[r("A","X","(T)",first),r("A","X","(L)",second)]}),GR.FAIL);
+test("same-cohort completed T/L results share a pass, but no pass means failure",()=>{
+ const completedPairs=[
+  ["ไม่ผ่าน","ไม่พบเนื้อหา",GR.FAIL],
+  ["ผ่าน","ไม่ผ่าน",GR.PASS],
+  ["ผ่าน","ไม่พบเนื้อหา",GR.PASS]
+ ];
+ for(const [first,second,expected] of completedPairs){
+   assert.equal(GR.courseStatus({profiles:[r("A","X","(TL)-(T)",first),r("A","X","(TL)-(L)",second)]}),expected);
  }
- assert.equal(GR.courseStatus({profiles:[r("A","X","(T)","ผ่าน"),r("A","X","(L)","unexpected")]}),GR.REVIEWING);
+ assert.equal(GR.courseStatus({profiles:[r("A","X","(TL)-(T)","ผ่าน"),r("A","X","(TL)-(L)","unexpected")]}),GR.REVIEWING);
 });
-test("ENG112 and ICT203 source-matching cases: T failed + L no content => course failed",()=>{
- for(const code of ["ENG112","ICT203"]){
+test("HMM221, ICT203, ENG112 same-cohort mixed outcomes pass at course grain",()=>{
+ for(const [code,lStatus] of [["HMM221","ไม่ผ่าน"],["ICT203","ไม่พบเนื้อหา"],["ENG112","ไม่พบเนื้อหา"]]){
    const profiles=[
-     r("คณะตัวอย่าง",code,"(TL)-(T)","ไม่ผ่าน"),
-     r("คณะตัวอย่าง",code,"(TL)-(L)","ไม่พบเนื้อหา")
+     r("คณะตัวอย่าง",code,"(TL)-(T)","ผ่าน"),
+     r("คณะตัวอย่าง",code,"(TL)-(L)",lStatus)
    ];
    const grouped=GR.groupCourses(profiles);
    assert.equal(grouped.length,1);
-   assert.equal(grouped[0].courseStatus,GR.FAIL);
+   assert.equal(grouped[0].courseStatus,GR.PASS);
    assert.equal(grouped[0].profiles.length,2);
    assert.equal(GR.filterCourses(grouped,{review:GR.REVIEWING}).length,0);
-   assert.equal(GR.filterCourses(grouped,{review:GR.FAIL}).length,1);
+   assert.equal(GR.filterCourses(grouped,{review:GR.PASS}).length,1);
+   assert.equal(grouped[0].profiles[1]["สถานะการตรวจสอบ"],lStatus);
  }
 });
 test("main status filter is at course grain; never removes sibling Profile",()=>{
@@ -85,4 +90,25 @@ test("zero-student Profiles remain in published GR course and Profile buckets",(
  const grouped=GR.groupCourses(data);
  assert.equal(grouped.reduce((sum,course)=>sum+course.profiles.length,0),7);
  assert.equal(GR.filterCourses(grouped,{search:"FAIL"}).reduce((sum,course)=>sum+course.profiles.length,0),3);
+});
+
+test("explicit instructor suffixes match AI/Podcast cohort semantics and never cross-share a pass",()=>{
+ const AI=require("../assets/ooe-course-score.js");
+ const profiles=[
+   r("A","X","(TL)-(T)-alice.pe","ผ่าน"),
+   r("A","X","(TL)-(L)-alice.pe","ไม่ผ่าน"),
+   r("A","X","(TL)-(T)-bob.pe","ไม่พบเนื้อหา")
+ ];
+ assert.equal(GR.cohortKey(profiles[0]),AI.cohortKey({courseProfile:profiles[0]["Course Profile"]}));
+ assert.equal(GR.cohortKey(profiles[1]),AI.cohortKey({courseProfile:profiles[1]["Course Profile"]}));
+ assert.equal(GR.cohortKey(profiles[2]),AI.cohortKey({courseProfile:profiles[2]["Course Profile"]}));
+ assert.equal(GR.courseStatus({profiles}),GR.FAIL);
+ assert.equal(GR.courseStatus({profiles:profiles.slice(0,2)}),GR.PASS);
+ assert.equal(GR.courseStatus({profiles:[profiles[0],r("A","X","(TL)-(L)-bob.pe","ผ่าน")]}),GR.PASS);
+});
+test("a separate unknown or pending cohort remains pending even if another is passing",()=>{
+ const profiles=[r("A","X","(TL)-(T)-alice.pe","ผ่าน"),
+                 r("A","X","(TL)-(L)-bob.pe","อยู่ระหว่างการตรวจสอบ")];
+ assert.equal(GR.courseStatus({profiles}),GR.REVIEWING);
+ assert.equal(GR.courseStatus({profiles:[profiles[0],r("A","X","(TL)-(L)-bob.pe","INVALID")]}),GR.REVIEWING);
 });
