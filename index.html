@@ -823,7 +823,8 @@ function render(reset=true){
   setKpis(grCourses||rows);
   renderChart(grCourses||rows);
   renderDonut(rows);
-  syncGsControls(activeType==='GR'?filteredGrCourses(true).flatMap(course=>course.profiles):filtered(true));
+  // Profile Summary and progress donut must share the same GR main-filtered Profile population.
+  syncGsControls(activeType==='GR'?rows:filtered(true));
   if(gsViewMode==='course')renderGsCourseTable(rows);
   else {
     $('courseTableHead').closest('table').classList.remove('gs-tree-table');
@@ -831,7 +832,7 @@ function render(reset=true){
       $('courseTableHead').innerHTML=gsProfileTableHead;
       I18N.apply($('courseTableHead')); // restore TH/EN headings after leaving GS Course View
     }
-    const sourceProfiles=activeType==='GR'?filteredGrCourses(true).flatMap(course=>course.profiles):filtered(true);
+    const sourceProfiles=activeType==='GR'?rows:filtered(true);
     const profileRows=gsProfileStatus!==null?GS_VIEW.filterProfiles(sourceProfiles,gsProfileStatus):rows;
     renderTable(profileRows);
     $('pageInfo').textContent=profileRows.length?gsText('profilePager')(fmt((currentPage-1)*PAGE_SIZE+1),fmt(Math.min(currentPage*PAGE_SIZE,profileRows.length)),fmt(profileRows.length)):t('pager.empty');
@@ -886,7 +887,8 @@ $('gsProfileSummary').addEventListener('click',event=>{
   const wasSelected=gsViewMode==='profile'&&gsProfileStatus===target;
   gsViewMode=wasSelected?'course':'profile';
   gsProfileStatus=wasSelected?null:target;
-  $('reviewFilter').value='';
+  // Keep the main course-status filter when drilling into GR Profiles. GS retains its established behavior.
+  if(activeType==='GS')$('reviewFilter').value='';
   render();
 });
 $('gsViewTools').addEventListener('click',event=>{
