@@ -27,7 +27,7 @@ test("All 4 GR/GS/AI Tutor/Podcast pages have updated date fallback and cache-bu
     const page=read(file);
     assert.match(page,/ข้อมูลอ้างอิง ณ วันที่ 18\/11\/2569/);
     assert.match(page,file==="index.html"
-      ?/assets\/ooe-i18n\.js\?v=20261119-gr-count-v1/
+      ?/assets\/ooe-i18n\.js\?v=20261119-grgs-header-v1/
       :/assets\/ooe-i18n\.js\?v=20261119-refdate-1811/);
     assert.doesNotMatch(page,/ข้อมูลอ้างอิง ณ วันที่ 16\/11\/2569/);
     assert.doesNotMatch(page,/20261116-reference-date/);
