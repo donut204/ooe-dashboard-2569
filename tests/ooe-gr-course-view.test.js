@@ -39,9 +39,26 @@ test("homogeneous completed Profile outcomes become course outcomes",()=>{
  assert.equal(grouped[3].courseStatus,GR.NO_CONTENT);
  assert.equal(grouped[4].courseStatus,GR.REVIEWING);
 });
-test("mixed completed statuses are not assigned a guessed status",()=>{
- assert.equal(GR.courseStatus({profiles:[r("A","X","(T)","ผ่าน"),r("A","X","(L)","ไม่ผ่าน")]}),GR.REVIEWING);
+test("fully reviewed mixed Profile outcomes are completed failures, not pending",()=>{
+ const completedPairs=[["ไม่ผ่าน","ไม่พบเนื้อหา"],["ผ่าน","ไม่ผ่าน"],["ผ่าน","ไม่พบเนื้อหา"]];
+ for(const [first,second] of completedPairs){
+   assert.equal(GR.courseStatus({profiles:[r("A","X","(T)",first),r("A","X","(L)",second)]}),GR.FAIL);
+ }
  assert.equal(GR.courseStatus({profiles:[r("A","X","(T)","ผ่าน"),r("A","X","(L)","unexpected")]}),GR.REVIEWING);
+});
+test("ENG112 and ICT203 source-matching cases: T failed + L no content => course failed",()=>{
+ for(const code of ["ENG112","ICT203"]){
+   const profiles=[
+     r("คณะตัวอย่าง",code,"(TL)-(T)","ไม่ผ่าน"),
+     r("คณะตัวอย่าง",code,"(TL)-(L)","ไม่พบเนื้อหา")
+   ];
+   const grouped=GR.groupCourses(profiles);
+   assert.equal(grouped.length,1);
+   assert.equal(grouped[0].courseStatus,GR.FAIL);
+   assert.equal(grouped[0].profiles.length,2);
+   assert.equal(GR.filterCourses(grouped,{review:GR.REVIEWING}).length,0);
+   assert.equal(GR.filterCourses(grouped,{review:GR.FAIL}).length,1);
+ }
 });
 test("main status filter is at course grain; never removes sibling Profile",()=>{
  const grouped=GR.groupCourses(data);

@@ -34,7 +34,7 @@ html.auth-check body{visibility:hidden}
 <script src="auth-config.js"></script>
 <script src="auth.js"></script>
 <script>OOEAuth.requireAuth();</script>
-<script src="assets/ooe-i18n.js?v=20261119-refdate-1811"></script>
+<script src="assets/ooe-i18n.js?v=20261119-gr-count-v1"></script>
 
 <style>
 /* OOE dashboard micro-interactions */
@@ -248,7 +248,7 @@ html.auth-check body{visibility:hidden}
 
 <script src="assets/ooe-progress.js"></script>
 <script src="assets/ooe-gs-course-view.js?v=20261118-gs-view"></script>
-<script src="assets/ooe-gr-course-view.js?v=20261118-gr-course"></script>
+<script src="assets/ooe-gr-course-view.js?v=20261119-reviewed-mix-v1"></script>
 <script>
 const CSV_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vSrdzF0uLqoeVFjT2Dovsl3l82J7PdBgnTk2g_0VZTSMsZyceTrOgUn4l-JLixxY34FVqxzhMhqUQNP/pub?gid=131857057&single=true&output=csv';
 let DATA=[];
@@ -358,7 +358,12 @@ function syncKpiCueLabels(){
 function syncSourceSummary(){
   const el=$('sourceSummary');
   const state=el.dataset.state||'loading';
-  if(state==='ready')el.textContent=t('source.courseCount',{count:fmt(typeRows().length)});
+  if(state==='ready'){
+    const profiles=typeRows();
+    // The published GR/GS rows are Profiles. A distinct course is faculty + courseCode.
+    const courseCount=GS_VIEW.groupCourses(profiles).length;
+    el.textContent=t('source.courseProfileCount',{courses:fmt(courseCount),profiles:fmt(profiles.length)});
+  }
   else if(state==='error')el.textContent=t('source.loadError');
   else el.textContent=t('source.loading');
 }
