@@ -1,4 +1,4 @@
-/* Shared course-level Profile-count multi-select for AI Tutor and Podcast.
+/* Shared course-level Profile-count multi-select for GR, GS, AI Tutor and Podcast.
    An empty selected set means ALL counts; all calculations remain in each dashboard. */
 (function(){
   'use strict';
@@ -6,6 +6,7 @@
     if(!element) throw new Error('Profile-count filter container is missing');
     let available=[];
     let selected=new Set();
+    let language='th';
     const panelId=element.id+'Panel';
     element.innerHTML=
       '<button type="button" class="pcf-trigger" aria-haspopup="true" aria-expanded="false" aria-controls="'+panelId+'" aria-label="เลือกจำนวน Profile">'+
@@ -32,8 +33,13 @@
 
     function sync(){
       const n=selected.size;
-      value.textContent=n===0?'ทั้งหมด':n===1?Array.from(selected)[0]+' Profile':'เลือก '+n+' รายการ';
-      hint.textContent=n===0?'แสดงทุกจำนวน Profile':'เลือกแล้ว '+n+' รายการ';
+      const en=language==='en';
+      value.textContent=n===0?(en?'All':'ทั้งหมด'):n===1?Array.from(selected)[0]+' Profile':(en?'Selected '+n+' counts':'เลือก '+n+' รายการ');
+      hint.textContent=n===0?(en?'Show all Profile counts':'แสดงทุกจำนวน Profile'):(en?'Selected '+n+' counts':'เลือกแล้ว '+n+' รายการ');
+      all.parentElement.querySelector('span').textContent=en?'All':'ทั้งหมด';
+      done.textContent=en?'Done':'เสร็จสิ้น';
+      trigger.setAttribute('aria-label',en?'Select Profile count':'เลือกจำนวน Profile');
+      panel.setAttribute('aria-label',en?'Profile count':'จำนวน Profile');
       all.checked=n===0;
       for(const input of options.querySelectorAll('[data-pcf-count]')){
         input.checked=selected.has(Number(input.dataset.pcfCount));
@@ -77,6 +83,7 @@
     }
     function getSelected(){return new Set(selected)}
     function matches(count){return selected.size===0||selected.has(Number(count))}
+    function setLanguage(lang){language=lang==='en'?'en':'th';sync();}
     trigger.addEventListener('click',()=>setOpen(panel.hidden));
     done.addEventListener('click',()=>setOpen(false,true));
     element.addEventListener('change',event=>{
@@ -102,7 +109,7 @@
       }
     });
     sync();
-    return {setOptions,clear,getSelected,matches,isOpen:()=>!panel.hidden};
+    return {setOptions,clear,getSelected,matches,setLanguage,isOpen:()=>!panel.hidden};
   }
   window.OOEProfileCountFilter={create};
 })();

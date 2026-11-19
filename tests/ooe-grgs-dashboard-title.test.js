@@ -51,7 +51,7 @@ test("switching to English uses translated GR/GS labels and tab titles",()=>{
 });
 test("HTML fallback is new GR title and i18n cache tag changes",()=>{
  assert.match(html,/<h1 id="pageTitle">Dashboard รายวิชานอกแผน GR<\/h1>/);
- assert.match(html,/assets\/ooe-i18n\.js\?v=20261119-grgs-header-v1/);
+ assert.match(html,/assets\/ooe-i18n\.js\?v=20261119-grgs-profile-count-v1/);
  assert.doesNotMatch(html,/<h1 id="pageTitle">Dashboard รายวิชา GR<\/h1>/);
  assert.match(inline,/syncPageIdentity\(\)/);
 });

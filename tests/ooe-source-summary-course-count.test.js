@@ -41,7 +41,7 @@ test("Both TH/EN reference text and source summary unit have translations",()=>{
  const code=read("assets/ooe-i18n.js");
  assert.match(code,/'source.courseProfileCount':'{courses} รายวิชา \({profiles} Profile\)'/);
  assert.match(code,/'source.courseProfileCount':'{courses} Courses \({profiles} Profiles\)'/);
- assert.match(page,/assets\/ooe-i18n\.js\?v=20261119-grgs-header-v1/);
+ assert.match(page,/assets\/ooe-i18n\.js\?v=20261119-grgs-profile-count-v1/);
  assert.match(page,/assets\/ooe-gr-course-view\.js\?v=20261119-reviewed-mix-v1/);
 });
 test("AI Tutor/Podcast already use grouped courses and source Profile total, unchanged",()=>{
