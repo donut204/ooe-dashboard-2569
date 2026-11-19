@@ -61,20 +61,24 @@ Native spreadsheet ที่ตรวจจริง: `Report691_18_11_2569` —
 
 **ข้อควรระวังเชิงเทคนิค (ยังไม่สั่งแก้):** `index.html > setKpis()` ของ **GS** ยังคำนวณ Total จาก `typeRows().length` เพราะข้อมูลที่เผยแพร่ปัจจุบัน GS มี 1 Profile ต่อ 1 รายวิชา (46=46); หากอนาคต GS มีหลาย Profile ในรายวิชาเดียว การ์ด Total จะไม่เท่ากับจำนวนรายวิชาจริง แม้ Header Source Summary จะนับถูกด้วย group แล้ว. **Agent ต้องตรวจเงื่อนไขนี้เมื่อมี Profile ใหม่ และขออนุมัติ/กำหนด Status roll-up ของ GS ก่อนเปลี่ยน Logic สถานะ**; ห้ามคัดลอก GR status precedence ให้ GS โดยไม่ได้รับคำสั่ง
 
-### 0.4 GR: กฎสรุปสถานะรายวิชา — Current, OWNER-approved
+### 0.4 GR: กฎสรุปสถานะรายวิชา — Current, OWNER-approved (19/11/2569, supersedes PR #38/#43)
 
-Source ของแต่ละ Profile คงสถานะจริง; การตัดสินระดับรายวิชาอยู่ใน `assets/ooe-gr-course-view.js > courseStatus()`:
+**คำสั่ง OWNER ล่าสุด:** เปลี่ยนเกณฑ์ GR จาก “รายวิชาจะผ่านก็ต่อเมื่อทุก Profile ผ่าน” เป็น **ใช้ผลผ่านร่วมกันสำหรับ Profile ของผู้สอน/กลุ่มผู้เรียนเดียวกัน** ตามหลักการ MAX ภายใน cohort ของ AI Tutor/Podcast. คำสั่งนี้ใช้เฉพาะการสรุปสถานะ GR **ระดับรายวิชา**; ไม่เปลี่ยนสถานะ Review ต้นฉบับของ Profile ลูก, สถานะ GS หรือ CourseScore ในหน้า AI Tutor/Podcast
 
-1. **มี Profile ใดว่าง / ยังรอตรวจ / unknown ⇒ รายวิชา “อยู่ระหว่างการตรวจสอบ”**
-2. **ทุก Profile เป็น “ผ่าน” ⇒ รายวิชา “ผ่าน”**
-3. **ทุก Profile เป็น “ไม่พบเนื้อหา” ⇒ รายวิชา “ไม่พบเนื้อหา”**
-4. **ตรวจครบทุก Profile แล้ว และไม่เข้าข้อ 2/3 ⇒ รายวิชา “ไม่ผ่าน”** รวมกรณีผสม “ไม่ผ่าน” กับ “ไม่พบเนื้อหา” หรือ “ผ่าน” กับ “ไม่ผ่าน”
+กฎใน `assets/ooe-gr-course-view.js > cohortKey() / courseStatus()`:
 
-**Control cases:** ENG112 และ ICT203 แต่ละรายวิชามี (T)=ไม่ผ่าน + (L)=ไม่พบเนื้อหา ทั้งสองเป็น **รายวิชา “ไม่ผ่าน” ไม่ใช่ “อยู่ระหว่างการตรวจสอบ”**. HMM215 กรณีประวัติเคยมี T=ผ่าน และ L=blank ต้อง “รอตรวจ” จนมีผลของ L; อย่าใช้สถานะประวัตินั้นแทนข้อมูลใหม่
+1. รายวิชายังคงรวมด้วย **exact `faculty + courseCode`** และอ่าน Profile จาก `GRGS_Public` ทั้งหมด ไม่ตัด zero-student
+2. **Cohort identity:** ยึดรูปแบบ `Course Profile` แบบเดียวกับ `OOECourseScore.cohortKey()`. หากมี explicit trailing instructor suffix เช่น `(TL)-(T)-alice.pe` จะได้ `instructor:alice.pe`; suffix ต่างกันคือ **คนละ learner cohort**. ถ้าไม่มี suffix จะเป็น `shared` cohort ของรายวิชานั้น ซึ่งทำให้ `(TL)-(T)` และ `(TL)-(L)` ใช้หลักฐานร่วมกันได้; **ห้ามใช้ชื่ออาจารย์บนหน้าจอหรือ student count เดากลุ่มเพิ่มเอง**. ข้อจำกัด: ถ้าภายหลังมี learner cohort แยกกันแต่ไม่มี explicit suffix/ตัวระบุกลุ่ม ต้องปรับ data contract กับ OWNER ก่อนจะประเมินรวมอย่างเชื่อถือได้
+3. หาก Profile ใดมีสถานะ **ว่าง / อยู่ระหว่างการตรวจสอบ / unknown** ⇒ รายวิชายังคง **อยู่ระหว่างการตรวจสอบ** (ไม่ให้ Profile ผ่านอีกตัวปกปิดผลที่ยังไม่ตรวจ)
+4. เมื่อ Review ครบ: **ภายใน cohort เดียวกัน** ถ้ามี Profile **ผ่าน** อย่างน้อยหนึ่งรายการ ⇒ cohort **ผ่าน** (เสมือน MAX ของผล binary); มิฉะนั้นถ้ามี **ไม่ผ่าน** อย่างน้อยหนึ่งรายการ ⇒ cohort **ไม่ผ่าน**; มิฉะนั้น cohort **ไม่พบเนื้อหา**
+5. **รายวิชาผ่านเมื่อทุก cohort ผ่าน**. ถ้าทุก cohort ไม่พบเนื้อหา ⇒ รายวิชา **ไม่พบเนื้อหา**. ส่วนกรณีครบผลตรวจแต่มี cohort ไม่ผ่าน/ไม่พบเนื้อหาปะปน ⇒ **ไม่ผ่าน**. การแยก cohort ไม่ใช่การเพิ่มจำนวนรายวิชา และ **ไม่ใช้ Average/CourseScore** มาตัดสิน GR
+6. Tree Table / Profile View / Donut / Evidence ยังคงแสดงสถานะ **Profile ลูกตามต้นฉบับ**; KPI/กราฟคณะ/Filter สถานะระดับรายวิชาใช้ `courseStatus` ใหม่, Profile Summary ยังคงนับ Profile หลัง Main Filters ตามกฎ PR #39–#40
 
-Snapshot GR 19/11: **138 รายวิชา = 17 ผ่าน + 0 รอตรวจ + 112 ไม่ผ่าน + 9 ไม่พบเนื้อหา**. Profile GR = **149 = 18 ผ่าน + 0 รอตรวจ + 118 ไม่ผ่าน + 13 ไม่พบเนื้อหา**. ตัวเลขนี้เป็น **ข้อมูลที่ตรวจวันนั้น** ไม่ใช่ assertion ถาวรหรือ Constant ใน Code. GR top KPI และ bar chart รายคณะนับ **รายวิชา**, Profile Summary และ donut นับ **Profile**
+**Control cases จาก Google Sheets ที่ตรวจจริง 19/11:** `HMM221` = (T) ผ่าน + (L) ไม่ผ่าน ⇒ **รายวิชาผ่าน**; `ICT203` = (T) ผ่าน + (L) ไม่พบเนื้อหา ⇒ **รายวิชาผ่าน**; `ENG112` = (T) ผ่าน + (L) ไม่พบเนื้อหา, ผู้สอนร่วมชุดเดียวกัน ⇒ **รายวิชาผ่าน**. กรณีทั้ง (T)/(L) ไม่ผ่านยัง **ไม่ผ่าน** และทั้งคู่ไม่พบเนื้อหายัง **ไม่พบเนื้อหา**. กรณี cohort suffix คนละกลุ่ม (ผ่าน/ไม่ผ่าน) **ไม่ผ่าน**; มี Profile ที่ยังรอตรวจยัง **รอตรวจ**
 
-**GS:** ไม่มี Owner-approved course-level mixed-status precedence ที่เทียบเท่า GR; ยังคง KPI/สถานะจากแถว Profile ใน `index.html` สำหรับแผงหลักตาม Logic เดิม ไม่ย้าย GR precedence ไป GS เอง
+**Snapshot `GRGS_Public` ล่าสุดในรอบงานนี้ (ข้อมูลเปลี่ยนจาก snapshot เดิมระหว่างวัน):** GR **138 รายวิชา / 149 Profile**, source Profile status **50 ผ่าน / 86 ไม่ผ่าน / 13 ไม่พบเนื้อหา**, ไม่พบ Pending. Course-level ก่อนแก้กฎเมื่ออ่านข้อมูลชุดนี้ = **46 ผ่าน / 0 รอตรวจ / 83 ไม่ผ่าน / 9 ไม่พบเนื้อหา**; หลังกฎใหม่ = **49 ผ่าน / 0 รอตรวจ / 80 ไม่ผ่าน / 9 ไม่พบเนื้อหา**. ตัวเลขทั้งหมดเป็น **dated source observations**, ห้าม hard-code หรือยึดกับการตรวจรอบถัดไป
+
+**GS:** ไม่มี Owner-approved course-level roll-up แบบ GR; GS KPI สถานะยังนับ Profile ตาม Logic เดิม ห้ามคัดลอกกฎนี้ไป GS โดยไม่ได้รับคำสั่ง
 
 ### 0.5 GR/GS UI — 2 Views, Tree Table และ Main Filter
 
@@ -2182,3 +2186,20 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - [PR #43](https://github.com/donut204/ooe-dashboard-2569/pull/43) was **merged into main** at exact code merge SHA `6a702df8c5a6d779c3fe2fbffad165213bcf8fa4`. Directly fetched `main` and verified `index.html` references the shared count widget, GR and GS grouped count guards are present, and the new TH/EN `setLanguage` method exists.
 - GitHub Pages [workflow #44560145242](https://github.com/donut204/ooe-dashboard-2569/actions/runs/44560145242), exact head SHA `6a702df8c5a6d779c3fe2fbffad165213bcf8fa4`, completed **success**; `build`, `deploy`, `report-build-status` all completed successfully. This confirms the Pages publication pipeline, **not an authenticated browser visual E2E test**.
 - Source and regression evidence from this release: GR 138 courses (127 with one Profile, 11 with two), GS 46 courses (all one Profile), 63/63 targeted isolated tests passed. HMM221 (T pass/L fail) and ICT203 (T pass/L no-content) remain course-level **ไม่ผ่าน** under the previously approved GR policy. No source writes or Score changes. A later doc-only HEAD may supersede the code SHA; get live main SHA on the next task.
+
+## 19/11/2569 — OWNER changes GR pass policy to shared learner-cohort evidence
+
+### Decision / why
+- OWNER explicitly **superseded** the prior 19 Nov GR rule `all Profiles must pass`: when T and L Profiles are the **same instructor/learner cohort**, a passing Profile can confirm the shared cohort even if its sibling Profile shows `ไม่ผ่าน` or `ไม่พบเนื้อหา`, mirroring AI Tutor/Podcast's within-cohort MAX principle. Do not reuse this rule for GS or average statuses as Score.
+- Cohort separation uses the **explicit suffix naming convention** already established by `assets/ooe-course-score.js > cohortKey()`; unsuffixed T/L Profiles share a cohort, instructor-suffixed Profiles use their normalized suffix as the key. Different cohorts cannot borrow a pass; incomplete/unknown source review remains pending across the whole course. No inference from teacher display names or number of students; there is no separately published learner-group ID in `GRGS_Public`.
+- Existing per-Profile `reviewStatus`, link/evidence, student eligibility and `faculty + courseCode` course grouping remain unchanged. All bar/KPI/filter aggregations derive from `GR_VIEW.courseStatus`. Existing Course View parent cells remain placeholders.
+
+### Implementation and actual source reconciliation
+- Preflight read entire Handoff, `main@bb2dfeb4b1cd2d2be0462dc9ac259675c7ff74e4`, relevant modules/tests, AI Tutor/Podcast `OOECourseScore.cohortKey` and open PR inventory (none).
+- Branch `feat/gr-shared-cohort-pass-20261119`. Change **`assets/ooe-gr-course-view.js`** only for runtime: add pure `cohortKey` aligned to AI/Podcast's regex; update `courseStatus` to roll up reviewed statuses by cohort using precedence pass > fail > no-content, then require all cohorts pass for course pass; keep pending/unknown fail-closed. No changes to `assets/ooe-course-score.js`, GR/GS source CSV, score math, auth, UI layout, other tabs or Main/Tree/Donut Profile data.
+- Native read-only `Report691_18_11_2569` / `GRGS_Public` latest GR 149 Profile rows grouped to 138 courses. **Old policy applied to current sheet**: 46 ผ่าน / 83 ไม่ผ่าน / 9 ไม่พบเนื้อหา / 0 รอตรวจ. **New policy on exact same rows**: 49 ผ่าน / 80 ไม่ผ่าน / 9 ไม่พบเนื้อหา / 0 รอตรวจ. Three changed parents only: **HMM221, ICT203, ENG112** — all `ไม่ผ่าน` → `ผ่าน`, preserving their different child statuses unchanged.
+- Tests updated: `tests/ooe-gr-course-view.test.js` for same vs explicit distinct cohorts and pending, `tests/ooe-grgs-profile-count-filter.test.js` for updated review filter result; source/count consistency check confirms only 3 parents change, GR course total remains 138 and Profile total 149. QA gates: run relevant full regression and record result before Merge.
+- Prior notes/fixtures in PR #38/#43 and older Section 0.4 describing **all profiles must pass**, or ENG112/ICT203/HMM221 always failed, are now **historical and superseded**. Do not downgrade the current rule when interpreting those sections.
+
+### Release evidence
+- Owner's standing instruction is release to `main` after tests and Handoff. Fill PR number, merge SHA and GitHub Pages exact-status proof only after verified.
