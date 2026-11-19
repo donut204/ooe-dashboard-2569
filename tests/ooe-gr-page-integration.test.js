@@ -76,5 +76,6 @@ test("GR selected course search retains sibling Profiles while Profile card can 
  const filtered=GR.filterCourses(GR.groupCourses(source),{search:"C1(L)"});
  assert.equal(filtered.length,1);
  assert.equal(filtered[0].profiles.length,2);
- assert.match(script,/const sourceProfiles=activeType==='GR'\?filteredGrCourses\(true\)\.flatMap/);
+ assert.match(script,/const sourceProfiles=activeType==='GR'\?rows:filtered\(true\)/);
+ assert.match(script,/syncGsControls\(activeType==='GR'\?rows:filtered\(true\)\)/);
 });
