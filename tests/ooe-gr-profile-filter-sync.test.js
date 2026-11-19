@@ -40,18 +40,18 @@ test("live-source-shaped example: 13 no-content Profiles, 9 courses, 11 Profiles
 test("GR Profile Summary and GR flat Profile View consume same main-filtered rows as donut",()=>{
  match("const rows=grCourses?grCourses.flatMap(course=>course.profiles):filtered();");
  match("renderDonut(rows);");
- match("syncGsControls(activeType==='GR'?rows:filtered(true));");
- match("const sourceProfiles=activeType==='GR'?rows:filtered(true);");
+ match("syncGsControls(rows);");
+ match("const sourceProfiles=rows;");
  match("GS_VIEW.filterProfiles(sourceProfiles,gsProfileStatus)");
  assert.doesNotMatch(script,/syncGsControls\(activeType==='GR'\?filteredGrCourses\(true\)/);
  assert.doesNotMatch(script,/const sourceProfiles=activeType==='GR'\?filteredGrCourses\(true\)/);
 });
-test("clicking a GR Profile card preserves the main course-status filter; GS retains old reset",()=>{
+test("clicking a GR or GS Profile card preserves the main course-status filter",()=>{
  const from=script.indexOf("$('gsProfileSummary').addEventListener('click',event=>{");
  const to=script.indexOf("\n$('gsViewTools').addEventListener",from);
  assert.ok(from>=0&&to>from);
  const handler=script.slice(from,to);
- for(const [type,expected] of [["GR","ไม่พบเนื้อหา"],["GS",""]]){
+ for(const [type,expected] of [["GR","ไม่พบเนื้อหา"],["GS","ไม่พบเนื้อหา"]]){
    const review={value:"ไม่พบเนื้อหา"},card={dataset:{gsStatus:"ไม่พบเนื้อหา"}};
    const target={closest:()=>card};
    const listeners={};
@@ -81,5 +81,5 @@ test("main filter stays course-grain; GS calculation path and published CSV rema
  match("setKpis(grCourses||rows);");
  match("renderChart(grCourses||rows);");
  assert.match(page,/gid=131857057&single=true&output=csv/);
- assert.match(script,/activeType==='GS'\)\$\('reviewFilter'\)\.value=''/);
+ assert.doesNotMatch(script,/activeType==='GS'\)\$\('reviewFilter'\)\.value=''/);
 });

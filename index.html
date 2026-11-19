@@ -572,7 +572,8 @@ function setKpis(rows){
   const fail=isGr?courseCounts[REVIEW.fail]:rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.fail).length;
   const noContent=isGr?courseCounts[REVIEW.noContent]:rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.noContent).length;
 
-  $('totalKpi').textContent=fmt(total);
+  // OWNER: the total-course KPI is a dataset baseline, not the filtered result count.
+  $('totalKpi').textContent=fmt(all);
   $('passKpi').textContent=fmt(pass);
   $('reviewingKpi').textContent=fmt(reviewing);
   $('failKpi').textContent=fmt(fail);
@@ -823,8 +824,8 @@ function render(reset=true){
   setKpis(grCourses||rows);
   renderChart(grCourses||rows);
   renderDonut(rows);
-  // Profile Summary and progress donut must share the same GR main-filtered Profile population.
-  syncGsControls(activeType==='GR'?rows:filtered(true));
+  // GR and GS Profile Summary must use the exact main-filtered Profile population as the donut.
+  syncGsControls(rows);
   if(gsViewMode==='course')renderGsCourseTable(rows);
   else {
     $('courseTableHead').closest('table').classList.remove('gs-tree-table');
@@ -832,7 +833,7 @@ function render(reset=true){
       $('courseTableHead').innerHTML=gsProfileTableHead;
       I18N.apply($('courseTableHead')); // restore TH/EN headings after leaving GS Course View
     }
-    const sourceProfiles=activeType==='GR'?rows:filtered(true);
+    const sourceProfiles=rows;
     const profileRows=gsProfileStatus!==null?GS_VIEW.filterProfiles(sourceProfiles,gsProfileStatus):rows;
     renderTable(profileRows);
     $('pageInfo').textContent=profileRows.length?gsText('profilePager')(fmt((currentPage-1)*PAGE_SIZE+1),fmt(Math.min(currentPage*PAGE_SIZE,profileRows.length)),fmt(profileRows.length)):t('pager.empty');
@@ -887,8 +888,7 @@ $('gsProfileSummary').addEventListener('click',event=>{
   const wasSelected=gsViewMode==='profile'&&gsProfileStatus===target;
   gsViewMode=wasSelected?'course':'profile';
   gsProfileStatus=wasSelected?null:target;
-  // Keep the main course-status filter when drilling into GR Profiles. GS retains its established behavior.
-  if(activeType==='GS')$('reviewFilter').value='';
+  // Preserve the main course-status filter on both GR and GS when drilling into Profiles.
   render();
 });
 $('gsViewTools').addEventListener('click',event=>{

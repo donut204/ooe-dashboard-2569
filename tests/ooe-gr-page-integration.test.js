@@ -59,7 +59,7 @@ test("GR chart receives course group/status, donut receives Profiles",()=>{
  assert.match(script,/donutUnitLabel'\)\.textContent=activeType==='GR'\?'Profile'/);
 });
 test("GR Profile Summary and Course View share the GS-approved tree and controls",()=>{
- assert.match(script,/syncGsControls\(activeType==='GR'/);
+ assert.match(script,/syncGsControls\(rows\)/);
  assert.match(script,/if\(gsViewMode==='course'\)renderGsCourseTable\(rows\)/);
  assert.match(script,/gsViewMode='course';gsProfileStatus=null/);
  assert.match(script,/gsProfileStatus!==null\?GS_VIEW\.filterProfiles\(sourceProfiles,gsProfileStatus\):rows/);
@@ -76,6 +76,6 @@ test("GR selected course search retains sibling Profiles while Profile card can 
  const filtered=GR.filterCourses(GR.groupCourses(source),{search:"C1(L)"});
  assert.equal(filtered.length,1);
  assert.equal(filtered[0].profiles.length,2);
- assert.match(script,/const sourceProfiles=activeType==='GR'\?rows:filtered\(true\)/);
- assert.match(script,/syncGsControls\(activeType==='GR'\?rows:filtered\(true\)\)/);
+ assert.match(script,/const sourceProfiles=rows/);
+ assert.match(script,/syncGsControls\(rows\)/);
 });
