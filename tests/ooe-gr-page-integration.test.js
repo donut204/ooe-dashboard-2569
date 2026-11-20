@@ -5,6 +5,7 @@ const fs=require("node:fs");
 const vm=require("node:vm");
 const path=require("node:path");
 const GR=require("../assets/ooe-gr-course-view.js");
+const GS=require("../assets/ooe-gs-course-view.js");
 const page=fs.readFileSync(path.join(__dirname,"../index.html"),"utf8");
 const script=page.match(/<script>\s*\nconst CSV_URL=[\s\S]*?<\/script>/)?.[0].replace(/^<script>/,"").replace(/<\/script>$/,"");
 const extract=(from,to)=>script.slice(script.indexOf(from),script.indexOf(to,script.indexOf(from)));
@@ -20,13 +21,13 @@ const source=[
 function runKpis(type,rows){
  const nodes=Object.fromEntries(["totalKpi","passKpi","reviewingKpi","failKpi","noContentKpi",
    "totalNote","passNote","reviewingNote","failNote","noContentNote"].map(x=>[x,{textContent:""}]));
- const env={activeType:type,GR_VIEW:GR,
+ const env={activeType:type,GR_VIEW:GR,GS_VIEW:GS,
   REVIEW:{pass:"ผ่าน",reviewing:"อยู่ระหว่างการตรวจสอบ",fail:"ไม่ผ่าน",noContent:"ไม่พบเนื้อหา"},
   typeRows:()=>source,fmt:v=>String(v),t:(key)=>key,
-  $:key=>nodes[key]};
+  $:key=>key==="facultyFilter"?{value:""}:nodes[key]};
  const body=extract("function setKpis(rows){","function renderChart(rows){");
  const fn=new Function("rows","env",`
- const {activeType,GR_VIEW,REVIEW,typeRows,fmt,t,$}=env;
+ const {activeType,GR_VIEW,GS_VIEW,REVIEW,typeRows,fmt,t,$}=env;
  ${body}
  setKpis(rows);
  `);
@@ -44,9 +45,9 @@ test("GR main KPI cards count 4 distinct courses and normalize partial review",(
  assert.equal(nodes.failKpi.textContent,"1");
  assert.equal(nodes.noContentKpi.textContent,"1");
 });
-test("GS KPI code path still counts original source Profile rows",()=>{
+test("GS total counts unique source courses while status cards still count Profiles",()=>{
  const nodes=runKpis("GS",source);
- assert.equal(nodes.totalKpi.textContent,"5");
+ assert.equal(nodes.totalKpi.textContent,"4");
  assert.equal(nodes.passKpi.textContent,"2");
  assert.equal(nodes.reviewingKpi.textContent,"0");
  assert.equal(nodes.failKpi.textContent,"1");
