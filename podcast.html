@@ -1111,9 +1111,13 @@ function setKpis(rows){
   const profileNotdone=profiles.filter(d=>courseStatus(d.profileScore)==='notdone').length;
   const pctOf=n=>total?n/total*100:0;
   const fmt2=n=>n.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
-  // The total-course KPI is independent of faculty, status, type and search filters.
-  $('totalKpi').textContent=allCourseCount().toLocaleString('th-TH');
-  $('totalNote').textContent=`จาก ${DATA.length.toLocaleString('th-TH')} Profile`;
+  // Total Courses follows only the faculty selection, whether chosen by chart
+  // or dropdown. Ignore status, course type, Profile-count and search filters.
+  const selectedFaculty=$('facultyFilter').value;
+  const facultyProfiles=selectedFaculty?DATA.filter(d=>d.faculty===selectedFaculty):DATA;
+  const facultyCourseCount=selectedFaculty?groupCourses(facultyProfiles).length:allCourseCount();
+  $('totalKpi').textContent=facultyCourseCount.toLocaleString('th-TH');
+  $('totalNote').textContent=`จาก ${facultyProfiles.length.toLocaleString('th-TH')} Profile`;
   $('pointsKpi').textContent=Math.ceil(points).toLocaleString('th-TH');
   $('pointsTotalKpi').textContent=`/ ${total.toLocaleString('th-TH')}`;
   $('progressKpi').textContent=fmt2(pct)+'%';
