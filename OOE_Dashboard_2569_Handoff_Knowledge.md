@@ -2230,3 +2230,9 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 ### Verification boundaries
 - The new Total Courses KPI is **faculty-scoped only**, but Source Summary header remains global and may show a larger all-faculty number. This distinction is intentional and should not be treated as a mismatch.
 - No adjustments to score, reviewStatus, CourseScore, ProfileScore, source data, participants, or inclusion/exclusion. No live Browser screenshot verification claimed.
+
+### PR #45 — verified main merge and GitHub Pages deployment (20/11/2569)
+- [PR #45](https://github.com/donut204/ooe-dashboard-2569/pull/45) **merged to `main`**, exact **code merge SHA `e8b16e2ebb71e59f536ceef4763ad0e829aeebe2`**. Directly fetched main `index.html`, `ai-tutor.html`, `podcast.html` and this Handoff and verified that all three HTML shells compute distinct Total Courses using the selected faculty only. No status/score/source or UI layout change.
+- [GitHub Pages workflow #44672530651](https://github.com/donut204/ooe-dashboard-2569/actions/runs/44672530651) head SHA exactly matches `e8b16e2ebb71e59f536ceef4763ad0e829aeebe2`; overall **completed / success**, with `build`, `deploy`, `report-build-status` all **completed / success**. This is verified Production publication via GitHub Pages, **not actual Browser visual E2E**.
+- Regression: **72/72 isolated JS tests PASS across all 14 repo test files**; actual published source reconciliation: GS full 46, faculty บริหารธุรกิจ 11 / โลจิสติกส์ฯ 9 / เทคโนโลยีสารสนเทศ 7, GR total 138 / 149 Profiles (20/11 snapshot). Values are dynamic after source reload, not hard-coded.
+- A subsequent **MD-only release-evidence commit** will move `main` HEAD; agents must fetch the live SHA on every new task and should not confuse this later documentation commit with the exact deployed code SHA.
