@@ -585,7 +585,12 @@ function filtered(ignoreReview=false){
 function setKpis(rows){
   const isGr=activeType==='GR';
   const courseCounts=isGr?GR_VIEW.countCourses(rows):null;
-  const total=rows.length,all=isGr?GR_VIEW.groupCourses(typeRows()).length:typeRows().length;
+  // Total Courses follows the selected faculty (chart or dropdown), but ignores
+  // status, progress, Profile-count and search filters. Count distinct courses,
+  // not Profile rows, including any future multi-Profile GS courses.
+  const selectedFaculty=$('facultyFilter').value;
+  const facultyRows=typeRows().filter(d=>!selectedFaculty||d['คณะ']===selectedFaculty);
+  const total=rows.length,all=GS_VIEW.groupCourses(facultyRows).length;
   const pass=isGr?courseCounts[REVIEW.pass]:rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.pass).length;
   const reviewing=isGr?courseCounts[REVIEW.reviewing]:rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.reviewing).length;
   const fail=isGr?courseCounts[REVIEW.fail]:rows.filter(d=>d['สถานะการตรวจสอบ']===REVIEW.fail).length;
