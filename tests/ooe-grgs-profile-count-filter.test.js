@@ -99,7 +99,7 @@ test("TH/EN label and widget localization supported without changing source Scor
  assert.match(i18n,/'filters.profileCount':'Profile Count'/);
  assert.match(widget,/function setLanguage\(lang\)/);
  assert.match(widget,/return \{setOptions,clear,getSelected,matches,setLanguage/);
- assert.match(page,/assets\/ooe-i18n\.js\?v=20261119-grgs-profile-count-v1/);
+ assert.match(page,/assets\/ooe-i18n\.js\?v=20261123-reference-date-v1/);
  assert.doesNotThrow(()=>new Function(script));
  assert.doesNotThrow(()=>new Function(widget));
  assert.doesNotThrow(()=>new Function(i18n));
