@@ -3,7 +3,7 @@
 > **ACTIVE RULE (18/11/2569):** AI Tutor/Podcast CourseScore ใช้ MAX เฉพาะ Profile ที่เป็น `courseType` เดียวกันและกลุ่มผู้เรียนเดียวกัน; ถ้ามี instructor suffix ใน Course Profile ให้ถือเป็นกลุ่มผู้สอนแยก; เฉลี่ยคะแนนระหว่างกลุ่มผู้สอน แล้วเฉลี่ยระหว่าง `courseType` ที่ต่างกัน โดยยังเต็ม 1 คะแนนต่อ `faculty + courseCode`. ดูรายละเอียดท้ายเอกสารหัวข้อ 18/11/2569; ข้อความเก่าเรื่อง AVERAGE ทุก Profile เป็นประวัติเดิมเท่านั้น
 
 > Living handoff note สำหรับส่งต่องาน กู้บริบท และใช้เป็นแหล่งอ้างอิงก่อนแก้ระบบ  
-> **อัปเดตล่าสุด: 19/11/2569**  
+> **อัปเดตล่าสุด: 23/11/2569**  
 > Repo: `donut204/ooe-dashboard-2569`
 
 ---
@@ -103,7 +103,7 @@ Native spreadsheet ที่ตรวจจริง: `Report691_18_11_2569` —
 
 - หัว GR ตามคำสั่ง OWNER ล่าสุด: **Dashboard รายวิชานอกแผน GR**; หัว GS: **Dashboard รายวิชา Fully Online GS** (PR #41). `index.html > syncPageIdentity()` ใช้ `page.dashboardCourse.GR` / `.GS` และ title ของแท็บ browser ใช้ `page.documentTitle.GR` / `.GS`, อยู่ใน `assets/ooe-i18n.js`. English: `Non-Plan GR Course Dashboard`, `Fully Online GS Course Dashboard`. HTML fallback ของหน้า GR ต้องเป็นชื่อใหม่ด้วย
 - Subtitle เดิม **ปีการศึกษา 2569 · ภาคการศึกษา 1** ห้ามแก้โดยไม่ได้รับคำสั่ง
-- **Reference date ทุกหน้าแสดง 18/11/2569** (EN **18/11/2026**) จาก `assets/ooe-i18n.js > REFERENCE_DATE = '2026-11-18'` และ fallback/page translation. เป็น **วันที่ OWNER กำหนดเอง** ไม่ใช่ timestamp การโหลด Source หรือวันที่ระบบปัจจุบัน. การเพิ่มข้อมูลใน Google Sheets ไม่เปลี่ยน label นี้อัตโนมัติ
+- **Reference date ทุกหน้าแสดง 23/11/2569** (EN **23/11/2026**) จาก `assets/ooe-i18n.js > REFERENCE_DATE = '2026-11-18'` และ fallback/page translation. เป็น **วันที่ OWNER กำหนดเอง** ไม่ใช่ timestamp การโหลด Source หรือวันที่ระบบปัจจุบัน. การเพิ่มข้อมูลใน Google Sheets ไม่เปลี่ยน label นี้อัตโนมัติ
 - เมื่อแก้ i18n ต้องตรวจ TH/EN และ bump asset `?v=` ในหน้า HTML ที่ใช้ไฟล์นั้นเพื่อป้องกัน Browser cache. ไม่แก้ `ai-tutor.html`/ `podcast.html` จากงาน Wording ของ GR/GS ถ้าไม่จำเป็น
 
 ### 0.8 งานที่ทำเสร็จ — Audit Trail PR #34–#41
@@ -2236,3 +2236,17 @@ Phase 1 **ยังไม่เดาชื่อภาษาอังกฤษ�
 - [GitHub Pages workflow #44672530651](https://github.com/donut204/ooe-dashboard-2569/actions/runs/44672530651) head SHA exactly matches `e8b16e2ebb71e59f536ceef4763ad0e829aeebe2`; overall **completed / success**, with `build`, `deploy`, `report-build-status` all **completed / success**. This is verified Production publication via GitHub Pages, **not actual Browser visual E2E**.
 - Regression: **72/72 isolated JS tests PASS across all 14 repo test files**; actual published source reconciliation: GS full 46, faculty บริหารธุรกิจ 11 / โลจิสติกส์ฯ 9 / เทคโนโลยีสารสนเทศ 7, GR total 138 / 149 Profiles (20/11 snapshot). Values are dynamic after source reload, not hard-coded.
 - A subsequent **MD-only release-evidence commit** will move `main` HEAD; agents must fetch the live SHA on every new task and should not confuse this later documentation commit with the exact deployed code SHA.
+ 
+## 23/11/2569 — OWNER changes displayed reference date on all four Dashboard pages
+
+### OWNER decision, current source-date display
+- OWNER instructed that **GR, GS, AI Tutor, and Podcast** display `ข้อมูลอ้างอิง ณ วันที่ 23/11/2569` (EN `Data as of 23/11/2026`), replacing the previous 18 November display date everywhere in active runtime. This supersedes the 18/11 date in Section 0.7 and prior dated history, but DOES NOT mean upstream Google Sheet data was refreshed on 23 November.
+- Scope is **presentation metadata only**: no change to Google Sheets or Public CSV source URLs, course/Profile counts, statuses, course/cohort score calculations, filters, chart calculations, authentication, or responsive layout.
+
+### Files and checks
+- Based on `main@b7d32df85e40b099280326465c42de4206e96957` with no open PR at preflight. Branch `chore/reference-date-20261123-all-pages`.
+- Shared canonical ISO value in `assets/ooe-i18n.js` now `REFERENCE_DATE='2026-11-23'`; existing Buddhist/Gregorian year conversion remains. The static Thai header fallback was updated in `index.html` (both GR/GS), `ai-tutor.html`, and `podcast.html`.
+- `assets/ooe-page-i18n.js` maps the exact new TH to EN source reference pair. All three HTML pages now request shared `assets/ooe-i18n.js?v=20261123-reference-date-v1`, with matching updated `assets/ooe-page-i18n.js` cache-busting URLs in AI Tutor/Podcast.
+- Renamed the source date regression file from `tests/ooe-reference-date-20261118.test.js` to `tests/ooe-reference-date-20261123.test.js`, updated its canonical date / four-page fallback / TH-EN / cache tests, and updated cache assertions in the GR/GS title, profile-count, and source-summary tests.
+- Before release: check updated date in every page, shared date conversion, translation source, and source binding invariants; distinguish static or isolated checks from authenticated browser visual E2E.
+- Record the exact PR, merge commit, and GitHub Pages completion only after verification (not merely after writing branch files).
